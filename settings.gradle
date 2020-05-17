@@ -1,0 +1,2 @@
+rootProject.name='Wheep'
+include ':app'
