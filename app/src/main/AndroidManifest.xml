@@ -12,14 +12,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MessageActivity"
             android:theme="@style/AppTheme.ActionBar" />
         <activity
             android:name=".SignInActivity"
-            android:theme="@style/AppTheme.NoTitle">
+            android:theme="@style/AppTheme.NoTitle.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

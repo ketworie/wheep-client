@@ -8,11 +8,15 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoTitle" parent="AppTheme">
+    <style name="AppTheme.NoTitle">
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.ActionBar" parent="AppTheme">
+    <style name="AppTheme.NoTitle.Launcher">
+        <item name="android:windowBackground">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.ActionBar">
         <item name="windowActionBar">true</item>
     </style>
 
