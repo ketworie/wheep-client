@@ -8,7 +8,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.lifecycle.liveData
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,18 +16,18 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
 import com.ketworie.wheep.client.hub.HubAdapter
-import com.ketworie.wheep.client.hub.HubService
-import com.ketworie.wheep.client.user.UserService
+import com.ketworie.wheep.client.hub.HubDao
+import com.ketworie.wheep.client.user.UserDao
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
 class MessageActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var hubService: HubService
+    lateinit var hubDao: HubDao
 
     @Inject
-    lateinit var userService: UserService
+    lateinit var userDao: UserDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -39,9 +38,7 @@ class MessageActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@MessageActivity)
             adapter = hubAdapter
         }
-        liveData {
-            emit(hubService.getMyHubs())
-        }.observe(this, onChanged = { list -> hubAdapter.submitList(list) })
+        hubDao.getMyHubs().observe(this, onChanged = { list -> hubAdapter.submitList(list) })
     }
 
     override fun onBackPressed() {
@@ -53,7 +50,7 @@ class MessageActivity : AppCompatActivity() {
             val bitmap = BitmapFactory.decodeResource(resources, R.raw.icon)
             val roundedBitmap = RoundedBitmapDrawableFactory.create(resources, bitmap)
             roundedBitmap.isCircular = true
-            userService.getMe().observe(this@MessageActivity) {
+            userDao.getMe().observe(this@MessageActivity) {
                 val resourceUrl = it.image
                 loadDrawable(resourceUrl, roundedBitmap)
             }

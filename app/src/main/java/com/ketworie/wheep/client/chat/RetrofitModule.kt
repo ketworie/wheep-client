@@ -1,4 +1,4 @@
-package com.ketworie.wheep.client.dao
+package com.ketworie.wheep.client.chat
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.ketworie.wheep.client.MainApplication.Companion.SERVER_BASE

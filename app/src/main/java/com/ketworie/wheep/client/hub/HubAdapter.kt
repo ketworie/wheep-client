@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.bumptech.glide.Glide
+import com.ketworie.wheep.client.MainApplication
 import com.ketworie.wheep.client.R
 
 class HubAdapter : ListAdapter<Hub, HubViewHolder>(UserDefaultDiff) {
@@ -27,8 +29,14 @@ class HubAdapter : ListAdapter<Hub, HubViewHolder>(UserDefaultDiff) {
     }
 
     override fun onBindViewHolder(holder: HubViewHolder, position: Int) {
-        val (id, name, lastMessage) = getItem(position)
+        val (_, name, image, _, lastMessage) = getItem(position)
         holder.header.text = name
         holder.lastMessage.text = lastMessage?.text ?: "No messages"
+        Glide
+            .with(holder.itemView)
+            .asBitmap()
+            .circleCrop()
+            .load(MainApplication.RESOURCE_BASE + image)
+            .into(holder.avatar)
     }
 }

@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.postDelayed
 import com.google.android.material.snackbar.Snackbar
-import com.ketworie.wheep.client.dao.AuthInterceptor
-import com.ketworie.wheep.client.dao.SecurityService
+import com.ketworie.wheep.client.chat.AuthInterceptor
+import com.ketworie.wheep.client.chat.SecurityService
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,5 +1,6 @@
-package com.ketworie.wheep.client.dao
+package com.ketworie.wheep.client.chat
 
+import com.ketworie.wheep.client.hub.Hub
 import com.ketworie.wheep.client.user.User
 import retrofit2.Response
 import retrofit2.http.Field
@@ -18,4 +19,8 @@ interface ChatService {
 
     @GET("/user/me")
     suspend fun getMe(): User
+
+    @GET("/user/me/hubs")
+    suspend fun getMyHubs(): List<Hub>
+
 }

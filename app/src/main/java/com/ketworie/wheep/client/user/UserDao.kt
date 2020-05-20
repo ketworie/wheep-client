@@ -2,12 +2,12 @@ package com.ketworie.wheep.client.user
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
-import com.ketworie.wheep.client.dao.ChatService
+import com.ketworie.wheep.client.chat.ChatService
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserService @Inject constructor() {
+class UserDao @Inject constructor() {
     @Inject
     lateinit var chatService: ChatService
 
@@ -15,10 +15,11 @@ class UserService @Inject constructor() {
 
     fun getMe(): LiveData<User> {
         return liveData {
-            if (me != null)
-                me?.let { emit(it) }
-            me = chatService.getMe()
-            me?.let { emit(it) }
+            me?.let {
+                emit(it)
+                return@liveData
+            }
+            me = chatService.getMe().also { emit(it) }
         }
     }
 }
