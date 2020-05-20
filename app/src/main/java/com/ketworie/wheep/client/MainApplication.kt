@@ -9,7 +9,9 @@ import javax.inject.Inject
 
 class MainApplication : Application(), HasAndroidInjector {
     companion object {
-        val X_AUTH_TOKEN = "X-Auth-Token"
+        const val X_AUTH_TOKEN = "X-Auth-Token"
+        const val SERVER_BASE = "http://10.0.2.2:8080"
+        const val RESOURCE_BASE = "$SERVER_BASE/wayne/"
     }
 
     @Inject

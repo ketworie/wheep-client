@@ -10,7 +10,13 @@ class SecurityService @Inject constructor() {
 
 
     suspend fun login(login: String, password: String): String {
-        val response = chatService.login(login, password)
+        val response = try {
+            chatService.login(login, password)
+        } catch (e: Exception) {
+            throw RuntimeException("Network error")
+        }
+        if (!response.isSuccessful)
+            throw RuntimeException("Login failed")
         return response.headers().get(MainApplication.X_AUTH_TOKEN)!!
     }
 }

@@ -1,5 +1,6 @@
 package com.ketworie.wheep.client
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
@@ -9,8 +10,9 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.postDelayed
 import com.google.android.material.snackbar.Snackbar
-import com.ketworie.wheep.client.MainApplication.Companion.X_AUTH_TOKEN
+import com.ketworie.wheep.client.dao.AuthInterceptor
 import com.ketworie.wheep.client.dao.SecurityService
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
@@ -20,8 +22,7 @@ import javax.inject.Inject
 
 class SignInActivity : AppCompatActivity() {
 
-    private var isLogged = false
-    private var token = ""
+    private var token = "5ec3f20fba903f0cce3ec2da"
 
     private lateinit var appNameView: TextView
     private lateinit var loginView: EditText
@@ -31,6 +32,9 @@ class SignInActivity : AppCompatActivity() {
 
     @Inject
     lateinit var securityService: SecurityService
+
+    @Inject
+    lateinit var authInterceptor: AuthInterceptor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -43,6 +47,7 @@ class SignInActivity : AppCompatActivity() {
         signInButton = findViewById(R.id.signInButton)
         rootLayout = findViewById(R.id.signInRootLayout)
         toLoggedState()
+        appNameView.postDelayed(200) { checkToken() }
 
 
         findViewById<EditText>(R.id.passwordText).setOnEditorActionListener { _, actionId, _ ->
@@ -56,36 +61,30 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun toLoggedState() {
-        appNameView.y = resources.displayMetrics.heightPixels.toFloat() * 0.4f
+        appNameView.y = resources.displayMetrics.heightPixels.toFloat() * 0.3f
         loginView.alpha = 0f
         passwordView.alpha = 0f
         signInButton.alpha = 0f
     }
 
+    private fun checkToken() {
+        if (token.isNotEmpty()) {
+            startChat(token)
+            return
+        }
+        toUnLoggedState()
+    }
+
     private fun toUnLoggedState() {
         appNameView.animate().y(resources.displayMetrics.heightPixels.toFloat() * 0.18f)
-            .setDuration(1000).withEndAction {
+            .setDuration(500)
+            .withEndAction {
                 loginView.animate().alpha(1f).start()
                 passwordView.animate().alpha(1f).start()
                 signInButton.animate().alpha(1f).start()
-            }.start()
+            }
+            .start()
     }
-
-
-    override fun onResume() {
-        if (!isLogged)
-            toUnLoggedState()
-        super.onResume()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-    }
-
 
     fun onSignIn(view: android.view.View) {
         processSignIn()
@@ -102,11 +101,11 @@ class SignInActivity : AppCompatActivity() {
                 startChat(token)
             } catch (e: Exception) {
                 Snackbar
-                    .make(appNameView, e.toString(), Snackbar.LENGTH_SHORT)
+                    .make(appNameView, e.message!!, Snackbar.LENGTH_SHORT)
                     .setBackgroundTint(
                         resources.getColor(
                             R.color.design_default_color_error,
-                            resources.newTheme()
+                            theme
                         )
                     )
                     .show()
@@ -135,10 +134,11 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun startChat(token: String) {
-        val intent = Intent(this, MessageActivity::class.java).apply {
-            putExtra(X_AUTH_TOKEN, token)
-        }
-        startActivity(intent)
+        authInterceptor.token = token
+        startActivity(
+            Intent(this, MessageActivity::class.java)
+            , ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
+        )
     }
 
 
