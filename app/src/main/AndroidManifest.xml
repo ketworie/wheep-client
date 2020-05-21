@@ -14,8 +14,11 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".MessageActivity"
+            android:name=".SettingsActivity"
             android:theme="@style/AppTheme.ActionBar" />
+        <activity
+            android:name=".MessageActivity"
+            android:theme="@style/AppTheme.NoTitle" />
         <activity
             android:name=".SignInActivity"
             android:theme="@style/AppTheme.NoTitle.Launcher">
@@ -25,8 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
-
 
 </manifest>

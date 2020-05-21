@@ -1,24 +1,20 @@
 package com.ketworie.wheep.client
 
 import android.graphics.BitmapFactory
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
 import com.ketworie.wheep.client.hub.HubAdapter
 import com.ketworie.wheep.client.hub.HubDao
 import com.ketworie.wheep.client.user.UserDao
 import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.activity_message.*
 import javax.inject.Inject
 
 class MessageActivity : AppCompatActivity() {
@@ -33,6 +29,8 @@ class MessageActivity : AppCompatActivity() {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message)
+        setSupportActionBar(toolbar)
+        createAvatarImage()
         val hubAdapter = HubAdapter()
         findViewById<RecyclerView>(R.id.messageList).apply {
             layoutManager = LinearLayoutManager(this@MessageActivity)
@@ -45,49 +43,22 @@ class MessageActivity : AppCompatActivity() {
         moveTaskToBack(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menu?.add("Settings")?.apply {
-            val bitmap = BitmapFactory.decodeResource(resources, R.raw.icon)
-            val roundedBitmap = RoundedBitmapDrawableFactory.create(resources, bitmap)
-            roundedBitmap.isCircular = true
-            userDao.getMe().observe(this@MessageActivity) {
-                val resourceUrl = it.image
-                loadDrawable(resourceUrl, roundedBitmap)
-            }
-            icon = roundedBitmap
-            setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-            setOnMenuItemClickListener {
-                onSettings()
-                return@setOnMenuItemClickListener true
-            }
+    fun createAvatarImage() {
+        val bitmap = BitmapFactory.decodeResource(resources, R.raw.icon)
+        val roundedBitmap = RoundedBitmapDrawableFactory.create(resources, bitmap)
+        roundedBitmap.isCircular = true
+        userDao.getMe().observe(this@MessageActivity) {
+            val resourceUrl = it.image
+            Glide.with(this)
+                .asBitmap()
+                .placeholder(roundedBitmap)
+                .load(RESOURCE_BASE + resourceUrl)
+                .circleCrop()
+                .into(avatarImageView)
         }
-        return super.onCreateOptionsMenu(menu)
     }
 
-    private fun MenuItem.loadDrawable(
-        resourceUrl: String,
-        placeholder: RoundedBitmapDrawable
-    ) {
-        Glide.with(this@MessageActivity)
-            .load(RESOURCE_BASE + resourceUrl)
-            .circleCrop()
-            .placeholder(placeholder)
-            .into(object : CustomTarget<Drawable>() {
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    icon = placeholder
-                }
-
-                override fun onResourceReady(
-                    resource: Drawable,
-                    transition: Transition<in Drawable>?
-                ) {
-                    icon = resource
-                }
-
-            })
-    }
-
-    private fun onSettings() {
+    private fun onSettings(view: View) {
         TODO("Not yet implemented")
     }
 

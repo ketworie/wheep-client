@@ -11,4 +11,7 @@ abstract class InjectorModule {
     @ContributesAndroidInjector
     abstract fun contributeMessageActivityInjector(): MessageActivity?
 
+    @ContributesAndroidInjector
+    abstract fun contributeSettingsActivityInjector(): SettingsActivity?
+
 }
