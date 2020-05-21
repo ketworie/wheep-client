@@ -1,6 +1,5 @@
 package com.ketworie.wheep.client
 
-import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
@@ -10,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.postDelayed
 import com.google.android.material.snackbar.Snackbar
 import com.ketworie.wheep.client.chat.AuthInterceptor
@@ -137,7 +137,7 @@ class SignInActivity : AppCompatActivity() {
         authInterceptor.token = token
         startActivity(
             Intent(this, MessageActivity::class.java)
-            , ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
+            , ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
         )
     }
 

@@ -14,8 +14,11 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".HubActivity"
+            android:theme="@style/AppTheme.NoTitle" />
+        <activity
             android:name=".SettingsActivity"
-            android:theme="@style/AppTheme.ActionBar" />
+            android:theme="@style/AppTheme.NoTitle.GreyStatusBar" />
         <activity
             android:name=".MessageActivity"
             android:theme="@style/AppTheme.NoTitle" />

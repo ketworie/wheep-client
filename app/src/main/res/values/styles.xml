@@ -10,27 +10,21 @@
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowContentTransitions">true</item>
 
-        <!-- specify enter and exit transitions -->
-        <item name="android:windowEnterTransition">@android:transition/slide_right</item>
-        <item name="android:windowExitTransition">@android:transition/slide_left</item>
+        <item name="android:windowEnterTransition">@android:transition/fade</item>
+        <item name="android:windowExitTransition">@android:transition/fade</item>
 
-        <!-- specify shared element transitions -->
-        <item name="android:windowSharedElementEnterTransition">
-            @transition/element_transform
-        </item>
-        <item name="android:windowSharedElementExitTransition">
-            @transition/element_transform
-        </item>
-
-
+        <item name="android:windowBackground">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.NoTitle">
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.NoTitle.GreyStatusBar">
+        <item name="android:statusBarColor">#B8B8B8</item>
+    </style>
+
     <style name="AppTheme.NoTitle.Launcher">
-        <item name="android:windowBackground">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.ActionBar">

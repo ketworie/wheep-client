@@ -1,5 +1,6 @@
 package com.ketworie.wheep.client.hub
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.ketworie.wheep.client.chat.ChatService
@@ -12,15 +13,10 @@ class HubDao @Inject constructor() {
     @Inject
     lateinit var chatService: ChatService
 
-    private var myHubs: List<Hub>? = null
-
-    fun getMyHubs(): LiveData<List<Hub>> {
-        return liveData {
-            myHubs?.let {
-                emit(it)
-                return@liveData
-            }
-            myHubs = chatService.getMyHubs().also { emit(it) }
+    val myHubs: LiveData<List<Hub>> by lazy {
+        liveData {
+            Log.i("text", "hubs performed")
+            emit(chatService.getMyHubs())
         }
     }
 }

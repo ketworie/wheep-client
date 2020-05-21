@@ -11,15 +11,9 @@ class UserDao @Inject constructor() {
     @Inject
     lateinit var chatService: ChatService
 
-    private var me: User? = null
-
-    fun getMe(): LiveData<User> {
-        return liveData {
-            me?.let {
-                emit(it)
-                return@liveData
-            }
-            me = chatService.getMe().also { emit(it) }
-        }
+    val me: LiveData<User> by lazy {
+        liveData { emit(chatService.getMe()) }
     }
+
+
 }
