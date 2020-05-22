@@ -16,7 +16,7 @@ class HubAdapter : ListAdapter<Hub, HubViewHolder>(UserDefaultDiff) {
         }
 
         override fun areContentsTheSame(oldItem: Hub, newItem: Hub): Boolean {
-            return oldItem.name == newItem.name && oldItem.lastMessage?.id == newItem.lastMessage?.id
+            return oldItem.name == newItem.name && oldItem.lastMessage?.date == newItem.lastMessage?.date
         }
 
     }
@@ -29,7 +29,7 @@ class HubAdapter : ListAdapter<Hub, HubViewHolder>(UserDefaultDiff) {
     }
 
     override fun onBindViewHolder(holder: HubViewHolder, position: Int) {
-        val (_, name, image, _, lastMessage) = getItem(position)
+        val (_, name, image, _, _, lastMessage) = getItem(position)
         holder.header.text = name
         holder.lastMessage.text = lastMessage?.text ?: "No messages"
         Glide

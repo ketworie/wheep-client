@@ -1,7 +1,8 @@
-package com.ketworie.wheep.client
+package com.ketworie.wheep.client.hub.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.ketworie.wheep.client.R
 
 class HubActivity : AppCompatActivity() {
 

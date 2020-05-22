@@ -11,7 +11,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.ketworie.wheep.client.MainApplication.Companion.IMAGE_URL_KEY
 import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
-import com.ketworie.wheep.client.user.UserDao
+import com.ketworie.wheep.client.user.UserService
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_settings.*
 import javax.inject.Inject
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class SettingsActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var userDao: UserDao
+    lateinit var userService: UserService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -27,12 +27,11 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         val avatarImageUrl = intent.extras?.getString(IMAGE_URL_KEY)
         avatarImageUrl?.also { loadAvatar(it) }
-        userDao.me.observe(
-            this,
-            onChanged = { user ->
-                settingsUserName.text = user.name
-                settingsUserAlias.text = user.alias
-            })
+        userService.getMe().observe(this)
+        { user ->
+            settingsUserName.text = user.name
+            settingsUserAlias.text = user.alias
+        }
     }
 
     private fun loadAvatar(it: String) {

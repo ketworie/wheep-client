@@ -1,19 +1,17 @@
 package com.ketworie.wheep.client.user
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
-import com.ketworie.wheep.client.chat.ChatService
-import javax.inject.Inject
-import javax.inject.Singleton
+import androidx.room.*
 
-@Singleton
-class UserDao @Inject constructor() {
-    @Inject
-    lateinit var chatService: ChatService
+@Dao
+interface UserDao {
 
-    val me: LiveData<User> by lazy {
-        liveData { emit(chatService.getMe()) }
-    }
+    @Query("SELECT * FROM User WHERE id = :id")
+    fun get(id: String): LiveData<User>
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrUpdate(user: User)
 
+    @Delete
+    suspend fun delete(user: User)
 }

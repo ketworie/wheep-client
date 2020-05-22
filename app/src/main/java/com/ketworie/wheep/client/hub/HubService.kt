@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class HubDao @Inject constructor() {
+class HubService @Inject constructor() {
 
     @Inject
     lateinit var chatService: ChatService

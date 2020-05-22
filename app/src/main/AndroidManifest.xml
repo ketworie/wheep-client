@@ -14,13 +14,13 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".HubActivity"
+            android:name=".hub.activity.HubActivity"
             android:theme="@style/AppTheme.NoTitle" />
         <activity
             android:name=".SettingsActivity"
             android:theme="@style/AppTheme.NoTitle.GreyStatusBar" />
         <activity
-            android:name=".MessageActivity"
+            android:name=".hub.activity.HubListActivity"
             android:theme="@style/AppTheme.NoTitle" />
         <activity
             android:name=".SignInActivity"

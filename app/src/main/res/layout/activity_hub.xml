@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".HubActivity">
+    tools:context=".hub.activity.HubActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/hubToolbar"
@@ -30,8 +30,9 @@
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:ellipsize="end"
+                android:gravity="center"
                 android:text="Hub name" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.Toolbar>

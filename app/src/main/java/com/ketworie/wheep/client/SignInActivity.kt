@@ -12,8 +12,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.postDelayed
 import com.google.android.material.snackbar.Snackbar
-import com.ketworie.wheep.client.chat.AuthInterceptor
-import com.ketworie.wheep.client.chat.SecurityService
+import com.ketworie.wheep.client.hub.activity.HubListActivity
+import com.ketworie.wheep.client.security.AuthInterceptor
+import com.ketworie.wheep.client.security.SecurityService
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -136,7 +137,7 @@ class SignInActivity : AppCompatActivity() {
     private fun startChat(token: String) {
         authInterceptor.token = token
         startActivity(
-            Intent(this, MessageActivity::class.java)
+            Intent(this, HubListActivity::class.java)
             , ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
         )
     }

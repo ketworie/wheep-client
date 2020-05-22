@@ -1,6 +1,8 @@
 package com.ketworie.wheep.client
 
 import android.app.Application
+import com.ketworie.wheep.client.dagger.DaggerMainApplicationComponent
+import com.ketworie.wheep.client.dagger.DataModule
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -21,7 +23,11 @@ class MainApplication : Application(), HasAndroidInjector {
 
     override fun onCreate() {
         super.onCreate()
-        DaggerMainApplicationComponent.create().inject(this)
+        DaggerMainApplicationComponent
+            .builder()
+            .dataModule(DataModule(this))
+            .build()
+            .inject(this)
     }
 
     override fun androidInjector(): AndroidInjector<Any> {

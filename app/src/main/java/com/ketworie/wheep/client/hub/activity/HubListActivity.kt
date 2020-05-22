@@ -1,4 +1,4 @@
-package com.ketworie.wheep.client
+package com.ketworie.wheep.client.hub.activity
 
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -7,40 +7,42 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ketworie.wheep.client.MainApplication.Companion.IMAGE_URL_KEY
 import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
+import com.ketworie.wheep.client.R
+import com.ketworie.wheep.client.SettingsActivity
+import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.hub.HubAdapter
-import com.ketworie.wheep.client.hub.HubDao
-import com.ketworie.wheep.client.user.UserDao
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_message.*
+import kotlinx.android.synthetic.main.activity_hub_list.*
 import javax.inject.Inject
 
-class MessageActivity : AppCompatActivity() {
+class HubListActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var hubDao: HubDao
-
-    @Inject
-    lateinit var userDao: UserDao
     private var avatarImageResource: String? = null
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    lateinit var viewModel: HubListActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_message)
+        setContentView(R.layout.activity_hub_list)
         setSupportActionBar(messageToolbar)
+        viewModel = ViewModelProvider(this, viewModelFactory).get()
         createAvatarImage()
         val hubAdapter = HubAdapter()
         findViewById<RecyclerView>(R.id.hubList).apply {
-            layoutManager = LinearLayoutManager(this@MessageActivity)
+            layoutManager = LinearLayoutManager(this@HubListActivity)
             adapter = hubAdapter
         }
-        hubDao.myHubs.observe(this, onChanged = { list -> hubAdapter.submitList(list) })
     }
 
     override fun onBackPressed() {
@@ -48,10 +50,13 @@ class MessageActivity : AppCompatActivity() {
     }
 
     private fun createAvatarImage() {
-        val bitmap = BitmapFactory.decodeResource(resources, R.raw.icon)
+        val bitmap = BitmapFactory.decodeResource(
+            resources,
+            R.raw.icon
+        )
         val roundedBitmap = RoundedBitmapDrawableFactory.create(resources, bitmap)
         roundedBitmap.isCircular = true
-        userDao.me.observe(this@MessageActivity) {
+        viewModel.me.observe(this) {
             val resourceUrl = it.image
             avatarImageResource = resourceUrl
             Glide.with(this)

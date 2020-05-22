@@ -1,4 +1,4 @@
-package com.ketworie.wheep.client.chat
+package com.ketworie.wheep.client.security
 
 import com.ketworie.wheep.client.MainApplication
 import okhttp3.Interceptor

@@ -1,13 +1,13 @@
 package com.ketworie.wheep.client.hub
 
-import com.ketworie.wheep.client.user.User
+import androidx.room.Entity
 import java.time.ZonedDateTime
 
+@Entity
 data class Message(
     val id: String,
-    val user: User,
-    val hub: Hub,
+    val userId: String,
+    val hubId: String,
     val text: String,
     val time: ZonedDateTime
-) {
-}
+)

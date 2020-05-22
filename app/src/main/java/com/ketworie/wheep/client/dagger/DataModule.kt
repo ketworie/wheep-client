@@ -1,7 +1,13 @@
-package com.ketworie.wheep.client.chat
+package com.ketworie.wheep.client.dagger
 
+import android.app.Application
+import androidx.room.Room
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.ketworie.wheep.client.MainApplication.Companion.SERVER_BASE
+import com.ketworie.wheep.client.chat.ChatService
+import com.ketworie.wheep.client.room.Database
+import com.ketworie.wheep.client.security.AuthInterceptor
+import com.ketworie.wheep.client.user.UserDao
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -11,7 +17,7 @@ import javax.inject.Singleton
 
 
 @Module
-class RetrofitModule {
+class DataModule(private val application: Application) {
 
     @Provides
     @Singleton
@@ -25,6 +31,18 @@ class RetrofitModule {
             .addConverterFactory(JacksonConverterFactory.create(jacksonObjectMapper()))
             .build()
         return retrofit.create(ChatService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatabase(): Database {
+        return Room.databaseBuilder(application, Database::class.java, "wheep").build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserDao(db: Database): UserDao {
+        return db.userDao()
     }
 
 }
