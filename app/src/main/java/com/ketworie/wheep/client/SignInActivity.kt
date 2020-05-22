@@ -1,5 +1,6 @@
 package com.ketworie.wheep.client
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
@@ -23,7 +24,7 @@ import javax.inject.Inject
 
 class SignInActivity : AppCompatActivity() {
 
-    private var token = "5ec3f20fba903f0cce3ec2da"
+    private var token = ""
 
     private lateinit var appNameView: TextView
     private lateinit var loginView: EditText
@@ -41,6 +42,8 @@ class SignInActivity : AppCompatActivity() {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
+
+        retrieveToken()
 
         appNameView = findViewById(R.id.appNameText)
         loginView = findViewById(R.id.loginText)
@@ -60,6 +63,17 @@ class SignInActivity : AppCompatActivity() {
         }
 
     }
+
+    private fun retrieveToken() {
+        token = getPreferences(Context.MODE_PRIVATE).getString(MainApplication.X_AUTH_TOKEN, "")
+            .orEmpty()
+    }
+
+    private fun persistToken(token: String) {
+        getPreferences(Context.MODE_PRIVATE).edit().putString(MainApplication.X_AUTH_TOKEN, token)
+            .apply()
+    }
+
 
     private fun toLoggedState() {
         appNameView.y = resources.displayMetrics.heightPixels.toFloat() * 0.3f
@@ -99,7 +113,7 @@ class SignInActivity : AppCompatActivity() {
             try {
                 token =
                     securityService.login(loginView.text.toString(), passwordView.text.toString())
-                startChat(token)
+                runOnUiThread { startChat(token) }
             } catch (e: Exception) {
                 Snackbar
                     .make(appNameView, e.message!!, Snackbar.LENGTH_SHORT)
@@ -135,13 +149,13 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun startChat(token: String) {
+        persistToken(token)
         authInterceptor.token = token
         startActivity(
             Intent(this, HubListActivity::class.java)
             , ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
         )
     }
-
 
     private fun hasValidInput(): Boolean {
         if (loginView.text.isNullOrBlank()) {
