@@ -1,8 +1,11 @@
 package com.ketworie.wheep.client.user
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.ketworie.wheep.client.chat.ChatService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,9 +21,11 @@ class UserService @Inject constructor() {
     fun getMe(): LiveData<User> {
         return liveData {
             if (!::userId.isInitialized) {
-                val me = chatService.getMe()
+                Log.i("Service", "Before getMe")
+                val me = withContext(Dispatchers.IO) { chatService.getMe() }
+                Log.i("Service", "After getMe")
                 userId = me.id
-                userDao.insertOrUpdate(me)
+                userDao.save(me)
             }
             emitSource(userDao.get(userId))
         }

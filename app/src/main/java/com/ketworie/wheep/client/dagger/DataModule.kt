@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.ketworie.wheep.client.MainApplication.Companion.SERVER_BASE
 import com.ketworie.wheep.client.chat.ChatService
+import com.ketworie.wheep.client.hub.HubDao
 import com.ketworie.wheep.client.room.Database
 import com.ketworie.wheep.client.security.AuthInterceptor
 import com.ketworie.wheep.client.user.UserDao
@@ -43,6 +44,12 @@ class DataModule(private val application: Application) {
     @Singleton
     fun provideUserDao(db: Database): UserDao {
         return db.userDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providesHubDao(db: Database): HubDao {
+        return db.hubDao()
     }
 
 }

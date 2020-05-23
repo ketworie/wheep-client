@@ -43,6 +43,9 @@ class HubListActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@HubListActivity)
             adapter = hubAdapter
         }
+        viewModel.hubs.observe(this) {
+            hubAdapter.submitList(it)
+        }
     }
 
     override fun onBackPressed() {
@@ -56,14 +59,15 @@ class HubListActivity : AppCompatActivity() {
         )
         val roundedBitmap = RoundedBitmapDrawableFactory.create(resources, bitmap)
         roundedBitmap.isCircular = true
+        avatarImageView.setImageDrawable(roundedBitmap)
         viewModel.me.observe(this) {
             val resourceUrl = it.image
             avatarImageResource = resourceUrl
-            Glide.with(this)
+            Glide.with(this@HubListActivity)
                 .asBitmap()
-                .placeholder(roundedBitmap)
-                .load(RESOURCE_BASE + resourceUrl)
+//                .placeholder(roundedBitmap)
                 .circleCrop()
+                .load(RESOURCE_BASE + resourceUrl)
                 .into(avatarImageView)
         }
     }

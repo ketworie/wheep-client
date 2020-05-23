@@ -17,7 +17,7 @@ class SecurityService @Inject constructor() {
             throw RuntimeException("Network error")
         }
         if (!response.isSuccessful)
-            throw RuntimeException("Login failed")
+            throw RuntimeException("Wrong login or password")
         return response.headers().get(MainApplication.X_AUTH_TOKEN)!!
     }
 }
