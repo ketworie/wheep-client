@@ -17,4 +17,7 @@ interface HubDao {
 
     @Delete
     suspend fun delete(hub: Hub)
+
+    @Query("DELETE FROM Hub")
+    suspend fun deleteAll()
 }

@@ -59,7 +59,9 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    def lifecycle_ktx_version = "2.2.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_ktx_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_ktx_version"
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation 'androidx.paging:paging-runtime-ktx:2.1.2'
     def room_version = "2.2.5"

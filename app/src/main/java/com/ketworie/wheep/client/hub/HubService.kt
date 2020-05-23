@@ -1,9 +1,8 @@
 package com.ketworie.wheep.client.hub
 
+import android.util.Log
 import androidx.paging.DataSource
 import com.ketworie.wheep.client.chat.ChatService
-import kotlinx.coroutines.runBlocking
-import retrofit2.Call
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,11 +19,13 @@ class HubService @Inject constructor() {
         return hubDao.getRecent()
     }
 
-    fun getMyHubs(): Call<List<Hub>> {
-        return chatService.getMyHubs()
-    }
-
-    fun saveListBlocking(hubs: List<Hub>) = runBlocking {
-        hubDao.saveList(hubs)
+    suspend fun refresh() {
+        try {
+            val myHubs = chatService.getMyHubs()
+            hubDao.deleteAll()
+            hubDao.saveList(myHubs)
+        } catch (e: Exception) {
+            Log.e("HubService", "Error during hub refresh", e)
+        }
     }
 }

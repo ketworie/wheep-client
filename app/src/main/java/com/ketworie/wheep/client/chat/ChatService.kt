@@ -2,7 +2,6 @@ package com.ketworie.wheep.client.chat
 
 import com.ketworie.wheep.client.hub.Hub
 import com.ketworie.wheep.client.user.User
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -22,6 +21,6 @@ interface ChatService {
     suspend fun getMe(): User
 
     @GET("/user/me/hubs")
-    fun getMyHubs(): Call<List<Hub>>
+    suspend fun getMyHubs(): List<Hub>
 
 }

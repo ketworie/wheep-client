@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ketworie.wheep.client.MainApplication.Companion.IMAGE_URL_KEY
+import com.ketworie.wheep.client.MainApplication.Companion.IS_NEW_SESSION
 import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.SettingsActivity
@@ -46,6 +47,8 @@ class HubListActivity : AppCompatActivity() {
         viewModel.hubs.observe(this) {
             hubAdapter.submitList(it)
         }
+        if (intent.extras?.getBoolean(IS_NEW_SESSION) == true)
+            viewModel.refreshHubs()
     }
 
     override fun onBackPressed() {
@@ -65,7 +68,7 @@ class HubListActivity : AppCompatActivity() {
             avatarImageResource = resourceUrl
             Glide.with(this@HubListActivity)
                 .asBitmap()
-//                .placeholder(roundedBitmap)
+                .placeholder(roundedBitmap)
                 .circleCrop()
                 .load(RESOURCE_BASE + resourceUrl)
                 .into(avatarImageView)

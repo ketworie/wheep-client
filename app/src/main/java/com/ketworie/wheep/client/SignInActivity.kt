@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.postDelayed
 import com.google.android.material.snackbar.Snackbar
+import com.ketworie.wheep.client.MainApplication.Companion.IS_NEW_SESSION
 import com.ketworie.wheep.client.hub.activity.HubListActivity
 import com.ketworie.wheep.client.security.AuthInterceptor
 import com.ketworie.wheep.client.security.SecurityService
@@ -23,8 +24,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SignInActivity : AppCompatActivity() {
-
-    private var token = ""
 
     private lateinit var appNameView: TextView
     private lateinit var loginView: EditText
@@ -42,8 +41,6 @@ class SignInActivity : AppCompatActivity() {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
-
-        retrieveToken()
 
         appNameView = findViewById(R.id.appNameText)
         loginView = findViewById(R.id.loginText)
@@ -64,8 +61,8 @@ class SignInActivity : AppCompatActivity() {
 
     }
 
-    private fun retrieveToken() {
-        token = getPreferences(Context.MODE_PRIVATE).getString(MainApplication.X_AUTH_TOKEN, "")
+    private fun retrieveToken(): String {
+        return getPreferences(Context.MODE_PRIVATE).getString(MainApplication.X_AUTH_TOKEN, "")
             .orEmpty()
     }
 
@@ -83,8 +80,9 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun checkToken() {
+        val token = retrieveToken()
         if (token.isNotEmpty()) {
-            startChat(token)
+            startChat(token, false)
             return
         }
         toUnLoggedState()
@@ -111,9 +109,9 @@ class SignInActivity : AppCompatActivity() {
         lockSignInButton()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                token =
+                val token =
                     securityService.login(loginView.text.toString(), passwordView.text.toString())
-                runOnUiThread { startChat(token) }
+                runOnUiThread { startChat(token, true) }
             } catch (e: Exception) {
                 Snackbar
                     .make(appNameView, e.message!!, Snackbar.LENGTH_SHORT)
@@ -148,11 +146,11 @@ class SignInActivity : AppCompatActivity() {
         )
     }
 
-    private fun startChat(token: String) {
+    private fun startChat(token: String, isNewSession: Boolean) {
         persistToken(token)
         authInterceptor.token = token
         startActivity(
-            Intent(this, HubListActivity::class.java)
+            Intent(this, HubListActivity::class.java).putExtra(IS_NEW_SESSION, isNewSession)
             , ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
         )
     }
