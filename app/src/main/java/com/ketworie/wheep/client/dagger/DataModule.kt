@@ -22,13 +22,18 @@ class DataModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun provideChatService(authInterceptor: AuthInterceptor): ChatService {
-        val httpClient = OkHttpClient.Builder()
+    fun provideHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
+        return OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatService(client: OkHttpClient): ChatService {
         val retrofit = Retrofit.Builder()
             .baseUrl(SERVER_BASE)
-            .client(httpClient)
+            .client(client)
             .addConverterFactory(JacksonConverterFactory.create(jacksonObjectMapper()))
             .build()
         return retrofit.create(ChatService::class.java)

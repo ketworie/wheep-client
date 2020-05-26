@@ -8,6 +8,7 @@ data class Message(
     val id: String,
     val userId: String,
     val hubId: String,
+    val subId: Int,
     val text: String,
     val time: ZonedDateTime
 )
