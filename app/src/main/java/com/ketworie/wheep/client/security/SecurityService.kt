@@ -3,7 +3,9 @@ package com.ketworie.wheep.client.security
 import com.ketworie.wheep.client.MainApplication
 import com.ketworie.wheep.client.chat.ChatService
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SecurityService @Inject constructor() {
 
     @Inject

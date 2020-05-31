@@ -168,4 +168,12 @@ class SignInActivity : AppCompatActivity() {
         }
         return true
     }
+
+    override fun onStop() {
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
 }
