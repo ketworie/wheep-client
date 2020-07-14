@@ -18,18 +18,13 @@ import com.ketworie.wheep.client.hub.activity.HubListActivity
 import com.ketworie.wheep.client.security.AuthInterceptor
 import com.ketworie.wheep.client.security.SecurityService
 import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SignInActivity : AppCompatActivity() {
-
-    private lateinit var appNameView: TextView
-    private lateinit var loginView: EditText
-    private lateinit var passwordView: EditText
-    private lateinit var signInButton: Button
-    private lateinit var rootLayout: ConstraintLayout
 
     @Inject
     lateinit var securityService: SecurityService
@@ -42,16 +37,11 @@ class SignInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
-        appNameView = findViewById(R.id.appNameText)
-        loginView = findViewById(R.id.loginText)
-        passwordView = findViewById(R.id.passwordText)
-        signInButton = findViewById(R.id.signInButton)
-        rootLayout = findViewById(R.id.signInRootLayout)
         toLoggedState()
-        appNameView.postDelayed(200) { checkToken() }
+        appName.postDelayed(200) { checkToken() }
 
 
-        findViewById<EditText>(R.id.passwordText).setOnEditorActionListener { _, actionId, _ ->
+        findViewById<EditText>(R.id.password).setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 processSignIn()
                 return@setOnEditorActionListener true
@@ -73,27 +63,27 @@ class SignInActivity : AppCompatActivity() {
 
 
     private fun toLoggedState() {
-        appNameView.y = resources.displayMetrics.heightPixels.toFloat() * 0.3f
-        loginView.alpha = 0f
-        passwordView.alpha = 0f
+        appName.y = resources.displayMetrics.heightPixels.toFloat() * 0.3f
+        login.alpha = 0f
+        password.alpha = 0f
         signInButton.alpha = 0f
     }
 
     private fun checkToken() {
         val token = retrieveToken()
         if (token.isNotEmpty()) {
-            startChat(token, false)
+            startHubList(token, false)
             return
         }
         toUnLoggedState()
     }
 
     private fun toUnLoggedState() {
-        appNameView.animate().y(resources.displayMetrics.heightPixels.toFloat() * 0.18f)
+        appName.animate().y(resources.displayMetrics.heightPixels.toFloat() * 0.18f)
             .setDuration(500)
             .withEndAction {
-                loginView.animate().alpha(1f).start()
-                passwordView.animate().alpha(1f).start()
+                login.animate().alpha(1f).start()
+                password.animate().alpha(1f).start()
                 signInButton.animate().alpha(1f).start()
             }
             .start()
@@ -110,11 +100,11 @@ class SignInActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val token =
-                    securityService.login(loginView.text.toString(), passwordView.text.toString())
-                runOnUiThread { startChat(token, true) }
+                    securityService.login(login.text.toString(), password.text.toString())
+                runOnUiThread { startHubList(token, true) }
             } catch (e: Exception) {
                 Snackbar
-                    .make(appNameView, e.message!!, Snackbar.LENGTH_SHORT)
+                    .make(appName, e.message!!, Snackbar.LENGTH_SHORT)
                     .setBackgroundTint(
                         resources.getColor(
                             R.color.design_default_color_error,
@@ -146,7 +136,7 @@ class SignInActivity : AppCompatActivity() {
         )
     }
 
-    private fun startChat(token: String, isNewSession: Boolean) {
+    private fun startHubList(token: String, isNewSession: Boolean) {
         persistToken(token)
         authInterceptor.token = token
         startActivity(
@@ -156,24 +146,16 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun hasValidInput(): Boolean {
-        if (loginView.text.isNullOrBlank()) {
-            loginView.requestFocus()
-            loginView.error = resources.getString(R.string.login_empty)
+        if (login.text.isNullOrBlank()) {
+            login.requestFocus()
+            login.error = resources.getString(R.string.login_empty)
             return false
         }
-        if (passwordView.text.isNullOrBlank()) {
-            passwordView.requestFocus()
-            passwordView.error = resources.getString(R.string.password_empty)
+        if (password.text.isNullOrBlank()) {
+            password.requestFocus()
+            password.error = resources.getString(R.string.password_empty)
             return false
         }
         return true
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }

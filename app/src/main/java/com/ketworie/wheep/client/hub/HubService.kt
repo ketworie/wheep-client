@@ -1,6 +1,7 @@
 package com.ketworie.wheep.client.hub
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import com.ketworie.wheep.client.chat.ChatService
 import javax.inject.Inject
@@ -17,6 +18,10 @@ class HubService @Inject constructor() {
 
     fun getRecent(): DataSource.Factory<Int, Hub> {
         return hubDao.getRecent()
+    }
+
+    fun get(id: String): LiveData<Hub> {
+        return hubDao.get(id)
     }
 
     suspend fun refresh() {

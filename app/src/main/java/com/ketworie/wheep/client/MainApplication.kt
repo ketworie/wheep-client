@@ -16,6 +16,7 @@ class MainApplication : Application(), HasAndroidInjector {
         const val RESOURCE_BASE = "$SERVER_BASE/wayne/"
         const val IMAGE_URL_KEY = "image_url"
         const val IS_NEW_SESSION = "isNewSession"
+        const val HUB_ID = "hubId"
     }
 
     @Inject

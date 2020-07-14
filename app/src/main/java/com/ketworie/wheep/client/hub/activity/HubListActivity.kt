@@ -7,21 +7,24 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.util.Pair
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.ketworie.wheep.client.MainApplication.Companion.HUB_ID
 import com.ketworie.wheep.client.MainApplication.Companion.IMAGE_URL_KEY
 import com.ketworie.wheep.client.MainApplication.Companion.IS_NEW_SESSION
 import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.SettingsActivity
 import com.ketworie.wheep.client.ViewModelFactory
-import com.ketworie.wheep.client.hub.HubAdapter
+import com.ketworie.wheep.client.chat.ChatActivity
+import com.ketworie.wheep.client.hub.Hub
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_hub_list.*
+import kotlinx.android.synthetic.main.hub_list_item.view.*
 import javax.inject.Inject
 
 class HubListActivity : AppCompatActivity() {
@@ -40,7 +43,8 @@ class HubListActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, viewModelFactory).get()
         createAvatarImage()
         val hubAdapter = HubAdapter()
-        findViewById<RecyclerView>(R.id.hubList).apply {
+        hubAdapter.onItemClick = this::startChat
+        hubList.apply {
             layoutManager = LinearLayoutManager(this@HubListActivity)
             adapter = hubAdapter
         }
@@ -55,6 +59,15 @@ class HubListActivity : AppCompatActivity() {
         moveTaskToBack(true)
     }
 
+    private fun startChat(view: View, hub: Hub) {
+        val avatarElement: Pair<View, String> = Pair(view.avatar, "avatar_${hub.id}")
+        val headerElement: Pair<View, String> = Pair(view.header, "text_${hub.id}")
+        startActivity(
+            Intent(this, ChatActivity::class.java).putExtra(HUB_ID, hub.id)
+            , ActivityOptionsCompat.makeSceneTransitionAnimation(this, avatarElement, headerElement).toBundle()
+        )
+    }
+
     private fun createAvatarImage() {
         val bitmap = BitmapFactory.decodeResource(
             resources,
@@ -62,7 +75,7 @@ class HubListActivity : AppCompatActivity() {
         )
         val roundedBitmap = RoundedBitmapDrawableFactory.create(resources, bitmap)
         roundedBitmap.isCircular = true
-        avatarImageView.setImageDrawable(roundedBitmap)
+        avatar.setImageDrawable(roundedBitmap)
         viewModel.me.observe(this) {
             val resourceUrl = it.image
             avatarImageResource = resourceUrl
@@ -71,7 +84,7 @@ class HubListActivity : AppCompatActivity() {
                 .placeholder(roundedBitmap)
                 .circleCrop()
                 .load(RESOURCE_BASE + resourceUrl)
-                .into(avatarImageView)
+                .into(avatar)
         }
     }
 
@@ -84,7 +97,7 @@ class HubListActivity : AppCompatActivity() {
             intent,
             ActivityOptionsCompat.makeSceneTransitionAnimation(
                 this,
-                avatarImageView,
+                avatar,
                 resources.getString(R.string.user_avatar_transition_key)
             )
                 .toBundle()

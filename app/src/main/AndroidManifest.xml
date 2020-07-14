@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".hub.activity.HubActivity"
+            android:name=".chat.ChatActivity"
             android:theme="@style/AppTheme.NoTitle" />
         <activity
             android:name=".SettingsActivity"

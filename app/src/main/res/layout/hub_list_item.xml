@@ -11,7 +11,7 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:id="@+id/hubAvatarView"
+        android:id="@+id/avatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="10dp"
@@ -24,8 +24,8 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/hubHeaderText"
-            android:layout_width="match_parent"
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:lines="1"
@@ -33,8 +33,8 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/hubLastMessageText"
-            android:layout_width="match_parent"
+            android:id="@+id/lastMessage"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:ellipsize="end"

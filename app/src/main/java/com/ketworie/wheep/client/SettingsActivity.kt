@@ -29,8 +29,8 @@ class SettingsActivity : AppCompatActivity() {
         avatarImageUrl?.also { loadAvatar(it) }
         userService.getMe().observe(this)
         { user ->
-            settingsUserName.text = user.name
-            settingsUserAlias.text = user.alias
+            userName.text = user.name
+            userAlias.text = user.alias
         }
     }
 
@@ -62,6 +62,6 @@ class SettingsActivity : AppCompatActivity() {
                 }
             })
             .load(RESOURCE_BASE + it)
-            .into(settingsAvatarView)
+            .into(avatar)
     }
 }

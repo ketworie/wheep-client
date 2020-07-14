@@ -2,6 +2,7 @@ package com.ketworie.wheep.client.dagger
 
 import android.app.Application
 import androidx.room.Room
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.ketworie.wheep.client.MainApplication.Companion.SERVER_BASE
 import com.ketworie.wheep.client.chat.ChatService
@@ -34,7 +35,7 @@ class DataModule(private val application: Application) {
         val retrofit = Retrofit.Builder()
             .baseUrl(SERVER_BASE)
             .client(client)
-            .addConverterFactory(JacksonConverterFactory.create(jacksonObjectMapper()))
+            .addConverterFactory(JacksonConverterFactory.create(jacksonObjectMapper().registerModule(JavaTimeModule())))
             .build()
         return retrofit.create(ChatService::class.java)
     }

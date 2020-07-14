@@ -1,4 +1,4 @@
-package com.ketworie.wheep.client.hub
+package com.ketworie.wheep.client.chat
 
 import androidx.room.Entity
 import java.time.ZonedDateTime
@@ -8,7 +8,7 @@ data class Message(
     val id: String,
     val userId: String,
     val hubId: String,
-    val subId: Int,
+    val nextId: String,
     val text: String,
-    val time: ZonedDateTime
+    val date: ZonedDateTime
 )
