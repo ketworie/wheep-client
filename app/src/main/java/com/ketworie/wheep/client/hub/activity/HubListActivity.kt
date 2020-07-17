@@ -14,7 +14,6 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.ketworie.wheep.client.MainApplication.Companion.HUB_ID
-import com.ketworie.wheep.client.MainApplication.Companion.IMAGE_URL_KEY
 import com.ketworie.wheep.client.MainApplication.Companion.IS_NEW_SESSION
 import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
 import com.ketworie.wheep.client.R
@@ -28,8 +27,6 @@ import kotlinx.android.synthetic.main.hub_list_item.view.*
 import javax.inject.Inject
 
 class HubListActivity : AppCompatActivity() {
-
-    private var avatarImageResource: String? = null
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -63,8 +60,9 @@ class HubListActivity : AppCompatActivity() {
         val avatarElement: Pair<View, String> = Pair(view.avatar, "avatar_${hub.id}")
         val headerElement: Pair<View, String> = Pair(view.header, "text_${hub.id}")
         startActivity(
-            Intent(this, ChatActivity::class.java).putExtra(HUB_ID, hub.id)
-            , ActivityOptionsCompat.makeSceneTransitionAnimation(this, avatarElement, headerElement).toBundle()
+            Intent(this, ChatActivity::class.java).putExtra(HUB_ID, hub.id),
+            ActivityOptionsCompat.makeSceneTransitionAnimation(this, avatarElement, headerElement)
+                .toBundle()
         )
     }
 
@@ -78,10 +76,12 @@ class HubListActivity : AppCompatActivity() {
         avatar.setImageDrawable(roundedBitmap)
         viewModel.me.observe(this) {
             val resourceUrl = it.image
-            avatarImageResource = resourceUrl
+
+            if (resourceUrl.isEmpty())
+                return@observe
+
             Glide.with(this@HubListActivity)
                 .asBitmap()
-                .placeholder(roundedBitmap)
                 .circleCrop()
                 .load(RESOURCE_BASE + resourceUrl)
                 .into(avatar)
@@ -91,8 +91,6 @@ class HubListActivity : AppCompatActivity() {
 
     fun onSettings(view: View) {
         val intent = Intent(this, SettingsActivity::class.java)
-        if (avatarImageResource != null)
-            intent.putExtra(IMAGE_URL_KEY, avatarImageResource)
         startActivity(
             intent,
             ActivityOptionsCompat.makeSceneTransitionAnimation(

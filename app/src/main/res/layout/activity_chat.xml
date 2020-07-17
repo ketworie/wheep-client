@@ -43,13 +43,14 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="bottom">
+        android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/messageList"
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_weight="0.1"
+            android:background="#FFFFFF" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -58,12 +59,14 @@
 
             <EditText
                 android:id="@+id/messageInput"
+                android:layout_marginStart="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Type here"
                 android:importantForAutofill="no"
                 android:layout_toStartOf="@id/sendButton"
-                android:inputType="textAutoComplete|textAutoCorrect" />
+                android:inputType="textAutoComplete|textAutoCorrect|textMultiLine"
+                android:maxLines="1" />
 
             <Button
                 android:id="@+id/sendButton"

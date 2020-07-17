@@ -3,10 +3,8 @@ package com.ketworie.wheep.client.chat
 import com.ketworie.wheep.client.hub.Hub
 import com.ketworie.wheep.client.user.User
 import retrofit2.Response
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
+import java.time.ZonedDateTime
 
 interface ChatService {
 
@@ -20,7 +18,25 @@ interface ChatService {
     @GET("/user/me")
     suspend fun getMe(): User
 
+    @GET("/user")
+    suspend fun get(@Query("id") id: String): User
+
     @GET("/user/me/hubs")
     suspend fun getMyHubs(): List<Hub>
+
+    @GET("/hub/prev")
+    suspend fun getPreviousMessages(
+        @Query("hub") hubId: String,
+        @Query("date") date: ZonedDateTime
+    ): List<Message>
+
+    @POST("/hub/send")
+    suspend fun sendMessage(@Body message: MessageSend): Message
+
+    @GET("/hub/next")
+    suspend fun getNextMessages(
+        @Query("hub") hubId: String,
+        @Query("date") date: ZonedDateTime
+    ): List<Message>
 
 }

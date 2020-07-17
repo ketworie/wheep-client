@@ -5,15 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.postDelayed
 import com.google.android.material.snackbar.Snackbar
 import com.ketworie.wheep.client.MainApplication.Companion.IS_NEW_SESSION
+import com.ketworie.wheep.client.MainApplication.Companion.PREFERENCES
 import com.ketworie.wheep.client.hub.activity.HubListActivity
 import com.ketworie.wheep.client.security.AuthInterceptor
 import com.ketworie.wheep.client.security.SecurityService
@@ -52,12 +50,16 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun retrieveToken(): String {
-        return getPreferences(Context.MODE_PRIVATE).getString(MainApplication.X_AUTH_TOKEN, "")
+        return getSharedPreferences(
+            PREFERENCES,
+            Context.MODE_PRIVATE
+        ).getString(MainApplication.X_AUTH_TOKEN, "")
             .orEmpty()
     }
 
     private fun persistToken(token: String) {
-        getPreferences(Context.MODE_PRIVATE).edit().putString(MainApplication.X_AUTH_TOKEN, token)
+        getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit()
+            .putString(MainApplication.X_AUTH_TOKEN, token)
             .apply()
     }
 

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.ketworie.wheep.client.MainApplication.Companion.SERVER_BASE
 import com.ketworie.wheep.client.chat.ChatService
+import com.ketworie.wheep.client.chat.MessageDao
 import com.ketworie.wheep.client.hub.HubDao
 import com.ketworie.wheep.client.room.Database
 import com.ketworie.wheep.client.security.AuthInterceptor
@@ -43,7 +44,8 @@ class DataModule(private val application: Application) {
     @Provides
     @Singleton
     fun provideDatabase(): Database {
-        return Room.databaseBuilder(application, Database::class.java, "wheep").build()
+        return Room.databaseBuilder(application, Database::class.java, "wheep")
+            .fallbackToDestructiveMigration().build()
     }
 
     @Provides
@@ -56,6 +58,12 @@ class DataModule(private val application: Application) {
     @Singleton
     fun providesHubDao(db: Database): HubDao {
         return db.hubDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providesMessageDao(db: Database): MessageDao {
+        return db.messageDao()
     }
 
 }

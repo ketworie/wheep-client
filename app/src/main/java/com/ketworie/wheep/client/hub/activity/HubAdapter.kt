@@ -15,12 +15,12 @@ import com.ketworie.wheep.client.hub.Hub
 import kotlinx.android.synthetic.main.hub_list_item.view.*
 
 class HubAdapter : PagedListAdapter<Hub, HubAdapter.HubViewHolder>(
-    UserDefaultDiff
+    HubDefaultDiff
 ) {
 
     var onItemClick: ((View, Hub) -> Unit)? = null
 
-    companion object UserDefaultDiff : DiffUtil.ItemCallback<Hub>() {
+    companion object HubDefaultDiff : DiffUtil.ItemCallback<Hub>() {
         override fun areItemsTheSame(oldItem: Hub, newItem: Hub): Boolean {
             return newItem.id == oldItem.id
         }
@@ -39,8 +39,7 @@ class HubAdapter : PagedListAdapter<Hub, HubAdapter.HubViewHolder>(
     }
 
     override fun onBindViewHolder(holder: HubViewHolder, position: Int) {
-        getItem(position)?.let {
-            val (id, name, image, _, _, _) = it
+        getItem(position)?.apply {
             holder.header.text = name
             // TODO: Show last message
             holder.lastMessage.text = "No messages"

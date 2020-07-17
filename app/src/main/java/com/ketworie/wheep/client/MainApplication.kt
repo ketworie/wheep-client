@@ -12,9 +12,10 @@ import javax.inject.Inject
 class MainApplication : Application(), HasAndroidInjector {
     companion object {
         const val X_AUTH_TOKEN = "X-Auth-Token"
+        const val USER_ID = "userId"
+        const val PREFERENCES = "preferences"
         const val SERVER_BASE = "http://10.0.2.2:8080"
         const val RESOURCE_BASE = "$SERVER_BASE/wayne/"
-        const val IMAGE_URL_KEY = "image_url"
         const val IS_NEW_SESSION = "isNewSession"
         const val HUB_ID = "hubId"
     }
