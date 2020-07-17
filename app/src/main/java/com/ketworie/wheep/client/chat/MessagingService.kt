@@ -17,11 +17,8 @@ class MessagingService @Inject constructor() {
     lateinit var chatService: ChatService
 
     fun getPaged(hubId: String): LiveData<PagedList<Message>> {
-        return messageDao.getRecent(hubId).mapByPage {
-            if (!it.isConsistent())
-                return@mapByPage null
-            it
-        }.toLiveData(10, boundaryCallback = MessageBoundaryCallback(this, hubId))
+        return messageDao.getRecent(hubId)
+            .toLiveData(10, boundaryCallback = MessageBoundaryCallback(this, hubId))
     }
 
     suspend fun loadMessages(hubId: String) {

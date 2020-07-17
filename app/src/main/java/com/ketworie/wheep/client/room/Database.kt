@@ -11,7 +11,7 @@ import com.ketworie.wheep.client.user.User
 import com.ketworie.wheep.client.user.UserDao
 
 @TypeConverters(Converters::class)
-@Database(entities = [User::class, Hub::class, Message::class], version = 2)
+@Database(entities = [User::class, Hub::class, Message::class], version = 3)
 abstract class Database : RoomDatabase() {
     abstract fun userDao(): UserDao
 
