@@ -12,21 +12,23 @@ import com.bumptech.glide.Glide
 import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.hub.Hub
+import com.ketworie.wheep.client.hub.HubMessage
 import kotlinx.android.synthetic.main.hub_list_item.view.*
 
-class HubAdapter : PagedListAdapter<Hub, HubAdapter.HubViewHolder>(
-    HubDefaultDiff
-) {
+class HubAdapter() :
+    PagedListAdapter<HubMessage, HubAdapter.HubViewHolder>(
+        HubDefaultDiff
+    ) {
 
     var onItemClick: ((View, Hub) -> Unit)? = null
 
-    companion object HubDefaultDiff : DiffUtil.ItemCallback<Hub>() {
-        override fun areItemsTheSame(oldItem: Hub, newItem: Hub): Boolean {
-            return newItem.id == oldItem.id
+    companion object HubDefaultDiff : DiffUtil.ItemCallback<HubMessage>() {
+        override fun areItemsTheSame(oldItem: HubMessage, newItem: HubMessage): Boolean {
+            return newItem.hub.id == oldItem.hub.id
         }
 
-        override fun areContentsTheSame(oldItem: Hub, newItem: Hub): Boolean {
-            return oldItem.name == newItem.name && oldItem.lastUpdate == newItem.lastUpdate
+        override fun areContentsTheSame(oldItem: HubMessage, newItem: HubMessage): Boolean {
+            return oldItem.hub.lastUpdate == newItem.hub.lastUpdate
         }
 
     }
@@ -40,19 +42,18 @@ class HubAdapter : PagedListAdapter<Hub, HubAdapter.HubViewHolder>(
 
     override fun onBindViewHolder(holder: HubViewHolder, position: Int) {
         getItem(position)?.apply {
-            holder.header.text = name
+            holder.header.text = hub.name
             // TODO: Show last message
-            holder.lastMessage.text = "No messages"
+            holder.lastMessage.text = message?.text ?: "No messages"
             Glide
                 .with(holder.itemView)
                 .asBitmap()
                 .circleCrop()
-                .load(RESOURCE_BASE + image)
+                .load(RESOURCE_BASE + hub.image)
                 .into(holder.avatar)
-            holder.avatar.transitionName = "avatar_$id"
-            holder.header.transitionName = "text_$id"
+            holder.avatar.transitionName = "avatar_${hub.id}"
+            holder.header.transitionName = "text_${hub.id}"
         }
-
     }
 
     inner class HubViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -62,7 +63,7 @@ class HubAdapter : PagedListAdapter<Hub, HubAdapter.HubViewHolder>(
 
         init {
             view.setOnClickListener {
-                getItem(adapterPosition)?.let { onItemClick?.invoke(view, it) }
+                getItem(adapterPosition)?.let { onItemClick?.invoke(view, it.hub) }
             }
         }
     }

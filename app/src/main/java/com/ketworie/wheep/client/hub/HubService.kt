@@ -16,7 +16,7 @@ class HubService @Inject constructor() {
     @Inject
     lateinit var hubDao: HubDao
 
-    fun getRecent(): DataSource.Factory<Int, Hub> {
+    fun getRecent(): DataSource.Factory<Int, HubMessage> {
         return hubDao.getRecent()
     }
 

@@ -1,11 +1,11 @@
 package com.ketworie.wheep.client.hub
 
-import androidx.room.Ignore
-import java.time.ZonedDateTime
+import androidx.room.Embedded
+import com.ketworie.wheep.client.chat.Message
 
 data class HubMessage(
-    var userName: String,
-    var userImage: String,
-    var text: String,
-    var date: ZonedDateTime
+    @Embedded
+    val hub: Hub,
+    @Embedded(prefix = "m_")
+    val message: Message?
 )

@@ -30,6 +30,7 @@ class HubListActivity : AppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+
     lateinit var viewModel: HubListActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,9 +46,10 @@ class HubListActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@HubListActivity)
             adapter = hubAdapter
         }
-        viewModel.hubs.observe(this) {
+        viewModel.getHubs().observe(this) {
             hubAdapter.submitList(it)
         }
+
         if (intent.extras?.getBoolean(IS_NEW_SESSION) == true)
             viewModel.refreshHubs()
     }
@@ -74,7 +76,7 @@ class HubListActivity : AppCompatActivity() {
         val roundedBitmap = RoundedBitmapDrawableFactory.create(resources, bitmap)
         roundedBitmap.isCircular = true
         avatar.setImageDrawable(roundedBitmap)
-        viewModel.me.observe(this) {
+        viewModel.getMe().observe(this) {
             val resourceUrl = it.image
 
             if (resourceUrl.isEmpty())

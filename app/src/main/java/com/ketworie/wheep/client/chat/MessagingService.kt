@@ -21,6 +21,10 @@ class MessagingService @Inject constructor() {
             .toLiveData(10, boundaryCallback = MessageBoundaryCallback(this, hubId))
     }
 
+    fun getLast(hubId: String): Message? {
+        return messageDao.getLast(hubId)
+    }
+
     suspend fun loadMessages(hubId: String) {
         val messages = chatService.getPreviousMessages(hubId, ZonedDateTime.now())
         messageDao.saveList(messages)
