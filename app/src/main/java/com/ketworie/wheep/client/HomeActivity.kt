@@ -1,4 +1,4 @@
-package com.ketworie.wheep.client.hub.activity
+package com.ketworie.wheep.client
 
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -7,65 +7,42 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.core.util.Pair
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.ketworie.wheep.client.MainApplication.Companion.HUB_ID
-import com.ketworie.wheep.client.MainApplication.Companion.IS_NEW_SESSION
+import com.google.android.material.tabs.TabLayoutMediator
 import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
-import com.ketworie.wheep.client.R
-import com.ketworie.wheep.client.SettingsActivity
-import com.ketworie.wheep.client.ViewModelFactory
-import com.ketworie.wheep.client.chat.ChatActivity
-import com.ketworie.wheep.client.hub.Hub
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_hub_list.*
-import kotlinx.android.synthetic.main.hub_list_item.view.*
+import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
 
-class HubListActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    lateinit var viewModel: HubListActivityViewModel
+    lateinit var viewModel: HomeActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_hub_list)
+        setContentView(R.layout.activity_home)
         setSupportActionBar(messageToolbar)
         viewModel = ViewModelProvider(this, viewModelFactory).get()
         createAvatarImage()
-        val hubAdapter = HubAdapter()
-        hubAdapter.onItemClick = this::startChat
-        hubList.apply {
-            layoutManager = LinearLayoutManager(this@HubListActivity)
-            adapter = hubAdapter
-        }
-        viewModel.getHubs().observe(this) {
-            hubAdapter.submitList(it)
-        }
-
-        if (intent.extras?.getBoolean(IS_NEW_SESSION) == true)
-            viewModel.refreshHubs()
+        homePager.adapter = HomeCollectionAdapter(this)
+        TabLayoutMediator(tabs, homePager) { tab, position ->
+            tab.text = when (position) {
+                0 -> resources.getString(R.string.hubs_tab); else -> resources.getString(R.string.contacts_tab)
+            }
+        }.attach()
     }
+
+
 
     override fun onBackPressed() {
         moveTaskToBack(true)
-    }
-
-    private fun startChat(view: View, hub: Hub) {
-        val avatarElement: Pair<View, String> = Pair(view.avatar, "avatar_${hub.id}")
-        val headerElement: Pair<View, String> = Pair(view.header, "text_${hub.id}")
-        startActivity(
-            Intent(this, ChatActivity::class.java).putExtra(HUB_ID, hub.id),
-            ActivityOptionsCompat.makeSceneTransitionAnimation(this, avatarElement, headerElement)
-                .toBundle()
-        )
     }
 
     private fun createAvatarImage() {
@@ -82,7 +59,7 @@ class HubListActivity : AppCompatActivity() {
             if (resourceUrl.isEmpty())
                 return@observe
 
-            Glide.with(this@HubListActivity)
+            Glide.with(this@HomeActivity)
                 .asBitmap()
                 .circleCrop()
                 .load(RESOURCE_BASE + resourceUrl)

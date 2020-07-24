@@ -37,16 +37,12 @@ class MessageAdapter(private val userId: String) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return (if (getItem(position)?.userId == userId) 0 else 1)
+        return (if (getItem(position)?.userId == userId) R.layout.outgoing_message else R.layout.incoming_message)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        val layoutId = when (viewType) {
-            0 -> R.layout.outgoing_message
-            else -> R.layout.incoming_message
-        }
         val view =
-            LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
+            LayoutInflater.from(parent.context).inflate(viewType, parent, false)
                 ?: throw RuntimeException("Error inflating message item")
         return MessageViewHolder(view)
     }

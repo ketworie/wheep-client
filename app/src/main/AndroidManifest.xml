@@ -20,7 +20,7 @@
             android:name=".SettingsActivity"
             android:theme="@style/AppTheme.NoTitle.GreyStatusBar" />
         <activity
-            android:name=".hub.activity.HubListActivity"
+            android:name=".HomeActivity"
             android:theme="@style/AppTheme.NoTitle" />
         <activity
             android:name=".SignInActivity"

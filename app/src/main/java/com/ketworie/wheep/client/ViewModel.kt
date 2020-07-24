@@ -3,7 +3,7 @@ package com.ketworie.wheep.client
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ketworie.wheep.client.chat.ChatActivityViewModel
-import com.ketworie.wheep.client.hub.activity.HubListActivityViewModel
+import com.ketworie.wheep.client.hub.HubListFragmentViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -39,13 +39,18 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(HubListActivityViewModel::class)
-    internal abstract fun postListViewModel(viewModel: HubListActivityViewModel): ViewModel
+    @ViewModelKey(HomeActivityViewModel::class)
+    internal abstract fun postListViewModel(viewModel: HomeActivityViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(ChatActivityViewModel::class)
     internal abstract fun postChatViewModel(viewModel: ChatActivityViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(HubListFragmentViewModel::class)
+    internal abstract fun postHubListFragmentViewModel(viewModel: HubListFragmentViewModel): ViewModel
 
 
 }

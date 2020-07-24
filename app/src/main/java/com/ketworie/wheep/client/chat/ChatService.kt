@@ -1,6 +1,7 @@
 package com.ketworie.wheep.client.chat
 
 import com.ketworie.wheep.client.hub.Hub
+import com.ketworie.wheep.client.notebook.Contact
 import com.ketworie.wheep.client.user.User
 import retrofit2.Response
 import retrofit2.http.*
@@ -20,6 +21,15 @@ interface ChatService {
 
     @GET("/user")
     suspend fun get(@Query("id") id: String): User
+
+    @GET("/user/contact/list")
+    suspend fun listContacts(): List<Contact>
+
+    @GET("/user/contact/add")
+    suspend fun addContact(@Query("alias") alias: String)
+
+    @GET("/user/contact/remove")
+    suspend fun removeContact(@Query("id") id: String)
 
     @GET("/user/me/hubs")
     suspend fun getMyHubs(): List<Hub>

@@ -1,4 +1,4 @@
-package com.ketworie.wheep.client.hub.activity
+package com.ketworie.wheep.client.hub
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
 import com.ketworie.wheep.client.R
-import com.ketworie.wheep.client.hub.Hub
-import com.ketworie.wheep.client.hub.HubMessage
 import kotlinx.android.synthetic.main.hub_list_item.view.*
 
 class HubAdapter() :
