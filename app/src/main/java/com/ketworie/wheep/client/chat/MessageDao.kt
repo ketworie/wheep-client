@@ -19,7 +19,7 @@ interface MessageDao {
     suspend fun save(m: Message)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveList(hubs: List<Message>)
+    suspend fun saveAll(hubs: List<Message>)
 
     @Query("DELETE FROM Message")
     suspend fun deleteAll()

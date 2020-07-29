@@ -16,7 +16,6 @@ class MainApplication : Application(), HasAndroidInjector {
         const val PREFERENCES = "preferences"
         const val SERVER_BASE = "http://10.0.2.2:8080"
         const val RESOURCE_BASE = "$SERVER_BASE/wayne/"
-        const val IS_NEW_SESSION = "isNewSession"
         const val HUB_ID = "hubId"
     }
 

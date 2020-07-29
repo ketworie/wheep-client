@@ -1,6 +1,5 @@
 package com.ketworie.wheep.client.hub
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import com.ketworie.wheep.client.chat.ChatService
@@ -24,13 +23,13 @@ class HubService @Inject constructor() {
         return hubDao.get(id)
     }
 
-    suspend fun refresh() {
-        try {
-            val myHubs = chatService.getMyHubs()
-            hubDao.deleteAll()
-            hubDao.saveList(myHubs)
-        } catch (e: Exception) {
-            Log.e("HubService", "Error during hub refresh", e)
-        }
+    suspend fun deleteAll() {
+        hubDao.deleteAll()
     }
+
+    suspend fun loadInitial() {
+        val myHubs = chatService.getMyHubs()
+        hubDao.saveAll(myHubs)
+    }
+
 }

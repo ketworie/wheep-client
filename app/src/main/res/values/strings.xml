@@ -13,5 +13,5 @@
     <string name="log_out_sign">Log out</string>
     <string name="hubs_tab">HUBS</string>
     <string name="contacts_tab">CONTACTS</string>
-    <string name="add_contact">ADD CONTACT</string>
+    <string name="add_contact">＋ ADD CONTACT</string>
 </resources>

@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.postDelayed
 import com.google.android.material.snackbar.Snackbar
-import com.ketworie.wheep.client.MainApplication.Companion.IS_NEW_SESSION
 import com.ketworie.wheep.client.MainApplication.Companion.PREFERENCES
 import com.ketworie.wheep.client.security.AuthInterceptor
 import com.ketworie.wheep.client.security.SecurityService
@@ -141,7 +140,7 @@ class SignInActivity : AppCompatActivity() {
         persistToken(token)
         authInterceptor.token = token
         startActivity(
-            Intent(this, HomeActivity::class.java).putExtra(IS_NEW_SESSION, isNewSession)
+            Intent(this, HomeActivity::class.java)
             , ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
         )
     }

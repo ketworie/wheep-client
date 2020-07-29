@@ -15,9 +15,13 @@ import com.bumptech.glide.request.target.Target
 import com.ketworie.wheep.client.MainApplication.Companion.PREFERENCES
 import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
 import com.ketworie.wheep.client.MainApplication.Companion.X_AUTH_TOKEN
+import com.ketworie.wheep.client.hub.HubService
 import com.ketworie.wheep.client.user.UserService
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SettingsActivity : AppCompatActivity() {
@@ -25,14 +29,17 @@ class SettingsActivity : AppCompatActivity() {
     @Inject
     lateinit var userService: UserService
 
+    @Inject
+    lateinit var hubService: HubService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         userService.getMe().observe(this)
         { user ->
-            userName.text = user.name
-            userAlias.text = user.alias
+            name.text = user.name
+            alias.text = user.alias
             loadAvatar(user.image)
         }
         logOut.setOnClickListener {
@@ -42,10 +49,18 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun logOut() {
         getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit().remove(X_AUTH_TOKEN).apply()
-        startActivity(
-            Intent(this, SignInActivity::class.java)
-            , ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
-        )
+        userService.resetUserId()
+        CoroutineScope(Dispatchers.IO).launch {
+            hubService.deleteAll()
+            runOnUiThread {
+                startActivity(
+                    Intent(this@SettingsActivity, SignInActivity::class.java)
+                    ,
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(this@SettingsActivity)
+                        .toBundle()
+                )
+            }
+        }
     }
 
     private fun loadAvatar(it: String) {

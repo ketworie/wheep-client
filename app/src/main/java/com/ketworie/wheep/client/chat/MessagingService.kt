@@ -27,17 +27,17 @@ class MessagingService @Inject constructor() {
 
     suspend fun loadMessages(hubId: String) {
         val messages = chatService.getPreviousMessages(hubId, ZonedDateTime.now())
-        messageDao.saveList(messages)
+        messageDao.saveAll(messages)
     }
 
     suspend fun loadNextMessages(hubId: String, dateTime: ZonedDateTime) {
         val messages = chatService.getNextMessages(hubId, dateTime)
-        messageDao.saveList(messages)
+        messageDao.saveAll(messages)
     }
 
     suspend fun loadPrevMessages(hubId: String, dateTime: ZonedDateTime) {
         val messages = chatService.getPreviousMessages(hubId, dateTime)
-        messageDao.saveList(messages)
+        messageDao.saveAll(messages)
     }
 
     suspend fun sendMessage(message: MessageSend) {

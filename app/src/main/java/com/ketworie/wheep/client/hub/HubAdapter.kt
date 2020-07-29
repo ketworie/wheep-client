@@ -26,7 +26,7 @@ class HubAdapter() :
         }
 
         override fun areContentsTheSame(oldItem: HubMessage, newItem: HubMessage): Boolean {
-            return oldItem.hub.lastUpdate == newItem.hub.lastUpdate
+            return oldItem.hub.lastModified == newItem.hub.lastModified && oldItem.message?.date == newItem.message?.date
         }
 
     }

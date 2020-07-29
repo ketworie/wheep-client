@@ -3,6 +3,7 @@ package com.ketworie.wheep.client.user
 import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.*
+import com.ketworie.wheep.client.notebook.Contact
 
 @Dao
 interface UserDao {
@@ -16,6 +17,19 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(user: User)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveAll(user: List<User>)
+
     @Delete
     suspend fun delete(user: User)
+
+    @Query("SELECT EXISTS(SELECT * FROM User WHERE id = :id)")
+    suspend fun existsById(id: String): Boolean
+
+    @Query("DELETE FROM Contact")
+    suspend fun deleteContacts()
+
+    @Insert
+    suspend fun saveContacts(contacts: List<Contact>)
+
 }

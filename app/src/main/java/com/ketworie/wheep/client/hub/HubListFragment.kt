@@ -13,7 +13,6 @@ import androidx.lifecycle.get
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ketworie.wheep.client.MainApplication
-import com.ketworie.wheep.client.MainApplication.Companion.IS_NEW_SESSION
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.chat.ChatActivity
@@ -49,8 +48,6 @@ class HubListFragment : Fragment() {
         viewModel.getHubs().observe(this.viewLifecycleOwner) {
             hubAdapter.submitList(it)
         }
-        if (arguments?.getBoolean(IS_NEW_SESSION) == true)
-            viewModel.refreshHubs()
     }
 
     private fun startChat(view: View, hub: Hub) {
