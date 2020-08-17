@@ -1,9 +1,12 @@
-package com.ketworie.wheep.client.notebook
+package com.ketworie.wheep.client.contact
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
@@ -33,7 +36,7 @@ class ContactListFragment : Fragment() {
         AndroidSupportInjection.inject(this)
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory).get()
-        val contactAdapter = ContactAdapter()
+        val contactAdapter = ContactAdapter { startContactAdd() }
         contactList?.apply {
             layoutManager = LinearLayoutManager(this@ContactListFragment.activity)
             adapter = contactAdapter
@@ -41,5 +44,17 @@ class ContactListFragment : Fragment() {
         viewModel.getContacts().observe(this.viewLifecycleOwner) {
             contactAdapter.submitList(it)
         }
+    }
+
+    private fun startContactAdd() {
+        Log.i("AAA", "AAAA")
+        startActivity(
+            Intent(this.context, AddContactActivity::class.java)
+            ,
+            this.activity?.parent?.let {
+                ActivityOptionsCompat.makeSceneTransitionAnimation(it)
+                    .toBundle()
+            }
+        )
     }
 }

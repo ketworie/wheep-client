@@ -8,6 +8,7 @@ import com.ketworie.wheep.client.MainApplication.Companion.SERVER_BASE
 import com.ketworie.wheep.client.chat.ChatService
 import com.ketworie.wheep.client.chat.MessageDao
 import com.ketworie.wheep.client.hub.HubDao
+import com.ketworie.wheep.client.network.NetworkResponseAdapterFactory
 import com.ketworie.wheep.client.room.Database
 import com.ketworie.wheep.client.security.AuthInterceptor
 import com.ketworie.wheep.client.user.UserDao
@@ -36,7 +37,14 @@ class DataModule(private val application: Application) {
         val retrofit = Retrofit.Builder()
             .baseUrl(SERVER_BASE)
             .client(client)
-            .addConverterFactory(JacksonConverterFactory.create(jacksonObjectMapper().registerModule(JavaTimeModule())))
+            .addConverterFactory(
+                JacksonConverterFactory.create(
+                    jacksonObjectMapper().registerModule(
+                        JavaTimeModule()
+                    )
+                )
+            )
+            .addCallAdapterFactory(NetworkResponseAdapterFactory())
             .build()
         return retrofit.create(ChatService::class.java)
     }

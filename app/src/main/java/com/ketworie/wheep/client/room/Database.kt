@@ -5,9 +5,9 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.ketworie.wheep.client.chat.Message
 import com.ketworie.wheep.client.chat.MessageDao
+import com.ketworie.wheep.client.contact.Contact
 import com.ketworie.wheep.client.hub.Hub
 import com.ketworie.wheep.client.hub.HubDao
-import com.ketworie.wheep.client.notebook.Contact
 import com.ketworie.wheep.client.user.User
 import com.ketworie.wheep.client.user.UserDao
 

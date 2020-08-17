@@ -18,7 +18,7 @@ import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.chat.ChatActivity
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_hub_list.*
-import kotlinx.android.synthetic.main.hub_list_item.view.*
+import kotlinx.android.synthetic.main.item_hub_list.view.*
 import javax.inject.Inject
 
 class HubListFragment : Fragment() {

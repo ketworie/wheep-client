@@ -1,4 +1,4 @@
-package com.ketworie.wheep.client.notebook
+package com.ketworie.wheep.client.contact
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

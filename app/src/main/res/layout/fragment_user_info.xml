@@ -4,59 +4,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    tools:context=".SettingsActivity">
+    tools:context=".user.UserInfoFragment">
 
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="128dp"
         android:layout_height="128dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:contentDescription="@string/avatar_image_description"
-        android:transitionName="@string/user_avatar_transition_key"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.060000002"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintVertical_bias="0.18"
+        tools:src="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Name"
+        android:gravity="center"
+        android:text="@string/no_user"
+        android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/avatar"
-        app:layout_constraintVertical_bias="0.07999998" />
+        app:layout_constraintVertical_bias="0.08"
+        tools:text="Name" />
 
     <TextView
         android:id="@+id/alias"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/name"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="Alias"
-        app:layout_constraintVertical_bias="0.060000002" />
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        app:layout_constraintVertical_bias="0.06"
+        tools:text="Alias" />
 
     <Button
-        android:id="@+id/logOut"
-        android:background="@drawable/red_border"
+        android:id="@+id/contactManagement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/log_out_sign"
-        android:textColor="@color/design_default_color_error"
+        android:background="@drawable/accent_border"
+        android:padding="10dp"
+        android:text="@string/add_to_contacts"
+        android:textColor="@color/accent"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alias" />
-
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        app:layout_constraintVertical_bias="0.42"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

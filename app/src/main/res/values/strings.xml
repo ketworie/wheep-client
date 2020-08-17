@@ -14,4 +14,10 @@
     <string name="hubs_tab">HUBS</string>
     <string name="contacts_tab">CONTACTS</string>
     <string name="add_contact">＋ ADD CONTACT</string>
+    <string name="alias">Alias</string>
+    <string name="search_button">SEARCH</string>
+    <string name="type_here">Type here</string>
+    <string name="add_to_contacts">ADD CONTACT</string>
+    <string name="remove_from_contacts">REMOVE CONTACT</string>
+    <string name="no_user">No user selected</string>
 </resources>

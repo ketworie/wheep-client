@@ -3,7 +3,7 @@ package com.ketworie.wheep.client.user
 import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.*
-import com.ketworie.wheep.client.notebook.Contact
+import com.ketworie.wheep.client.contact.Contact
 
 @Dao
 interface UserDao {
@@ -31,5 +31,8 @@ interface UserDao {
 
     @Insert
     suspend fun saveContacts(contacts: List<Contact>)
+
+    @Query("SELECT EXISTS(SELECT * FROM Contact WHERE userId = :userId)")
+    fun isContact(userId: String): LiveData<Boolean>
 
 }

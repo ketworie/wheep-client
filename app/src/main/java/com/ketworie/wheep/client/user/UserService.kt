@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.paging.DataSource
 import com.ketworie.wheep.client.chat.ChatService
-import com.ketworie.wheep.client.notebook.Contact
+import com.ketworie.wheep.client.contact.Contact
+import com.ketworie.wheep.client.network.GenericError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,7 +48,11 @@ class UserService @Inject constructor() {
     }
 
     suspend fun loadContacts() {
-        val contacts = chatService.listContacts().map { Contact(it) }
+        val contacts = chatService.listContacts().map {
+            Contact(
+                it
+            )
+        }
         if (contacts.isEmpty())
             return
         userDao.deleteContacts()
@@ -59,5 +64,15 @@ class UserService @Inject constructor() {
 
     fun getContacts(): DataSource.Factory<Int, User> {
         return userDao.getContacts()
+    }
+
+    fun isContact(userId: String): LiveData<Boolean> {
+        return userDao.isContact(userId)
+    }
+
+    fun getByAlias(alias: String): LiveData<GenericError<User>> {
+        return liveData {
+            emit(chatService.getByAlias(alias))
+        }
     }
 }

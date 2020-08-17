@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
 import com.ketworie.wheep.client.R
-import kotlinx.android.synthetic.main.hub_list_item.view.*
+import kotlinx.android.synthetic.main.item_hub_list.view.*
 
 class HubAdapter() :
     PagedListAdapter<HubMessage, HubAdapter.HubViewHolder>(
@@ -33,7 +33,7 @@ class HubAdapter() :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HubViewHolder {
         val messageView =
-            LayoutInflater.from(parent.context).inflate(R.layout.hub_list_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_hub_list, parent, false)
                 ?: throw RuntimeException("Error inflating message item")
         return HubViewHolder(messageView)
     }

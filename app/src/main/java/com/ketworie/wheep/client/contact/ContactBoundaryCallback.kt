@@ -1,4 +1,4 @@
-package com.ketworie.wheep.client.notebook
+package com.ketworie.wheep.client.contact
 
 import com.ketworie.wheep.client.AsyncBoundaryCallback
 import com.ketworie.wheep.client.user.User

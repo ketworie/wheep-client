@@ -3,8 +3,10 @@ package com.ketworie.wheep.client
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ketworie.wheep.client.chat.ChatActivityViewModel
+import com.ketworie.wheep.client.contact.AddContactActivityViewModel
+import com.ketworie.wheep.client.contact.ContactListFragmentViewModel
 import com.ketworie.wheep.client.hub.HubListFragmentViewModel
-import com.ketworie.wheep.client.notebook.ContactListFragmentViewModel
+import com.ketworie.wheep.client.user.UserInfoFragmentViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -57,6 +59,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ContactListFragmentViewModel::class)
     internal abstract fun postContactListFragmentViewModel(viewModel: ContactListFragmentViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UserInfoFragmentViewModel::class)
+    internal abstract fun postUserInfoFragmentViewModel(viewModel: UserInfoFragmentViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AddContactActivityViewModel::class)
+    internal abstract fun postAddContactActivityViewModel(viewModel: AddContactActivityViewModel): ViewModel
 
 
 }

@@ -52,20 +52,20 @@
             android:layout_weight="0.1"
             android:background="#FFFFFF" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end">
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/messageInput"
                 android:layout_marginStart="8dp"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Type here"
-                android:importantForAutofill="no"
-                android:layout_toStartOf="@id/sendButton"
+                android:layout_weight="1"
+                android:hint="@string/type_here"
                 android:inputType="textAutoComplete|textAutoCorrect|textMultiLine"
+                android:importantForAutofill="no"
                 android:maxLines="1" />
 
             <Button
@@ -73,9 +73,8 @@
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:text="->" />
 
-        </RelativeLayout>
+        </LinearLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>

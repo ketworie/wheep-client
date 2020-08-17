@@ -1,4 +1,4 @@
-package com.ketworie.wheep.client.notebook
+package com.ketworie.wheep.client.contact
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +15,10 @@ class ContactListFragmentViewModel @Inject constructor() : ViewModel() {
 
     fun getContacts(): LiveData<PagedList<User>> {
         return userService.getContacts()
-            .toLiveData(10, boundaryCallback = ContactBoundaryCallback(userService))
+            .toLiveData(
+                10, boundaryCallback = ContactBoundaryCallback(
+                    userService
+                )
+            )
     }
 }

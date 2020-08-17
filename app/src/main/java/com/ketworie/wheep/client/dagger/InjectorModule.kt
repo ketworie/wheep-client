@@ -4,8 +4,10 @@ import com.ketworie.wheep.client.HomeActivity
 import com.ketworie.wheep.client.SettingsActivity
 import com.ketworie.wheep.client.SignInActivity
 import com.ketworie.wheep.client.chat.ChatActivity
+import com.ketworie.wheep.client.contact.AddContactActivity
+import com.ketworie.wheep.client.contact.ContactListFragment
 import com.ketworie.wheep.client.hub.HubListFragment
-import com.ketworie.wheep.client.notebook.ContactListFragment
+import com.ketworie.wheep.client.user.UserInfoFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -28,5 +30,11 @@ abstract class InjectorModule {
 
     @ContributesAndroidInjector
     abstract fun contributeContactListFragmentInjector(): ContactListFragment?
+
+    @ContributesAndroidInjector
+    abstract fun contributeUserInfoFragmentInjector(): UserInfoFragment?
+
+    @ContributesAndroidInjector
+    abstract fun contributeAddContactActivityInjector(): AddContactActivity?
 
 }

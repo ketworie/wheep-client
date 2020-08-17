@@ -7,7 +7,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ketworie.wheep.client.R
-import kotlinx.android.synthetic.main.incoming_message.view.*
+import kotlinx.android.synthetic.main.item_incoming_message.view.*
 
 class MessageAdapter(private val userId: String) :
     PagedListAdapter<Message, MessageAdapter.MessageViewHolder>(MessageDefaultDiff) {
@@ -37,7 +37,7 @@ class MessageAdapter(private val userId: String) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return (if (getItem(position)?.userId == userId) R.layout.outgoing_message else R.layout.incoming_message)
+        return (if (getItem(position)?.userId == userId) R.layout.item_outgoing_message else R.layout.item_incoming_message)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {

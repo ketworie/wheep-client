@@ -1,4 +1,4 @@
-package com.ketworie.wheep.client.notebook
+package com.ketworie.wheep.client.contact
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +10,14 @@ import com.bumptech.glide.Glide
 import com.ketworie.wheep.client.MainApplication
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.user.User
-import kotlinx.android.synthetic.main.contact_list_item.view.*
-import kotlinx.android.synthetic.main.incoming_message.view.avatar
-import kotlinx.android.synthetic.main.incoming_message.view.name
+import kotlinx.android.synthetic.main.item_contact_list.view.*
+import kotlinx.android.synthetic.main.item_incoming_message.view.avatar
+import kotlinx.android.synthetic.main.item_incoming_message.view.name
 
-class ContactAdapter : PagedListAdapter<User, ContactAdapter.UserViewHolder>(UserDefaultDiff) {
+class ContactAdapter(private val onAdd: () -> Unit) :
+    PagedListAdapter<User, ContactAdapter.UserViewHolder>(
+        UserDefaultDiff
+    ) {
 
     companion object UserDefaultDiff : DiffUtil.ItemCallback<User>() {
         override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
@@ -32,14 +35,16 @@ class ContactAdapter : PagedListAdapter<User, ContactAdapter.UserViewHolder>(Use
 
     override fun getItemViewType(position: Int): Int {
         return when (position) {
-            0 -> R.layout.add_contact_button
-            else -> R.layout.contact_list_item
+            0 -> R.layout.button_add_contact
+            else -> R.layout.item_contact_list
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
             ?: throw RuntimeException("Error inflating contact item")
+        if (viewType == R.layout.button_add_contact)
+            view.setOnClickListener { onAdd.invoke() }
         return UserViewHolder(view)
     }
 
