@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
@@ -12,11 +13,19 @@ import com.bumptech.glide.Glide
 import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
+import com.ketworie.wheep.client.network.GenericError
+import com.ketworie.wheep.client.network.NetworkResponse
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_user_info.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class UserInfoFragment() : Fragment() {
+
+    @Inject
+    lateinit var userService: UserService
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -35,6 +44,8 @@ class UserInfoFragment() : Fragment() {
         AndroidSupportInjection.inject(this)
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory).get()
+        addContact.setOnClickListener { addContact() }
+        removeContact.setOnClickListener { removeContact() }
     }
 
     fun submitUser(user: User) {
@@ -55,21 +66,50 @@ class UserInfoFragment() : Fragment() {
         avatar.setImageDrawable(null)
         name.text = text.capitalize()
         alias.text = ""
-        contactManagement.visibility = View.INVISIBLE
+        addContact.visibility = View.INVISIBLE
+        removeContact.visibility = View.INVISIBLE
     }
 
     private fun transformContactButton(isContact: Boolean) {
-        contactManagement.visibility = View.VISIBLE
         if (isContact) {
-            contactManagement.text = resources.getString(R.string.remove_from_contacts)
-            contactManagement.setTextColor(resources.getColor(R.color.red, activity?.theme))
-            contactManagement.background =
-                resources.getDrawable(R.drawable.white_border, activity?.theme)
+            addContact.visibility = View.INVISIBLE
+            removeContact.visibility = View.VISIBLE
         } else {
-            contactManagement.text = resources.getString(R.string.add_to_contacts)
-            contactManagement.setTextColor(resources.getColor(R.color.white, activity?.theme))
-            contactManagement.background =
-                resources.getDrawable(R.drawable.white_border, activity?.theme)
+            addContact.visibility = View.VISIBLE
+            removeContact.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun addContact() {
+        val user = user ?: return
+        addContact.isEnabled = false
+        CoroutineScope(Dispatchers.IO).launch {
+            handleError(userService.addContact(user.id))
+            requireActivity().runOnUiThread { addContact.isEnabled = true }
+        }
+    }
+
+    private fun removeContact() {
+        val user = user ?: return
+        removeContact.isEnabled = false
+        CoroutineScope(Dispatchers.IO).launch {
+            handleError(userService.removeContact(user.id))
+            requireActivity().runOnUiThread { removeContact.isEnabled = true }
+        }
+    }
+
+    private fun handleError(error: GenericError<Unit>) {
+        when (val response = error) {
+            is NetworkResponse.ApiError -> toast(response.body.message)
+            is NetworkResponse.NetworkError -> toast(resources.getString(R.string.network_error))
+            is NetworkResponse.UnknownError -> toast(resources.getString(R.string.unknown_error))
+        }
+    }
+
+    private fun toast(text: String) {
+        requireActivity().runOnUiThread {
+            Toast.makeText(this@UserInfoFragment.context, text.capitalize(), Toast.LENGTH_SHORT)
+                .show()
         }
     }
 }

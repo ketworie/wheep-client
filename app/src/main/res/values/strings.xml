@@ -20,4 +20,6 @@
     <string name="add_to_contacts">ADD CONTACT</string>
     <string name="remove_from_contacts">REMOVE CONTACT</string>
     <string name="no_user">No user selected</string>
+    <string name="network_error">Network error</string>
+    <string name="unknown_error">Unknown error</string>
 </resources>

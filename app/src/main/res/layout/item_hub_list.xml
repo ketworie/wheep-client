@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
     android:clickable="true"
     android:focusable="false"
     android:focusableInTouchMode="false"
@@ -30,6 +29,7 @@
             android:layout_margin="5dp"
             android:lines="1"
             tools:text="Header"
+            android:textColor="@color/black"
             android:textStyle="bold" />
 
         <TextView

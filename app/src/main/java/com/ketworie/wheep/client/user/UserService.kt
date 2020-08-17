@@ -6,6 +6,7 @@ import androidx.paging.DataSource
 import com.ketworie.wheep.client.chat.ChatService
 import com.ketworie.wheep.client.contact.Contact
 import com.ketworie.wheep.client.network.GenericError
+import com.ketworie.wheep.client.network.NetworkResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -57,9 +58,23 @@ class UserService @Inject constructor() {
             return
         userDao.deleteContacts()
         userDao.saveContacts(contacts)
-        val absentContacts = contacts.filter { userDao.existsById(it.userId) }
+        val absentContacts = contacts.filter { !userDao.existsById(it.userId) }
         val users = chatService.getList(absentContacts.map { it.userId })
         userDao.saveAll(users)
+    }
+
+    suspend fun removeContact(id: String): GenericError<Unit> {
+        val response = chatService.removeContact(id)
+        if (response is NetworkResponse.Success)
+            userDao.deleteContact(id)
+        return response
+    }
+
+    suspend fun addContact(id: String): GenericError<Unit> {
+        val response = chatService.addContact(id)
+        if (response is NetworkResponse.Success)
+            userDao.saveContact(Contact(id))
+        return response
     }
 
     fun getContacts(): DataSource.Factory<Int, User> {

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
@@ -36,9 +37,19 @@ class ContactListFragment : Fragment() {
         AndroidSupportInjection.inject(this)
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory).get()
-        val contactAdapter = ContactAdapter { startContactAdd() }
+        val contactAdapter = ContactAdapter(resources) { startContactAdd() }
         contactList?.apply {
-            layoutManager = LinearLayoutManager(this@ContactListFragment.activity)
+            val linearLayoutManager = LinearLayoutManager(this@ContactListFragment.activity)
+            layoutManager = linearLayoutManager
+            val dividerItemDecoration =
+                DividerItemDecoration(context, linearLayoutManager.orientation)
+            dividerItemDecoration.setDrawable(
+                resources.getDrawable(
+                    R.drawable.divider,
+                    activity?.theme
+                )
+            )
+            addItemDecoration(dividerItemDecoration)
             adapter = contactAdapter
         }
         viewModel.getContacts().observe(this.viewLifecycleOwner) {

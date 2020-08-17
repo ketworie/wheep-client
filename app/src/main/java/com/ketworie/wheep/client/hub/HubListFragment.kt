@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ketworie.wheep.client.MainApplication
 import com.ketworie.wheep.client.R
@@ -41,7 +42,17 @@ class HubListFragment : Fragment() {
         val hubAdapter = HubAdapter()
         hubAdapter.onItemClick = this::startChat
         hubList.apply {
-            layoutManager = LinearLayoutManager(this@HubListFragment.activity)
+            val linearLayoutManager = LinearLayoutManager(this@HubListFragment.activity)
+            layoutManager = linearLayoutManager
+            val dividerItemDecoration =
+                DividerItemDecoration(context, linearLayoutManager.orientation)
+            dividerItemDecoration.setDrawable(
+                resources.getDrawable(
+                    R.drawable.divider,
+                    activity?.theme
+                )
+            )
+            addItemDecoration(dividerItemDecoration)
             adapter = hubAdapter
         }
         viewModel = ViewModelProvider(this, viewModelFactory).get()

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
@@ -127,13 +126,6 @@ class SignInActivity : AppCompatActivity() {
     private fun unlockSignInButton() {
         signInButton.isEnabled = true
         signInButton.text = resources.getString(R.string.login_button_waiting)
-    }
-
-    private fun hideKeyboard() {
-        getSystemService(InputMethodManager::class.java)?.hideSoftInputFromWindow(
-            this.currentFocus?.windowToken,
-            0
-        )
     }
 
     private fun startHubList(token: String, isNewSession: Boolean) {

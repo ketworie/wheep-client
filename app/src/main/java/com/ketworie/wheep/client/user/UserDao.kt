@@ -29,8 +29,14 @@ interface UserDao {
     @Query("DELETE FROM Contact")
     suspend fun deleteContacts()
 
+    @Query("DELETE FROM Contact WHERE userId = :userId")
+    suspend fun deleteContact(userId: String)
+
     @Insert
     suspend fun saveContacts(contacts: List<Contact>)
+
+    @Insert
+    suspend fun saveContact(contact: Contact)
 
     @Query("SELECT EXISTS(SELECT * FROM Contact WHERE userId = :userId)")
     fun isContact(userId: String): LiveData<Boolean>

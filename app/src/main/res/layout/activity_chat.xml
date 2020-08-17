@@ -35,8 +35,9 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="center"
+                android:textColor="@color/black"
                 android:textStyle="bold"
-                android:text="Hub name" />
+                tools:text="Hub name" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.Toolbar>
 

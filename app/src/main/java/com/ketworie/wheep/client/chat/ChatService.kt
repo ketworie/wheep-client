@@ -32,10 +32,10 @@ interface ChatService {
     suspend fun listContacts(): List<String>
 
     @GET("/user/contact/add")
-    suspend fun addContact(@Query("alias") alias: String)
+    suspend fun addContact(@Query("id") id: String): GenericError<Unit>
 
     @GET("/user/contact/remove")
-    suspend fun removeContact(@Query("id") id: String)
+    suspend fun removeContact(@Query("id") id: String): GenericError<Unit>
 
     @GET("/user/me/hubs")
     suspend fun getMyHubs(): List<Hub>
