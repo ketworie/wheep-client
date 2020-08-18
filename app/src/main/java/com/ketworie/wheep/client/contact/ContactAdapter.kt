@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.ketworie.wheep.client.BaseViewHolder
 import com.ketworie.wheep.client.MainApplication
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.user.User
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.item_incoming_message.view.avatar
 import kotlinx.android.synthetic.main.item_incoming_message.view.name
 
 class ContactAdapter(private val resources: Resources, private val onAdd: () -> Unit) :
-    PagedListAdapter<User, ContactAdapter.ContactViewHolder>(
+    PagedListAdapter<User, BaseViewHolder>(
         UserDefaultDiff
     ) {
 
@@ -45,17 +45,17 @@ class ContactAdapter(private val resources: Resources, private val onAdd: () -> 
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
             ?: throw RuntimeException("Error inflating contact item")
         if (viewType == R.layout.button_add_contact) {
             view.setOnClickListener { onAdd.invoke() }
-            return ContactViewHolder(view)
+            return BaseViewHolder(view)
         }
         return UserViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         if (holder !is UserViewHolder)
             return
         getItem(position - 1)?.let {
@@ -76,9 +76,7 @@ class ContactAdapter(private val resources: Resources, private val onAdd: () -> 
         }
     }
 
-    open class ContactViewHolder(view: View) : RecyclerView.ViewHolder(view)
-
-    inner class UserViewHolder(view: View) : ContactViewHolder(view) {
+    inner class UserViewHolder(view: View) : BaseViewHolder(view) {
         val avatar = view.avatar
         val name = view.name
         val alias = view.alias
