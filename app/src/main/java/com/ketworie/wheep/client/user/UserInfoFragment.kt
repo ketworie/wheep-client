@@ -100,8 +100,8 @@ class UserInfoFragment() : Fragment() {
     }
 
     private fun handleError(error: GenericError<Unit>) {
-        when (val response = error) {
-            is NetworkResponse.ApiError -> toast(response.body.message)
+        when (error) {
+            is NetworkResponse.ApiError -> toast(error.body.message)
             is NetworkResponse.NetworkError -> toast(resources.getString(R.string.network_error))
             is NetworkResponse.UnknownError -> toast(resources.getString(R.string.unknown_error))
         }
