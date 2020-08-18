@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -77,9 +79,9 @@ class ContactAdapter(private val resources: Resources, private val onAdd: () -> 
     }
 
     inner class UserViewHolder(view: View) : BaseViewHolder(view) {
-        val avatar = view.avatar
-        val name = view.name
-        val alias = view.alias
+        val avatar: ImageView = view.avatar
+        val name: TextView = view.name
+        val alias: TextView = view.alias
 
         init {
             view.setOnClickListener {
