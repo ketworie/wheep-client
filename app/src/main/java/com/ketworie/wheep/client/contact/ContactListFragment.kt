@@ -2,7 +2,6 @@ package com.ketworie.wheep.client.contact
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,11 @@ import androidx.lifecycle.get
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ketworie.wheep.client.MainApplication.Companion.USER_ID
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
+import com.ketworie.wheep.client.user.User
+import com.ketworie.wheep.client.user.UserInfoActivity
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_contact_list.*
 import javax.inject.Inject
@@ -55,10 +57,21 @@ class ContactListFragment : Fragment() {
         viewModel.getContacts().observe(this.viewLifecycleOwner) {
             contactAdapter.submitList(it)
         }
+        contactAdapter.onItemClick = this::startContactInfo
+    }
+
+    private fun startContactInfo(view: View, user: User) {
+        startActivity(
+            Intent(this.context, UserInfoActivity::class.java).putExtra(USER_ID, user.id)
+            ,
+            this.activity?.parent?.let {
+                ActivityOptionsCompat.makeSceneTransitionAnimation(it)
+                    .toBundle()
+            }
+        )
     }
 
     private fun startContactAdd() {
-        Log.i("AAA", "AAAA")
         startActivity(
             Intent(this.context, AddContactActivity::class.java)
             ,

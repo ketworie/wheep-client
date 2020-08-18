@@ -6,5 +6,6 @@
     <color name="incoming_message">#F282B9</color>
     <color name="white">#FFFFFF</color>
     <color name="red">@color/design_default_color_error</color>
+    <color name="light_red">#FF002E</color>
     <color name="black">#000000</color>
 </resources>

@@ -7,11 +7,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.ketworie.wheep.client.MainApplication.Companion.HUB_ID
-import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
+import com.ketworie.wheep.client.loadAvatar
 import com.ketworie.wheep.client.user.UserService
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -33,6 +32,7 @@ class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
+        supportPostponeEnterTransition()
         setContentView(R.layout.activity_chat)
         viewModel = ViewModelProvider(this, viewModelFactory).get()
         hubId = intent.extras?.getString(HUB_ID) ?: return
@@ -40,11 +40,7 @@ class ChatActivity : AppCompatActivity() {
         name.transitionName = "text_$hubId"
         viewModel.getHub(hubId).observe(this) {
             name.text = it.name
-            Glide.with(this)
-                .asBitmap()
-                .circleCrop()
-                .load(RESOURCE_BASE + it.image)
-                .into(avatar)
+            loadAvatar(this, avatar, it.image) { supportStartPostponedEnterTransition() }
         }
         userService.getMe().observe(this) { user ->
             val messageAdapter = MessageAdapter(user.id)

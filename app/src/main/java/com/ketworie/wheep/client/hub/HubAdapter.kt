@@ -18,7 +18,7 @@ class HubAdapter() :
         HubDefaultDiff
     ) {
 
-    var onItemClick: ((View, Hub) -> Unit)? = null
+    var onItemClick: ((View, Hub) -> Unit) = { _, _ -> }
 
     companion object HubDefaultDiff : DiffUtil.ItemCallback<HubMessage>() {
         override fun areItemsTheSame(oldItem: HubMessage, newItem: HubMessage): Boolean {
@@ -61,7 +61,7 @@ class HubAdapter() :
 
         init {
             view.setOnClickListener {
-                getItem(adapterPosition)?.let { onItemClick?.invoke(view, it.hub) }
+                getItem(adapterPosition)?.let { onItemClick.invoke(view, it.hub) }
             }
         }
     }

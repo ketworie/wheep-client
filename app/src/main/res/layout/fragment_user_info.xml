@@ -49,7 +49,8 @@
         android:id="@+id/addContact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/white_border"
+        android:background="?attr/selectableItemBackground"
+        android:foreground="@drawable/white_border"
         android:padding="10dp"
         android:text="@string/add_to_contacts"
         android:textColor="@color/white"
@@ -59,21 +60,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name"
         app:layout_constraintVertical_bias="0.42"
-        tools:visibility="visible" />
+        tools:visibility="invisible" />
 
     <Button
         android:id="@+id/removeContact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/white_border"
+        android:background="?attr/selectableItemBackground"
+        android:foreground="@drawable/light_red_border"
         android:padding="10dp"
         android:text="@string/remove_from_contacts"
-        android:textColor="@color/red"
+        android:textColor="@color/light_red"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name"
         app:layout_constraintVertical_bias="0.42"
-        tools:visibility="invisible" />
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

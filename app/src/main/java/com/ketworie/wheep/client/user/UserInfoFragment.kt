@@ -9,10 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
-import com.bumptech.glide.Glide
-import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
+import com.ketworie.wheep.client.loadAvatar
 import com.ketworie.wheep.client.network.GenericError
 import com.ketworie.wheep.client.network.NetworkResponse
 import dagger.android.support.AndroidSupportInjection
@@ -48,17 +47,19 @@ class UserInfoFragment() : Fragment() {
         removeContact.setOnClickListener { removeContact() }
     }
 
+    fun submitUserId(id: String) {
+        userService.getUser(id).observe(viewLifecycleOwner) {
+            submitUser(it)
+        }
+    }
+
     fun submitUser(user: User) {
         viewModel.isContact(user.id).observe(this.viewLifecycleOwner) {
             transformContactButton(it)
         }
         name.text = user.name
         alias.text = user.alias
-        Glide.with(this)
-            .asBitmap()
-            .circleCrop()
-            .load(RESOURCE_BASE + user.image)
-            .into(avatar)
+        this.context?.let { loadAvatar(it, avatar, user.image) }
         this.user = user
     }
 

@@ -18,9 +18,11 @@ import kotlinx.android.synthetic.main.item_incoming_message.view.avatar
 import kotlinx.android.synthetic.main.item_incoming_message.view.name
 
 class ContactAdapter(private val resources: Resources, private val onAdd: () -> Unit) :
-    PagedListAdapter<User, ContactAdapter.UserViewHolder>(
+    PagedListAdapter<User, ContactAdapter.ContactViewHolder>(
         UserDefaultDiff
     ) {
+
+    var onItemClick: ((View, User) -> Unit) = { _, _ -> }
 
     companion object UserDefaultDiff : DiffUtil.ItemCallback<User>() {
         override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
@@ -43,16 +45,18 @@ class ContactAdapter(private val resources: Resources, private val onAdd: () -> 
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
             ?: throw RuntimeException("Error inflating contact item")
-        if (viewType == R.layout.button_add_contact)
+        if (viewType == R.layout.button_add_contact) {
             view.setOnClickListener { onAdd.invoke() }
+            return ContactViewHolder(view)
+        }
         return UserViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        if (position == 0)
+    override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
+        if (holder !is UserViewHolder)
             return
         getItem(position - 1)?.let {
             val bitmap = BitmapFactory.decodeResource(
@@ -72,10 +76,19 @@ class ContactAdapter(private val resources: Resources, private val onAdd: () -> 
         }
     }
 
-    inner class UserViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    open class ContactViewHolder(view: View) : RecyclerView.ViewHolder(view)
+
+    inner class UserViewHolder(view: View) : ContactViewHolder(view) {
         val avatar = view.avatar
         val name = view.name
         val alias = view.alias
+
+        init {
+            view.setOnClickListener {
+                getItem(adapterPosition - 1)?.let { onItemClick.invoke(view, it) }
+            }
+        }
+
     }
 
 }
