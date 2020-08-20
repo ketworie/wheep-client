@@ -3,6 +3,7 @@ package com.ketworie.wheep.client.chat
 import com.ketworie.wheep.client.hub.Hub
 import com.ketworie.wheep.client.network.GenericError
 import com.ketworie.wheep.client.user.User
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
 import java.time.ZonedDateTime
@@ -16,7 +17,7 @@ interface ChatService {
         @Field("password") password: String
     ): Response<Unit>
 
-    @GET("/user/me")
+    @GET("/me")
     suspend fun getMe(): User
 
     @GET("/user")
@@ -28,16 +29,16 @@ interface ChatService {
     @POST("/user/list")
     suspend fun getList(@Body idList: List<String>): List<User>
 
-    @GET("/user/contact/list")
+    @GET("/contact/list")
     suspend fun listContacts(): List<String>
 
-    @GET("/user/contact/add")
+    @GET("/contact/add")
     suspend fun addContact(@Query("id") id: String): GenericError<Unit>
 
-    @GET("/user/contact/remove")
+    @GET("/contact/remove")
     suspend fun removeContact(@Query("id") id: String): GenericError<Unit>
 
-    @GET("/user/me/hubs")
+    @GET("/me/hubs")
     suspend fun getMyHubs(): List<Hub>
 
     @GET("/hub/prev")
@@ -54,5 +55,9 @@ interface ChatService {
         @Query("hub") hubId: String,
         @Query("date") date: ZonedDateTime
     ): List<Message>
+
+    @POST("/upload")
+    @Multipart
+    suspend fun uploadPicture(@Part image: MultipartBody.Part): GenericError<String>
 
 }
