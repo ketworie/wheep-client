@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
@@ -19,7 +17,6 @@ import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.chat.ChatActivity
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_hub_list.*
-import kotlinx.android.synthetic.main.item_hub_list.view.*
 import javax.inject.Inject
 
 class HubListFragment : Fragment() {
@@ -62,21 +59,15 @@ class HubListFragment : Fragment() {
     }
 
     private fun startAddHub() {
-        TODO("Not yet implemented")
+
     }
 
     private fun startChat(view: View, hub: Hub) {
-        val avatarElement: Pair<View, String> = Pair(view.avatar, "avatar_${hub.id}")
-        val headerElement: Pair<View, String> = Pair(view.header, "text_${hub.id}")
         startActivity(
             Intent(this.activity, ChatActivity::class.java).putExtra(
                 MainApplication.HUB_ID,
                 hub.id
-            ),
-            this.activity?.let {
-                ActivityOptionsCompat.makeSceneTransitionAnimation(it, avatarElement, headerElement)
-                    .toBundle()
-            }
+            )
         )
     }
 

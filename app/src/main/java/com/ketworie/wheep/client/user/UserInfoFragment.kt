@@ -4,16 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
+import androidx.transition.TransitionManager
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
-import com.ketworie.wheep.client.loadAvatar
-import com.ketworie.wheep.client.network.GenericError
-import com.ketworie.wheep.client.network.NetworkResponse
+import com.ketworie.wheep.client.image.loadAvatar
+import com.ketworie.wheep.client.network.toast
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_user_info.*
 import kotlinx.coroutines.CoroutineScope
@@ -59,7 +58,13 @@ class UserInfoFragment() : Fragment() {
         }
         name.text = user.name
         alias.text = user.alias
-        this.context?.let { loadAvatar(it, avatar, user.image) }
+        this.context?.let {
+            loadAvatar(
+                it,
+                avatar,
+                user.image
+            )
+        }
         this.user = user
     }
 
@@ -72,6 +77,7 @@ class UserInfoFragment() : Fragment() {
     }
 
     private fun transformContactButton(isContact: Boolean) {
+        TransitionManager.beginDelayedTransition(root)
         if (isContact) {
             addContact.visibility = View.INVISIBLE
             removeContact.visibility = View.VISIBLE
@@ -85,7 +91,7 @@ class UserInfoFragment() : Fragment() {
         val user = user ?: return
         addContact.isEnabled = false
         CoroutineScope(Dispatchers.IO).launch {
-            handleError(userService.addContact(user.id))
+            userService.addContact(user.id).toast(requireActivity())
             requireActivity().runOnUiThread { addContact.isEnabled = true }
         }
     }
@@ -94,23 +100,8 @@ class UserInfoFragment() : Fragment() {
         val user = user ?: return
         removeContact.isEnabled = false
         CoroutineScope(Dispatchers.IO).launch {
-            handleError(userService.removeContact(user.id))
+            userService.removeContact(user.id).toast(requireActivity())
             requireActivity().runOnUiThread { removeContact.isEnabled = true }
-        }
-    }
-
-    private fun handleError(error: GenericError<Unit>) {
-        when (error) {
-            is NetworkResponse.ApiError -> toast(error.body.message)
-            is NetworkResponse.NetworkError -> toast(resources.getString(R.string.network_error))
-            is NetworkResponse.UnknownError -> toast(resources.getString(R.string.unknown_error))
-        }
-    }
-
-    private fun toast(text: String) {
-        requireActivity().runOnUiThread {
-            Toast.makeText(this@UserInfoFragment.context, text.capitalize(), Toast.LENGTH_SHORT)
-                .show()
         }
     }
 }

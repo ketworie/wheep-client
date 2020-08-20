@@ -38,7 +38,7 @@ internal class NetworkResponseCall<S : Any, E : Any>(
                     if (error == null || error.contentLength() == 0L) {
                         callback.onResponse(
                             this@NetworkResponseCall,
-                            Response.success(NetworkResponse.UnknownError(RuntimeException("error is null")))
+                            Response.success(NetworkResponse.UnknownError(RuntimeException("empty error with code $code")))
                         )
                         return
                     }

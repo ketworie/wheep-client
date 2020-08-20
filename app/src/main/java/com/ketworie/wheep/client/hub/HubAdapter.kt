@@ -56,7 +56,7 @@ class HubAdapter(private val onAdd: () -> Unit) :
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         if (holder !is HubViewHolder)
             return
-        getItem(position)?.apply {
+        getItem(position.dec())?.apply {
             holder.header.text = hub.name
             // TODO: Show last message
             holder.lastMessage.text = message?.text ?: "No messages"
@@ -66,8 +66,6 @@ class HubAdapter(private val onAdd: () -> Unit) :
                 .circleCrop()
                 .load(RESOURCE_BASE + hub.image)
                 .into(holder.avatar)
-            holder.avatar.transitionName = "avatar_${hub.id}"
-            holder.header.transitionName = "text_${hub.id}"
         }
     }
 
@@ -78,7 +76,7 @@ class HubAdapter(private val onAdd: () -> Unit) :
 
         init {
             view.setOnClickListener {
-                getItem(adapterPosition)?.let { onItemClick.invoke(view, it.hub) }
+                getItem(adapterPosition.dec())?.let { onItemClick.invoke(view, it.hub) }
             }
         }
     }

@@ -56,8 +56,12 @@ interface ChatService {
         @Query("date") date: ZonedDateTime
     ): List<Message>
 
-    @POST("/upload")
     @Multipart
+    @POST("/upload")
     suspend fun uploadPicture(@Part image: MultipartBody.Part): GenericError<String>
+
+    @Multipart
+    @POST("/avatar/update")
+    suspend fun updateAvatar(@Part image: MultipartBody.Part): GenericError<String>
 
 }

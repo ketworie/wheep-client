@@ -1,19 +1,16 @@
 package com.ketworie.wheep.client.contact
 
 import android.content.res.Resources
-import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.bumptech.glide.Glide
 import com.ketworie.wheep.client.BaseViewHolder
-import com.ketworie.wheep.client.MainApplication
 import com.ketworie.wheep.client.R
+import com.ketworie.wheep.client.image.loadAvatar
 import com.ketworie.wheep.client.user.User
 import kotlinx.android.synthetic.main.item_contact_list.view.*
 import kotlinx.android.synthetic.main.item_incoming_message.view.avatar
@@ -61,20 +58,9 @@ class ContactAdapter(private val resources: Resources, private val onAdd: () -> 
         if (holder !is UserViewHolder)
             return
         getItem(position - 1)?.let {
-            val bitmap = BitmapFactory.decodeResource(
-                resources,
-                R.raw.icon
-            )
-            val roundedBitmap = RoundedBitmapDrawableFactory.create(resources, bitmap)
-            roundedBitmap.isCircular = true
             holder.name.text = it.name
             holder.alias.text = it.alias
-            Glide.with(holder.itemView)
-                .asBitmap()
-                .placeholder(roundedBitmap)
-                .circleCrop()
-                .load(MainApplication.RESOURCE_BASE + it.image)
-                .into(holder.avatar)
+            loadAvatar(holder.itemView.context, holder.avatar, it.image)
         }
     }
 

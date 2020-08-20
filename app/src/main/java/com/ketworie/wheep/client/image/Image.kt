@@ -1,4 +1,4 @@
-package com.ketworie.wheep.client
+package com.ketworie.wheep.client.image
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -10,10 +10,12 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.ketworie.wheep.client.MainApplication
+import com.ketworie.wheep.client.R
 
 
 fun loadAvatar(context: Context, imageView: ImageView, address: String) {
-    loadAvatar(context, imageView, address) {}
+    loadAvatar(context, imageView, address, null)
 }
 
 fun loadAvatar(context: Context, imageView: ImageView, address: String, onLoaded: (() -> Unit)?) {
@@ -23,6 +25,10 @@ fun loadAvatar(context: Context, imageView: ImageView, address: String, onLoaded
     )
     val roundedBitmap = RoundedBitmapDrawableFactory.create(context.resources, bitmap)
     roundedBitmap.isCircular = true
+    if (address.isEmpty()) {
+        imageView.setImageDrawable(roundedBitmap)
+        return
+    }
     val circleCrop = Glide.with(context)
         .asBitmap()
         .placeholder(roundedBitmap)

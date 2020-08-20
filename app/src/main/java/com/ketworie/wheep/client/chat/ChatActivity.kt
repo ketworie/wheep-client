@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ketworie.wheep.client.MainApplication.Companion.HUB_ID
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
-import com.ketworie.wheep.client.loadAvatar
+import com.ketworie.wheep.client.image.loadAvatar
 import com.ketworie.wheep.client.user.UserService
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -36,11 +36,13 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
         viewModel = ViewModelProvider(this, viewModelFactory).get()
         hubId = intent.extras?.getString(HUB_ID) ?: return
-        avatar.transitionName = "avatar_$hubId"
-        name.transitionName = "text_$hubId"
         viewModel.getHub(hubId).observe(this) {
             name.text = it.name
-            loadAvatar(this, avatar, it.image) { supportStartPostponedEnterTransition() }
+            loadAvatar(
+                this,
+                avatar,
+                it.image
+            ) { supportStartPostponedEnterTransition() }
         }
         userService.getMe().observe(this) { user ->
             val messageAdapter = MessageAdapter(user.id)

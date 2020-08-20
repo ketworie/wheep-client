@@ -23,6 +23,9 @@ interface UserDao {
     @Delete
     suspend fun delete(user: User)
 
+    @Query("UPDATE User SET image = :image WHERE id = :id")
+    suspend fun updateAvatar(id: String, image: String)
+
     @Query("SELECT EXISTS(SELECT * FROM User WHERE id = :id)")
     suspend fun existsById(id: String): Boolean
 

@@ -1,5 +1,7 @@
 package com.ketworie.wheep.client.user
 
+import android.net.Uri
+import androidx.core.net.toFile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.paging.DataSource
@@ -11,8 +13,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 import javax.inject.Singleton
+
 
 @Singleton
 class UserService @Inject constructor() {
@@ -89,5 +95,18 @@ class UserService @Inject constructor() {
         return liveData {
             emit(chatService.getByAlias(alias))
         }
+    }
+
+    suspend fun updateAvatar(id: String, image: Uri): GenericError<String> {
+        val file = image.toFile()
+        val requestFile: RequestBody =
+            RequestBody.create(MediaType.parse("image/*"), file)
+        val body =
+            MultipartBody.Part.createFormData("image", file.name, requestFile)
+        val updateAvatar = chatService.updateAvatar(body)
+        if (updateAvatar is NetworkResponse.Success) {
+            userDao.updateAvatar(id, updateAvatar.body)
+        }
+        return updateAvatar
     }
 }

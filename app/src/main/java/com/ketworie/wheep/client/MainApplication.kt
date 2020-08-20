@@ -17,6 +17,8 @@ class MainApplication : Application(), HasAndroidInjector {
         const val SERVER_BASE = "http://10.0.2.2:8080"
         const val RESOURCE_BASE = "$SERVER_BASE/wayne/"
         const val HUB_ID = "hubId"
+        const val IMAGE_TYPE = "imageType"
+        const val IMAGE_PATH = "imagePath"
     }
 
     @Inject

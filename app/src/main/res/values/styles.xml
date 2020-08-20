@@ -11,7 +11,7 @@
         <item name="android:windowContentTransitions">true</item>
 
         <item name="android:windowEnterTransition">@android:transition/fade</item>
-        <item name="android:windowExitTransition">@android:transition/fade</item>
+        <item name="android:windowExitTransition">@android:transition/no_transition</item>
 
         <item name="android:windowBackground">@color/accent</item>
     </style>
@@ -20,12 +20,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoTitle.GreyStatusBar">
-        <item name="android:statusBarColor">#B8B8B8</item>
+    <style name="AppTheme.NoTitle.Translucent">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
     </style>
 
-    <style name="AppTheme.NoTitle.Launcher">
-    </style>
+    <style name="AppTheme.NoTitle.Launcher"></style>
 
     <style name="AppTheme.ActionBar">
         <item name="windowActionBar">true</item>
