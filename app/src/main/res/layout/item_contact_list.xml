@@ -11,9 +11,7 @@
 
     <ImageView
         android:id="@+id/avatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_margin="10dp"
+        style="@style/avatar_small"
         android:contentDescription="@string/avatar_image_description"
         tools:srcCompat="@tools:sample/avatars" />
 

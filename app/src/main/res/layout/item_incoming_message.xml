@@ -16,13 +16,13 @@
 
     <TextView
         android:id="@+id/name"
-        android:layout_toRightOf="@id/avatar"
+        android:layout_toEndOf="@id/avatar"
         android:layout_alignTop="@id/avatar"
         android:paddingBottom="4dp"
-        android:paddingStart="4dp"
+        android:paddingHorizontal="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name" />
+        tools:text="Name" />
 
     <TextView
         android:id="@+id/text"
@@ -35,6 +35,6 @@
         android:paddingVertical="6dp"
         android:textSize="16sp"
         android:textColor="#000000"
-        android:text="Incoming message." />
+        tools:text="Incoming message." />
 
 </RelativeLayout>

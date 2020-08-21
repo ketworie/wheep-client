@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true">
+        <activity android:name=".hub.AddHubActivity"></activity>
         <activity
             android:name=".image.ImageCropperActivity"
             android:theme="@style/AppTheme.NoTitle" />

@@ -74,7 +74,7 @@
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:text="->" />
+                android:text="@string/send_sign" />
 
         </LinearLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>

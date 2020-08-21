@@ -23,4 +23,6 @@
     <string name="no_user">No user selected</string>
     <string name="network_error">Network error</string>
     <string name="unknown_error">Unknown error</string>
+    <string name="create">CREATE</string>
+    <string name="send_sign">-></string>
 </resources>
