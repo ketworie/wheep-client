@@ -13,10 +13,11 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.lifecycle.observe
 import com.ketworie.wheep.client.MainApplication.Companion.IMAGE_PATH
 import com.ketworie.wheep.client.MainApplication.Companion.PREFERENCES
+import com.ketworie.wheep.client.MainApplication.Companion.USER_ID
 import com.ketworie.wheep.client.MainApplication.Companion.X_AUTH_TOKEN
 import com.ketworie.wheep.client.hub.HubService
 import com.ketworie.wheep.client.image.ImageCropperActivity
-import com.ketworie.wheep.client.network.toast
+import com.ketworie.wheep.client.network.toastError
 import com.ketworie.wheep.client.user.UserService
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -57,6 +58,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun logOut() {
         getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit().remove(X_AUTH_TOKEN).apply()
+        getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit().remove(USER_ID).apply()
         userService.resetUserId()
         CoroutineScope(Dispatchers.IO).launch {
             hubService.deleteAll()
@@ -106,7 +108,7 @@ class SettingsActivity : AppCompatActivity() {
             val userId = userService.userId
             if (userId.isEmpty())
                 return@launch
-            userService.updateAvatar(userId, image).toast(this@SettingsActivity)
+            userService.updateAvatar(userId, image).toastError(this@SettingsActivity)
             val drawable = image.path?.let { RoundedBitmapDrawableFactory.create(resources, it) }
             drawable?.isCircular = true
             withContext(Dispatchers.Main) {

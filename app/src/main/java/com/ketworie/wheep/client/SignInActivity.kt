@@ -7,22 +7,32 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
-import androidx.core.view.postDelayed
 import com.google.android.material.snackbar.Snackbar
 import com.ketworie.wheep.client.MainApplication.Companion.PREFERENCES
+import com.ketworie.wheep.client.MainApplication.Companion.USER_ID
+import com.ketworie.wheep.client.MainApplication.Companion.X_AUTH_TOKEN
+import com.ketworie.wheep.client.network.GenericError
+import com.ketworie.wheep.client.network.NetworkResponse
+import com.ketworie.wheep.client.network.toastError
 import com.ketworie.wheep.client.security.AuthInterceptor
 import com.ketworie.wheep.client.security.SecurityService
+import com.ketworie.wheep.client.user.User
+import com.ketworie.wheep.client.user.UserService
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SignInActivity : AppCompatActivity() {
 
     @Inject
     lateinit var securityService: SecurityService
+
+    @Inject
+    lateinit var userService: UserService
 
     @Inject
     lateinit var authInterceptor: AuthInterceptor
@@ -33,7 +43,7 @@ class SignInActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sign_in)
 
         toLoggedState()
-        appName.postDelayed(200) { checkToken() }
+        appName.post { recoverSession() }
 
 
         findViewById<EditText>(R.id.password).setOnEditorActionListener { _, actionId, _ ->
@@ -50,13 +60,19 @@ class SignInActivity : AppCompatActivity() {
         return getSharedPreferences(
             PREFERENCES,
             Context.MODE_PRIVATE
-        ).getString(MainApplication.X_AUTH_TOKEN, "")
-            .orEmpty()
+        ).getString(X_AUTH_TOKEN, "").orEmpty()
+    }
+
+    private fun retrieveUserId(): String {
+        return getSharedPreferences(
+            PREFERENCES,
+            Context.MODE_PRIVATE
+        ).getString(USER_ID, "").orEmpty()
     }
 
     private fun persistToken(token: String) {
         getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit()
-            .putString(MainApplication.X_AUTH_TOKEN, token)
+            .putString(X_AUTH_TOKEN, token)
             .apply()
     }
 
@@ -68,13 +84,29 @@ class SignInActivity : AppCompatActivity() {
         signInButton.alpha = 0f
     }
 
-    private fun checkToken() {
+    private fun recoverSession() {
         val token = retrieveToken()
-        if (token.isNotEmpty()) {
-            startHubList(token)
+        val userId = retrieveUserId()
+        if (token.isEmpty() || userId.isEmpty()) {
+            toUnLoggedState()
             return
         }
-        toUnLoggedState()
+        registerToken(token)
+        CoroutineScope(Dispatchers.IO).launch {
+            when (val response = userService.loadMe()) {
+                is NetworkResponse.Success -> {
+                    registerUserId(response.body.id)
+                    withContext(Dispatchers.Main) { startHomeActivity() }
+                    return@launch
+                }
+                is NetworkResponse.ApiError -> {
+                    withContext(Dispatchers.Main) { toUnLoggedState() }
+                    return@launch
+                }
+            }
+            registerUserId(userId)
+            withContext(Dispatchers.Main) { startHomeActivity() }
+        }
     }
 
     private fun toUnLoggedState() {
@@ -100,7 +132,11 @@ class SignInActivity : AppCompatActivity() {
             try {
                 val token =
                     securityService.login(login.text.toString(), password.text.toString())
-                runOnUiThread { startHubList(token) }
+                persistToken(token)
+                registerToken(token)
+                if (loadMe().toastError(this@SignInActivity))
+                    return@launch
+                runOnUiThread { startHomeActivity() }
             } catch (e: Exception) {
                 Snackbar
                     .make(appName, e.message!!, Snackbar.LENGTH_SHORT)
@@ -118,6 +154,25 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
+    private suspend fun loadMe(): GenericError<User> {
+        val response = userService.loadMe()
+        if (response is NetworkResponse.Success) {
+            val userId = response.body.id
+            getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit()
+                .putString(USER_ID, userId).apply()
+            registerUserId(userId)
+        }
+        return response
+    }
+
+    private fun registerToken(token: String) {
+        authInterceptor.token = token
+    }
+
+    private fun registerUserId(userId: String) {
+        userService.userId = userId
+    }
+
     private fun lockSignInButton() {
         signInButton.isEnabled = false
         signInButton.text = resources.getString(R.string.login_button_signing)
@@ -128,9 +183,7 @@ class SignInActivity : AppCompatActivity() {
         signInButton.text = resources.getString(R.string.login_button_waiting)
     }
 
-    private fun startHubList(token: String) {
-        persistToken(token)
-        authInterceptor.token = token
+    private fun startHomeActivity() {
         startActivity(
             Intent(this, HomeActivity::class.java)
             , ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()

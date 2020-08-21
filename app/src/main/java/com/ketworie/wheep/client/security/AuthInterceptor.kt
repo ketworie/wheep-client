@@ -9,11 +9,11 @@ import javax.inject.Singleton
 @Singleton
 class AuthInterceptor @Inject constructor() : Interceptor {
 
-    var token: String? = null
+    var token: String = ""
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        if (token == null)
+        if (token.isEmpty())
             return chain.proceed(request)
 
         val newRequest = request

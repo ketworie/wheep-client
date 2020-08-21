@@ -12,7 +12,7 @@ import androidx.transition.TransitionManager
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.image.loadAvatar
-import com.ketworie.wheep.client.network.toast
+import com.ketworie.wheep.client.network.toastError
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_user_info.*
 import kotlinx.coroutines.CoroutineScope
@@ -91,7 +91,7 @@ class UserInfoFragment() : Fragment() {
         val user = user ?: return
         addContact.isEnabled = false
         CoroutineScope(Dispatchers.IO).launch {
-            userService.addContact(user.id).toast(requireActivity())
+            userService.addContact(user.id).toastError(requireActivity())
             requireActivity().runOnUiThread { addContact.isEnabled = true }
         }
     }
@@ -100,7 +100,7 @@ class UserInfoFragment() : Fragment() {
         val user = user ?: return
         removeContact.isEnabled = false
         CoroutineScope(Dispatchers.IO).launch {
-            userService.removeContact(user.id).toast(requireActivity())
+            userService.removeContact(user.id).toastError(requireActivity())
             requireActivity().runOnUiThread { removeContact.isEnabled = true }
         }
     }

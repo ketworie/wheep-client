@@ -40,14 +40,14 @@ class UserService @Inject constructor() {
     }
 
     fun getMe(): LiveData<User> {
-        return liveData {
-            if (userId.isEmpty()) {
-                val me = withContext(Dispatchers.IO) { chatService.getMe() }
-                userId = me.id
-                userDao.save(me)
-            }
-            emitSource(userDao.get(userId))
-        }
+        return userDao.get(userId)
+    }
+
+    suspend fun loadMe(): GenericError<User> {
+        val me = chatService.getMe()
+        if (me is NetworkResponse.Success)
+            userDao.save(me.body)
+        return me
     }
 
     fun resetUserId() {

@@ -18,7 +18,7 @@ interface ChatService {
     ): Response<Unit>
 
     @GET("/me")
-    suspend fun getMe(): User
+    suspend fun getMe(): GenericError<User>
 
     @GET("/user")
     suspend fun get(@Query("id") id: String): User

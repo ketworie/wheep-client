@@ -10,9 +10,8 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
-import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
-import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
+import com.ketworie.wheep.client.image.loadAvatar
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
@@ -54,16 +53,7 @@ class HomeActivity : AppCompatActivity() {
         roundedBitmap.isCircular = true
         avatar.setImageDrawable(roundedBitmap)
         viewModel.getMe().observe(this) {
-            val resourceUrl = it.image
-
-            if (resourceUrl.isEmpty())
-                return@observe
-
-            Glide.with(this@HomeActivity)
-                .asBitmap()
-                .circleCrop()
-                .load(RESOURCE_BASE + resourceUrl)
-                .into(avatar)
+            loadAvatar(applicationContext, avatar, it.image)
         }
     }
 

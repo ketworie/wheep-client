@@ -7,7 +7,7 @@ import java.io.IOException
 
 typealias GenericError<T> = NetworkResponse<T, ApiError>
 
-fun <T : Any> GenericError<T>.toast(activity: Activity) {
+fun <T : Any> GenericError<T>.toastError(activity: Activity): Boolean {
     when (this) {
         is NetworkResponse.ApiError -> toast(activity, this.body.message)
         is NetworkResponse.NetworkError -> toast(
@@ -18,7 +18,9 @@ fun <T : Any> GenericError<T>.toast(activity: Activity) {
             activity,
             activity.resources.getString(R.string.unknown_error)
         )
+        else -> return false
     }
+    return true
 }
 
 private fun toast(activity: Activity, text: String) {
