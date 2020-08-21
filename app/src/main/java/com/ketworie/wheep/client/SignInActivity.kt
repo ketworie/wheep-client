@@ -71,7 +71,7 @@ class SignInActivity : AppCompatActivity() {
     private fun checkToken() {
         val token = retrieveToken()
         if (token.isNotEmpty()) {
-            startHubList(token, false)
+            startHubList(token)
             return
         }
         toUnLoggedState()
@@ -100,7 +100,7 @@ class SignInActivity : AppCompatActivity() {
             try {
                 val token =
                     securityService.login(login.text.toString(), password.text.toString())
-                runOnUiThread { startHubList(token, true) }
+                runOnUiThread { startHubList(token) }
             } catch (e: Exception) {
                 Snackbar
                     .make(appName, e.message!!, Snackbar.LENGTH_SHORT)
@@ -128,7 +128,7 @@ class SignInActivity : AppCompatActivity() {
         signInButton.text = resources.getString(R.string.login_button_waiting)
     }
 
-    private fun startHubList(token: String, isNewSession: Boolean) {
+    private fun startHubList(token: String) {
         persistToken(token)
         authInterceptor.token = token
         startActivity(
