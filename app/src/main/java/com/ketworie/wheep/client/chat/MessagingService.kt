@@ -3,6 +3,7 @@ package com.ketworie.wheep.client.chat
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
+import com.ketworie.wheep.client.network.NetworkResponse
 import java.time.ZonedDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,17 +28,20 @@ class MessagingService @Inject constructor() {
 
     suspend fun loadMessages(hubId: String) {
         val messages = chatService.getPreviousMessages(hubId, ZonedDateTime.now())
-        messageDao.saveAll(messages)
+        if (messages is NetworkResponse.Success)
+            messageDao.saveAll(messages.body)
     }
 
     suspend fun loadNextMessages(hubId: String, dateTime: ZonedDateTime) {
         val messages = chatService.getNextMessages(hubId, dateTime)
-        messageDao.saveAll(messages)
+        if (messages is NetworkResponse.Success)
+            messageDao.saveAll(messages.body)
     }
 
     suspend fun loadPrevMessages(hubId: String, dateTime: ZonedDateTime) {
         val messages = chatService.getPreviousMessages(hubId, dateTime)
-        messageDao.saveAll(messages)
+        if (messages is NetworkResponse.Success)
+            messageDao.saveAll(messages.body)
     }
 
     suspend fun sendMessage(message: MessageSend) {

@@ -33,8 +33,9 @@ class UserService @Inject constructor() {
 
     fun getUser(id: String): LiveData<User> {
         CoroutineScope(Dispatchers.IO).launch {
-            val user = withContext(Dispatchers.IO) { chatService.get(id) }
-            userDao.save(user)
+            val response = withContext(Dispatchers.IO) { chatService.get(id) }
+            if (response is NetworkResponse.Success)
+                userDao.save(response.body)
         }
         return userDao.get(id)
     }

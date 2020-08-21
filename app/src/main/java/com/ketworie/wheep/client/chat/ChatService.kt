@@ -21,7 +21,7 @@ interface ChatService {
     suspend fun getMe(): GenericError<User>
 
     @GET("/user")
-    suspend fun get(@Query("id") id: String): User
+    suspend fun get(@Query("id") id: String): GenericError<User>
 
     @GET("/user")
     suspend fun getByAlias(@Query("alias") alias: String): GenericError<User>
@@ -45,7 +45,7 @@ interface ChatService {
     suspend fun getPreviousMessages(
         @Query("hub") hubId: String,
         @Query("date") date: ZonedDateTime
-    ): List<Message>
+    ): GenericError<List<Message>>
 
     @POST("/hub/send")
     suspend fun sendMessage(@Body message: MessageSend): Message
@@ -54,7 +54,7 @@ interface ChatService {
     suspend fun getNextMessages(
         @Query("hub") hubId: String,
         @Query("date") date: ZonedDateTime
-    ): List<Message>
+    ): GenericError<List<Message>>
 
     @Multipart
     @POST("/upload")
