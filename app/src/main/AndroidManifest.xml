@@ -20,7 +20,7 @@
             android:theme="@style/AppTheme.NoTitle" />
         <activity
             android:name=".user.UserInfoActivity"
-            android:theme="@style/AppTheme.NoTitle" />
+            android:theme="@style/AppTheme.NoTitle.WhiteStatusBar" />
         <activity
             android:name=".contact.AddContactActivity"
             android:theme="@style/AppTheme.NoTitle" />
@@ -29,7 +29,7 @@
             android:theme="@style/AppTheme.NoTitle" />
         <activity
             android:name=".SettingsActivity"
-            android:theme="@style/AppTheme.NoTitle.Translucent" />
+            android:theme="@style/AppTheme.NoTitle.WhiteStatusBar" />
         <activity
             android:name=".HomeActivity"
             android:theme="@style/AppTheme.NoTitle" />

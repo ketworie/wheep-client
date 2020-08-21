@@ -20,16 +20,26 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoTitle.Translucent">
+    <style name="AppTheme.NoTitle.WhiteStatusBar">
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:windowBackground">@color/white</item>
     </style>
 
-    <style name="AppTheme.NoTitle.Launcher"></style>
+    <style name="AppTheme.NoTitle.Launcher" />
 
     <style name="AppTheme.ActionBar">
         <item name="windowActionBar">true</item>
+    </style>
+
+    <style name="name_big">
+        <item name="android:textSize">34sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="alias_medium">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/grey</item>
     </style>
 
 </resources>
