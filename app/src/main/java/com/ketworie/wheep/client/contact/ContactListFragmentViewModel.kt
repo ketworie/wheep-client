@@ -14,7 +14,7 @@ class ContactListFragmentViewModel @Inject constructor() : ViewModel() {
     lateinit var userService: UserService
 
     fun getContacts(): LiveData<PagedList<User>> {
-        return userService.getContacts()
+        return userService.getContactUsers()
             .toLiveData(
                 10, boundaryCallback = ContactBoundaryCallback(
                     userService

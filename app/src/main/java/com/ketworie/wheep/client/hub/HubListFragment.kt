@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
@@ -12,11 +13,14 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ketworie.wheep.client.MainApplication
+import com.ketworie.wheep.client.MainApplication.Companion.USER_IDS
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.chat.ChatActivity
+import com.ketworie.wheep.client.observeOnce
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_hub_list.*
+import java.util.*
 import javax.inject.Inject
 
 class HubListFragment : Fragment() {
@@ -43,23 +47,25 @@ class HubListFragment : Fragment() {
             layoutManager = linearLayoutManager
             val dividerItemDecoration =
                 DividerItemDecoration(context, linearLayoutManager.orientation)
-            dividerItemDecoration.setDrawable(
-                resources.getDrawable(
-                    R.drawable.divider,
-                    activity?.theme
-                )
-            )
+            ResourcesCompat.getDrawable(resources, R.drawable.divider, activity?.theme)?.let {
+                dividerItemDecoration.setDrawable(it)
+            }
             addItemDecoration(dividerItemDecoration)
             adapter = hubAdapter
         }
         viewModel = ViewModelProvider(this, viewModelFactory).get()
-        viewModel.getHubs().observe(this.viewLifecycleOwner) {
+        viewModel.getHubs().observe(viewLifecycleOwner) {
             hubAdapter.submitList(it)
         }
     }
 
     private fun startAddHub() {
-
+        viewModel.getContacts().observeOnce(viewLifecycleOwner) { list ->
+            val userIds = list.map { it.userId }
+            val intent = Intent(this.context, AddHubActivity::class.java)
+            intent.putStringArrayListExtra(USER_IDS, ArrayList(userIds))
+            startActivity(intent)
+        }
     }
 
     private fun startChat(view: View, hub: Hub) {

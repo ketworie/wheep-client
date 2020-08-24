@@ -25,4 +25,6 @@
     <string name="unknown_error">Unknown error</string>
     <string name="create">CREATE</string>
     <string name="send_sign">-></string>
+    <string name="hub_name">Hub name</string>
+    <string name="users_selected">Selected users: %d</string>
 </resources>

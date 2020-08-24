@@ -11,8 +11,11 @@ interface UserDao {
     @Query("SELECT * FROM User WHERE id = :id")
     fun get(id: String): LiveData<User>
 
+    @Query("SELECT * FROM User WHERE id IN (:ids) ORDER BY name")
+    fun getAll(ids: List<String>): DataSource.Factory<Int, User>
+
     @Query("SELECT u.* FROM User u JOIN Contact c ON c.userId = u.id ORDER BY u.name")
-    fun getContacts(): DataSource.Factory<Int, User>
+    fun getContactUsers(): DataSource.Factory<Int, User>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(user: User)
@@ -44,4 +47,6 @@ interface UserDao {
     @Query("SELECT EXISTS(SELECT * FROM Contact WHERE userId = :userId)")
     fun isContact(userId: String): LiveData<Boolean>
 
+    @Query("SELECT * FROM Contact")
+    fun getContacts(): LiveData<List<Contact>>
 }

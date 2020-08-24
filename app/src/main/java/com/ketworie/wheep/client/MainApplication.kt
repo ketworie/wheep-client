@@ -19,6 +19,7 @@ class MainApplication : Application(), HasAndroidInjector {
         const val HUB_ID = "hubId"
         const val IMAGE_TYPE = "imageType"
         const val IMAGE_PATH = "imagePath"
+        const val USER_IDS = "userIds"
     }
 
     @Inject

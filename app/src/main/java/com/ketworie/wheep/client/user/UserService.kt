@@ -40,6 +40,10 @@ class UserService @Inject constructor() {
         return userDao.get(id)
     }
 
+    fun getUsers(ids: List<String>): DataSource.Factory<Int, User> {
+        return userDao.getAll(ids)
+    }
+
     fun getMe(): LiveData<User> {
         return userDao.get(userId)
     }
@@ -84,7 +88,11 @@ class UserService @Inject constructor() {
         return response
     }
 
-    fun getContacts(): DataSource.Factory<Int, User> {
+    fun getContactUsers(): DataSource.Factory<Int, User> {
+        return userDao.getContactUsers()
+    }
+
+    fun getContacts(): LiveData<List<Contact>> {
         return userDao.getContacts()
     }
 

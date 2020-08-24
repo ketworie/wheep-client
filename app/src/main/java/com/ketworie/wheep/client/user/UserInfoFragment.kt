@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
+import androidx.transition.Fade
 import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.image.loadAvatar
@@ -53,9 +55,6 @@ class UserInfoFragment() : Fragment() {
     }
 
     fun submitUser(user: User) {
-        viewModel.isContact(user.id).observe(this.viewLifecycleOwner) {
-            transformContactButton(it)
-        }
         name.text = user.name
         alias.text = user.alias
         this.context?.let {
@@ -64,6 +63,9 @@ class UserInfoFragment() : Fragment() {
                 avatar,
                 user.image
             )
+        }
+        viewModel.isContact(user.id).observe(this.viewLifecycleOwner) {
+            transformContactButton(it)
         }
         this.user = user
     }
@@ -77,7 +79,12 @@ class UserInfoFragment() : Fragment() {
     }
 
     private fun transformContactButton(isContact: Boolean) {
-        TransitionManager.beginDelayedTransition(root)
+        val fadeTransitionSequential = TransitionSet().apply {
+            ordering = TransitionSet.ORDERING_SEQUENTIAL
+            addTransition(Fade(Fade.OUT))
+            addTransition(Fade(Fade.IN))
+        }
+        TransitionManager.beginDelayedTransition(root, fadeTransitionSequential)
         if (isContact) {
             addContact.visibility = View.INVISIBLE
             removeContact.visibility = View.VISIBLE

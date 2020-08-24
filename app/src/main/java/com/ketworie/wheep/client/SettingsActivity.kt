@@ -10,7 +10,6 @@ import android.view.animation.Animation
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.lifecycle.observe
 import com.ketworie.wheep.client.MainApplication.Companion.IMAGE_PATH
 import com.ketworie.wheep.client.MainApplication.Companion.PREFERENCES
 import com.ketworie.wheep.client.MainApplication.Companion.USER_ID
@@ -42,13 +41,11 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportPostponeEnterTransition()
         setContentView(R.layout.activity_settings)
-        val liveData = userService.getMe()
-        liveData.observe(this)
+        userService.getMe().observeOnce(this)
         { user ->
             name.text = user.name
             alias.text = user.alias
             loadAvatar(user.image)
-            liveData.removeObservers(this)
         }
         logOut.setOnClickListener {
             logOut()

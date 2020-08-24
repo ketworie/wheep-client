@@ -39,7 +39,7 @@ class ContactListFragment : Fragment() {
         AndroidSupportInjection.inject(this)
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory).get()
-        val contactAdapter = ContactAdapter(resources) { startContactAdd() }
+        val contactAdapter = ContactAdapter { startContactAdd() }
         contactList?.apply {
             val linearLayoutManager = LinearLayoutManager(this@ContactListFragment.activity)
             layoutManager = linearLayoutManager

@@ -11,6 +11,7 @@ import com.ketworie.wheep.client.MainApplication.Companion.HUB_ID
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.image.loadAvatar
+import com.ketworie.wheep.client.observeOnce
 import com.ketworie.wheep.client.user.UserService
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -44,7 +45,7 @@ class ChatActivity : AppCompatActivity() {
                 it.image
             ) { supportStartPostponedEnterTransition() }
         }
-        userService.getMe().observe(this) { user ->
+        userService.getMe().observeOnce(this) { user ->
             val messageAdapter = MessageAdapter(user.id)
             messageAdapter.setScroller { messageList.smoothScrollToPosition(0) }
             messageList.apply {
