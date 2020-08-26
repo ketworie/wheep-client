@@ -40,7 +40,7 @@ class HubListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onViewCreated(view, savedInstanceState)
-        val hubAdapter = HubAdapter { startAddHub() }
+        val hubAdapter = HubAdapter()
         hubAdapter.onItemClick = this::startChat
         hubList.apply {
             val linearLayoutManager = LinearLayoutManager(this@HubListFragment.activity)
@@ -57,6 +57,7 @@ class HubListFragment : Fragment() {
         viewModel.getHubs().observe(viewLifecycleOwner) {
             hubAdapter.submitList(it)
         }
+        addHub.setOnClickListener { startAddHub() }
     }
 
     private fun startAddHub() {

@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.DiffUtil
-import com.ketworie.wheep.client.BaseViewHolder
+import androidx.recyclerview.widget.RecyclerView
 import com.ketworie.wheep.client.HasStringKey
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.image.loadAvatar
@@ -51,7 +51,7 @@ open class UserAdapter : PagedListAdapter<User, UserAdapter.UserViewHolder>(User
         return getItem(position)?.id
     }
 
-    inner class UserViewHolder(view: View) : BaseViewHolder(view) {
+    inner class UserViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val avatar: ImageView = view.avatar
         val name: TextView = view.name

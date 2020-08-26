@@ -74,17 +74,19 @@ class UserService @Inject constructor() {
         userDao.saveAll(users)
     }
 
-    suspend fun removeContact(id: String): GenericError<Unit> {
-        val response = chatService.removeContact(id)
+    suspend fun removeContact(user: User): GenericError<Unit> {
+        val response = chatService.removeContact(user.id)
         if (response is NetworkResponse.Success)
-            userDao.deleteContact(id)
+            userDao.deleteContact(user.id)
         return response
     }
 
-    suspend fun addContact(id: String): GenericError<Unit> {
-        val response = chatService.addContact(id)
-        if (response is NetworkResponse.Success)
-            userDao.saveContact(Contact(id))
+    suspend fun addContact(user: User): GenericError<Unit> {
+        val response = chatService.addContact(user.id)
+        if (response is NetworkResponse.Success) {
+            userDao.saveContact(Contact(user.id))
+            userDao.save(user)
+        }
         return response
     }
 

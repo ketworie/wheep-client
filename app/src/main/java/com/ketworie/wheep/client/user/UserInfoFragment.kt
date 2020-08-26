@@ -8,13 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
-import androidx.transition.Fade
 import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.image.loadAvatar
 import com.ketworie.wheep.client.network.toastError
+import com.ketworie.wheep.client.observeOnce
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_user_info.*
 import kotlinx.coroutines.CoroutineScope
@@ -64,7 +63,7 @@ class UserInfoFragment() : Fragment() {
                 user.image
             )
         }
-        viewModel.isContact(user.id).observe(this.viewLifecycleOwner) {
+        viewModel.isContact(user.id).observeOnce(this.viewLifecycleOwner) {
             transformContactButton(it)
         }
         this.user = user
@@ -78,13 +77,12 @@ class UserInfoFragment() : Fragment() {
         removeContact.visibility = View.INVISIBLE
     }
 
+    private fun animateContactButton(isContact: Boolean) {
+        TransitionManager.beginDelayedTransition(root)
+        transformContactButton(isContact)
+    }
+
     private fun transformContactButton(isContact: Boolean) {
-        val fadeTransitionSequential = TransitionSet().apply {
-            ordering = TransitionSet.ORDERING_SEQUENTIAL
-            addTransition(Fade(Fade.OUT))
-            addTransition(Fade(Fade.IN))
-        }
-        TransitionManager.beginDelayedTransition(root, fadeTransitionSequential)
         if (isContact) {
             addContact.visibility = View.INVISIBLE
             removeContact.visibility = View.VISIBLE
@@ -98,8 +96,10 @@ class UserInfoFragment() : Fragment() {
         val user = user ?: return
         addContact.isEnabled = false
         CoroutineScope(Dispatchers.IO).launch {
-            userService.addContact(user.id).toastError(requireActivity())
-            requireActivity().runOnUiThread { addContact.isEnabled = true }
+            val hasError = userService.addContact(user).toastError(requireActivity())
+            requireActivity().runOnUiThread {
+                addContact.isEnabled = true; animateContactButton(!hasError)
+            }
         }
     }
 
@@ -107,8 +107,12 @@ class UserInfoFragment() : Fragment() {
         val user = user ?: return
         removeContact.isEnabled = false
         CoroutineScope(Dispatchers.IO).launch {
-            userService.removeContact(user.id).toastError(requireActivity())
-            requireActivity().runOnUiThread { removeContact.isEnabled = true }
+            val hasError = userService.removeContact(user).toastError(requireActivity())
+            requireActivity().runOnUiThread {
+                removeContact.isEnabled = true; animateContactButton(
+                hasError
+            )
+            }
         }
     }
 }

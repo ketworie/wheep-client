@@ -7,16 +7,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.ketworie.wheep.client.BaseViewHolder
 import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
 import com.ketworie.wheep.client.R
 import kotlinx.android.synthetic.main.item_hub_list.view.*
 
-class HubAdapter(private val onAdd: () -> Unit) :
-    PagedListAdapter<HubMessage, BaseViewHolder>(
-        HubDefaultDiff
-    ) {
+class HubAdapter : PagedListAdapter<HubMessage, HubAdapter.HubViewHolder>(HubDefaultDiff) {
 
     var onItemClick: ((View, Hub) -> Unit) = { _, _ -> }
 
@@ -31,32 +28,15 @@ class HubAdapter(private val onAdd: () -> Unit) :
 
     }
 
-    override fun getItemCount(): Int {
-        return super.getItemCount() + 1
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return when (position) {
-            0 -> R.layout.button_add_hub
-            else -> R.layout.item_hub_list
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HubViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(viewType, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_hub_list, parent, false)
                 ?: throw RuntimeException("Error inflating message item")
-        if (viewType == R.layout.button_add_hub) {
-            view.setOnClickListener { onAdd.invoke() }
-            return BaseViewHolder(view)
-        }
         return HubViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        if (holder !is HubViewHolder)
-            return
-        getItem(position.dec())?.apply {
+    override fun onBindViewHolder(holder: HubViewHolder, position: Int) {
+        getItem(position)?.apply {
             holder.header.text = hub.name
             // TODO: Show last message
             holder.lastMessage.text = message?.text ?: "No messages"
@@ -69,14 +49,14 @@ class HubAdapter(private val onAdd: () -> Unit) :
         }
     }
 
-    inner class HubViewHolder(view: View) : BaseViewHolder(view) {
+    inner class HubViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val avatar: ImageView = view.avatar
         val header: TextView = view.header
         val lastMessage: TextView = view.lastMessage
 
         init {
             view.setOnClickListener {
-                getItem(adapterPosition.dec())?.let { onItemClick.invoke(view, it.hub) }
+                getItem(adapterPosition)?.let { onItemClick.invoke(view, it.hub) }
             }
         }
     }
