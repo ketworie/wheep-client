@@ -1,6 +1,6 @@
 package com.ketworie.wheep.client.chat
 
-import com.ketworie.wheep.client.hub.AddHub
+import com.ketworie.wheep.client.hub.HubAdd
 import com.ketworie.wheep.client.hub.Hub
 import com.ketworie.wheep.client.network.GenericError
 import com.ketworie.wheep.client.user.User
@@ -49,7 +49,7 @@ interface ChatService {
     ): GenericError<List<Message>>
 
     @POST("/hub/add")
-    suspend fun addHub(@Body adder: AddHub): GenericError<Unit>
+    suspend fun addHub(@Body adder: HubAdd): GenericError<Unit>
 
     @POST("/hub/send")
     suspend fun sendMessage(@Body message: MessageSend): Message

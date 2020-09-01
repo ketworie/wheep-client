@@ -18,7 +18,7 @@ import com.ketworie.wheep.client.image.loadAvatar
 import com.ketworie.wheep.client.network.NetworkResponse
 import com.ketworie.wheep.client.network.toastError
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_add_hub.*
+import kotlinx.android.synthetic.main.activity_hub_add.*
 import kotlinx.android.synthetic.main.activity_home.avatar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class AddHubActivity : AppCompatActivity() {
+class HubAddActivity : AppCompatActivity() {
 
     var avatarAddress = ""
 
@@ -36,7 +36,7 @@ class AddHubActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_hub)
+        setContentView(R.layout.activity_hub_add)
         intent?.getStringArrayListExtra(USER_IDS)?.let {
             val fragment = UserSelectorFragment(it)
             supportFragmentManager.beginTransaction().add(R.id.fragment, fragment)
@@ -81,7 +81,7 @@ class AddHubActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             val response = fileService.uploadImage(image)
             withContext(Dispatchers.Main) { avatar.isEnabled = true }
-            if (response.toastError(this@AddHubActivity))
+            if (response.toastError(this@HubAddActivity))
                 return@launch
             avatarAddress = (response as NetworkResponse.Success<String>).body
         }

@@ -13,15 +13,15 @@ import com.ketworie.wheep.client.hideKeyboard
 import com.ketworie.wheep.client.network.NetworkResponse
 import com.ketworie.wheep.client.user.UserInfoFragment
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_add_contact.*
+import kotlinx.android.synthetic.main.activity_contact_add.*
 import javax.inject.Inject
 
-class AddContactActivity : AppCompatActivity() {
+class ContacAddtActivity : AppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    lateinit var viewModel: AddContactActivityViewModel
+    lateinit var viewModelAdd: ContactAddActivityViewModel
 
     private val userInfoFragment: UserInfoFragment = UserInfoFragment()
 
@@ -29,8 +29,8 @@ class AddContactActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_contact)
-        viewModel = ViewModelProvider(this, viewModelFactory).get()
+        setContentView(R.layout.activity_contact_add)
+        viewModelAdd = ViewModelProvider(this, viewModelFactory).get()
         alias.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchUser()
@@ -46,7 +46,7 @@ class AddContactActivity : AppCompatActivity() {
         val alias = alias.text.toString()
         if (alias.isBlank())
             return
-        viewModel.search(alias).observe(this) {
+        viewModelAdd.search(alias).observe(this) {
             when (it) {
                 is NetworkResponse.Success -> {
                     userInfoFragment.submitUser(it.body)

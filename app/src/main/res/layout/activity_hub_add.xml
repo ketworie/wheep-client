@@ -7,7 +7,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context=".hub.AddHubActivity">
+    tools:context=".hub.HubAddActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

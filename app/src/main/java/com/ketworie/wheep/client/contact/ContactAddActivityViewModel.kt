@@ -7,7 +7,7 @@ import com.ketworie.wheep.client.user.User
 import com.ketworie.wheep.client.user.UserService
 import javax.inject.Inject
 
-class AddContactActivityViewModel @Inject constructor() : ViewModel() {
+class ContactAddActivityViewModel @Inject constructor() : ViewModel() {
 
     @Inject
     lateinit var userService: UserService

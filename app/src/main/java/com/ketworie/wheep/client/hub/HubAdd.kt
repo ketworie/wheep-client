@@ -1,4 +1,4 @@
 package com.ketworie.wheep.client.hub
 
-class AddHub {
+class HubAdd {
 }

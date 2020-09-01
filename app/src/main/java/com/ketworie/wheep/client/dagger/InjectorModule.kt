@@ -5,9 +5,9 @@ import com.ketworie.wheep.client.SettingsActivity
 import com.ketworie.wheep.client.SignInActivity
 import com.ketworie.wheep.client.UserSelectorFragment
 import com.ketworie.wheep.client.chat.ChatActivity
-import com.ketworie.wheep.client.contact.AddContactActivity
+import com.ketworie.wheep.client.contact.ContacAddtActivity
 import com.ketworie.wheep.client.contact.ContactListFragment
-import com.ketworie.wheep.client.hub.AddHubActivity
+import com.ketworie.wheep.client.hub.HubAddActivity
 import com.ketworie.wheep.client.hub.HubListFragment
 import com.ketworie.wheep.client.user.UserInfoFragment
 import dagger.Module
@@ -40,9 +40,9 @@ abstract class InjectorModule {
     abstract fun contributeUserSelectorFragmentInjector(): UserSelectorFragment?
 
     @ContributesAndroidInjector
-    abstract fun contributeAddContactActivityInjector(): AddContactActivity?
+    abstract fun contributeAddContactActivityInjector(): ContacAddtActivity?
 
     @ContributesAndroidInjector
-    abstract fun contributeAddHubActivityInjector(): AddHubActivity?
+    abstract fun contributeAddHubActivityInjector(): HubAddActivity?
 
 }

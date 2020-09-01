@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".hub.AddHubActivity"
+            android:name=".hub.HubAddActivity"
             android:theme="@style/AppTheme.NoTitle.WhiteStatusBar" />
         <activity
             android:name=".image.ImageCropperActivity"
@@ -25,7 +25,7 @@
             android:name=".user.UserInfoActivity"
             android:theme="@style/AppTheme.NoTitle.WhiteStatusBar" />
         <activity
-            android:name=".contact.AddContactActivity"
+            android:name=".contact.ContacAddtActivity"
             android:theme="@style/AppTheme.NoTitle" />
         <activity
             android:name=".chat.ChatActivity"

@@ -63,7 +63,7 @@ class HubListFragment : Fragment() {
     private fun startAddHub() {
         viewModel.getContacts().observeOnce(viewLifecycleOwner) { list ->
             val userIds = list.map { it.userId }
-            val intent = Intent(this.context, AddHubActivity::class.java)
+            val intent = Intent(this.context, HubAddActivity::class.java)
             intent.putStringArrayListExtra(USER_IDS, ArrayList(userIds))
             startActivity(intent)
         }
