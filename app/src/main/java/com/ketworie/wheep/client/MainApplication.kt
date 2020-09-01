@@ -20,6 +20,7 @@ class MainApplication : Application(), HasAndroidInjector {
         const val IMAGE_TYPE = "imageType"
         const val IMAGE_PATH = "imagePath"
         const val USER_IDS = "userIds"
+        const val REQUEST_AVATAR = 101
     }
 
     @Inject

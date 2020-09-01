@@ -110,10 +110,8 @@ class UserService @Inject constructor() {
 
     suspend fun updateAvatar(id: String, image: Uri): GenericError<String> {
         val file = image.toFile()
-        val requestFile: RequestBody =
-            RequestBody.create(MediaType.parse("image/*"), file)
-        val body =
-            MultipartBody.Part.createFormData("image", file.name, requestFile)
+        val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
+        val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
         val updateAvatar = chatService.updateAvatar(body)
         if (updateAvatar is NetworkResponse.Success) {
             userDao.updateAvatar(id, updateAvatar.body)

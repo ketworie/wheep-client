@@ -12,6 +12,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.ketworie.wheep.client.MainApplication.Companion.IMAGE_PATH
 import com.ketworie.wheep.client.MainApplication.Companion.PREFERENCES
+import com.ketworie.wheep.client.MainApplication.Companion.REQUEST_AVATAR
 import com.ketworie.wheep.client.MainApplication.Companion.USER_ID
 import com.ketworie.wheep.client.MainApplication.Companion.X_AUTH_TOKEN
 import com.ketworie.wheep.client.hub.HubService
@@ -33,8 +34,6 @@ class SettingsActivity : AppCompatActivity() {
 
     @Inject
     lateinit var hubService: HubService
-
-    private val requestAvatar = 101
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -81,7 +80,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun pickAvatar() {
         startActivityForResult(
             Intent(applicationContext, ImageCropperActivity::class.java),
-            requestAvatar
+            REQUEST_AVATAR
         )
     }
 
@@ -89,7 +88,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode != Activity.RESULT_OK)
             return
-        if (requestCode == requestAvatar && data != null) {
+        if (requestCode == REQUEST_AVATAR && data != null) {
             data.extras?.get(IMAGE_PATH)?.let { updateAvatar(it as Uri) }
         }
     }

@@ -22,6 +22,8 @@ class UserSelectorFragment(private val ids: List<String>) : Fragment() {
     @Inject
     lateinit var userService: UserService
 
+    lateinit var tracker: SelectionTracker<String>
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,7 +37,7 @@ class UserSelectorFragment(private val ids: List<String>) : Fragment() {
         val adapter = SelectableUserAdapter()
         userList.adapter = adapter
         userList.layoutManager = LinearLayoutManager(this@UserSelectorFragment.requireActivity())
-        val tracker = SelectionTracker.Builder<String>(
+        tracker = SelectionTracker.Builder<String>(
             "userSelector",
             userList,
             StringKeyProvider(userList),
