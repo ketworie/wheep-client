@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginVertical="4dp">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/avatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         android:layout_margin="4dp"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/name"
         android:layout_toEndOf="@id/avatar"
         android:layout_alignTop="@id/avatar"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         tools:text="Name" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/text"
         android:background="@drawable/incoming_message"
         android:layout_alignStart="@id/name"

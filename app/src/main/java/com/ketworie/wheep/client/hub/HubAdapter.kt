@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.image.loadAvatar
-import kotlinx.android.synthetic.main.item_hub_list.view.*
+import kotlinx.android.synthetic.main.item_list_entry.view.*
 
 class HubAdapter : PagedListAdapter<HubMessage, HubAdapter.HubViewHolder>(HubDefaultDiff) {
 
@@ -29,7 +29,7 @@ class HubAdapter : PagedListAdapter<HubMessage, HubAdapter.HubViewHolder>(HubDef
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HubViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_hub_list, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_list_entry, parent, false)
                 ?: throw RuntimeException("Error inflating message item")
         return HubViewHolder(view)
     }
@@ -46,7 +46,7 @@ class HubAdapter : PagedListAdapter<HubMessage, HubAdapter.HubViewHolder>(HubDef
     inner class HubViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val avatar: ImageView = view.avatar
         val header: TextView = view.header
-        val lastMessage: TextView = view.lastMessage
+        val lastMessage: TextView = view.body
 
         init {
             view.setOnClickListener {

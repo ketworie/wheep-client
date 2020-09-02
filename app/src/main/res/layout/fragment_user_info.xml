@@ -8,7 +8,7 @@
     android:background="@color/white"
     tools:context=".user.UserInfoFragment">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/avatar"
         android:layout_width="128dp"
         android:layout_height="128dp"
@@ -19,7 +19,7 @@
         app:layout_constraintVertical_bias="0.18"
         tools:src="@tools:sample/avatars" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
         app:layout_constraintVertical_bias="0.08"
         tools:text="Name" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/alias"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
         app:layout_constraintVertical_bias="0.06"
         tools:text="Alias" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/addContact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
         app:layout_constraintVertical_bias="0.42"
         tools:visibility="invisible" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/removeContact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

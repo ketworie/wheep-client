@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".SettingsActivity">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/avatar"
         android:layout_width="128dp"
         android:layout_height="128dp"
@@ -24,7 +24,7 @@
         app:layout_constraintVertical_bias="0.060000002"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/avatar"
         app:layout_constraintVertical_bias="0.07999998" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/alias"
         style="@style/grey_medium"
         android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
         tools:text="Alias"
         app:layout_constraintVertical_bias="0.060000002" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/logOut"
         android:background="@drawable/light_red_border"
         android:layout_width="wrap_content"

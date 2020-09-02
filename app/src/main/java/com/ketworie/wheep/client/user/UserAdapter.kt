@@ -5,8 +5,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.DiffUtil
@@ -15,8 +15,7 @@ import com.ketworie.wheep.client.HasStringKey
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.image.loadAvatar
 import kotlinx.android.synthetic.main.item_incoming_message.view.avatar
-import kotlinx.android.synthetic.main.item_incoming_message.view.name
-import kotlinx.android.synthetic.main.item_user.view.*
+import kotlinx.android.synthetic.main.item_list_entry.view.*
 
 open class UserAdapter : PagedListAdapter<User, UserAdapter.UserViewHolder>(UserDefaultDiff),
     HasStringKey {
@@ -34,8 +33,9 @@ open class UserAdapter : PagedListAdapter<User, UserAdapter.UserViewHolder>(User
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_user, parent, false)
-            ?: throw RuntimeException("Error inflating user item")
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_list_entry, parent, false)
+                ?: throw RuntimeException("Error inflating user item")
         return UserViewHolder(view)
     }
 
@@ -54,9 +54,9 @@ open class UserAdapter : PagedListAdapter<User, UserAdapter.UserViewHolder>(User
     inner class UserViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val avatar: ImageView = view.avatar
-        val name: TextView = view.name
-        val alias: TextView = view.alias
-        val root: LinearLayout = view.root
+        val name: TextView = view.header
+        val alias: TextView = view.body
+        val root: LinearLayoutCompat = view.root
 
         init {
             view.setOnClickListener {

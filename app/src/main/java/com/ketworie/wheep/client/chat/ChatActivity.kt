@@ -71,7 +71,7 @@ class ChatActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 viewModel.sendMessage(MessageSend(hubId, text))
-                messageInput.text.clear()
+                messageInput.text?.clear()
                 (messageList.adapter as MessageAdapter).isScrollNeeded = true
             } catch (e: Exception) {
                 Log.e("CHAT", "Error during message send", e)

@@ -20,7 +20,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/avatar"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -29,14 +29,13 @@
                 android:contentDescription="@string/avatar_image_description"
                 tools:srcCompat="@tools:sample/avatars" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="18sp"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:textColor="@color/black"
-                android:textStyle="bold"
                 tools:text="Hub name" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.Toolbar>
@@ -53,12 +52,12 @@
             android:layout_weight="0.1"
             android:background="#FFFFFF" />
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <EditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/messageInput"
                 android:layout_marginStart="8dp"
                 android:layout_width="0dp"
@@ -69,13 +68,13 @@
                 android:importantForAutofill="no"
                 android:maxLines="1" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/sendButton"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:text="@string/send_sign" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>
