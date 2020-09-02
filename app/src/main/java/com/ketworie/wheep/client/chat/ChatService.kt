@@ -1,7 +1,7 @@
 package com.ketworie.wheep.client.chat
 
-import com.ketworie.wheep.client.hub.HubAdd
 import com.ketworie.wheep.client.hub.Hub
+import com.ketworie.wheep.client.hub.HubAdd
 import com.ketworie.wheep.client.network.GenericError
 import com.ketworie.wheep.client.user.User
 import okhttp3.MultipartBody
@@ -48,8 +48,8 @@ interface ChatService {
         @Query("date") date: ZonedDateTime
     ): GenericError<List<Message>>
 
-    @POST("/hub/add")
-    suspend fun addHub(@Body adder: HubAdd): GenericError<Unit>
+    @POST("/hub")
+    suspend fun addHub(@Body add: HubAdd): GenericError<Hub>
 
     @POST("/hub/send")
     suspend fun sendMessage(@Body message: MessageSend): Message
@@ -61,7 +61,7 @@ interface ChatService {
     ): GenericError<List<Message>>
 
     @Multipart
-    @POST("/upload")
+    @POST("/upload/image")
     suspend fun uploadImage(@Part image: MultipartBody.Part): GenericError<String>
 
     @Multipart

@@ -191,16 +191,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun hasValidInput(): Boolean {
-        if (login.text.isNullOrBlank()) {
-            login.requestFocus()
-            login.error = resources.getString(R.string.login_empty)
-            return false
-        }
-        if (password.text.isNullOrBlank()) {
-            password.requestFocus()
-            password.error = resources.getString(R.string.password_empty)
-            return false
-        }
-        return true
+        return password.requireNonBlank(resources.getString(R.string.password_empty)) &&
+                login.requireNonBlank(resources.getString(R.string.login_empty))
     }
 }

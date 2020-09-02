@@ -1,33 +1,33 @@
 package com.ketworie.wheep.client.network
 
-import android.app.Activity
+import android.content.Context
 import android.widget.Toast
 import com.ketworie.wheep.client.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.IOException
 
 typealias GenericError<T> = NetworkResponse<T, ApiError>
 
-fun <T : Any> GenericError<T>.toastError(activity: Activity): Boolean {
-    when (this) {
-        is NetworkResponse.ApiError -> toast(activity, this.body.message)
-        is NetworkResponse.NetworkError -> toast(
-            activity,
-            activity.resources.getString(R.string.network_error)
-        )
-        is NetworkResponse.UnknownError -> toast(
-            activity,
-            activity.resources.getString(R.string.unknown_error)
-        )
-        else -> return false
+suspend fun <T : Any> GenericError<T>.toastError(context: Context): Boolean =
+    withContext(Dispatchers.Default) {
+        when (this@toastError) {
+            is NetworkResponse.ApiError -> toast(context, this@toastError.body.message)
+            is NetworkResponse.NetworkError -> toast(
+                context,
+                context.resources.getString(R.string.network_error)
+            )
+            is NetworkResponse.UnknownError -> toast(
+                context,
+                context.resources.getString(R.string.unknown_error)
+            )
+            else -> return@withContext false
+        }
+        return@withContext true
     }
-    return true
-}
 
-private fun toast(activity: Activity, text: String) {
-    activity.runOnUiThread {
-        Toast.makeText(activity, text.capitalize(), Toast.LENGTH_SHORT)
-            .show()
-    }
+private suspend fun toast(context: Context, text: String) = withContext(Dispatchers.Main) {
+    Toast.makeText(context, text.capitalize(), Toast.LENGTH_SHORT).show()
 }
 
 

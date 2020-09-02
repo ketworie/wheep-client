@@ -8,9 +8,8 @@ import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.ketworie.wheep.client.MainApplication.Companion.RESOURCE_BASE
 import com.ketworie.wheep.client.R
+import com.ketworie.wheep.client.image.loadAvatar
 import kotlinx.android.synthetic.main.item_hub_list.view.*
 
 class HubAdapter : PagedListAdapter<HubMessage, HubAdapter.HubViewHolder>(HubDefaultDiff) {
@@ -40,12 +39,7 @@ class HubAdapter : PagedListAdapter<HubMessage, HubAdapter.HubViewHolder>(HubDef
             holder.header.text = hub.name
             // TODO: Show last message
             holder.lastMessage.text = message?.text ?: "No messages"
-            Glide
-                .with(holder.itemView)
-                .asBitmap()
-                .circleCrop()
-                .load(RESOURCE_BASE + hub.image)
-                .into(holder.avatar)
+            loadAvatar(holder.avatar.context, holder.avatar, hub.image)
         }
     }
 

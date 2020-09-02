@@ -5,11 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.ketworie.wheep.client.MainApplication.Companion.IMAGE_PATH
 import com.ketworie.wheep.client.MainApplication.Companion.PREFERENCES
 import com.ketworie.wheep.client.MainApplication.Companion.REQUEST_AVATAR
@@ -17,14 +14,13 @@ import com.ketworie.wheep.client.MainApplication.Companion.USER_ID
 import com.ketworie.wheep.client.MainApplication.Companion.X_AUTH_TOKEN
 import com.ketworie.wheep.client.hub.HubService
 import com.ketworie.wheep.client.image.ImageCropperActivity
-import com.ketworie.wheep.client.network.toastError
+import com.ketworie.wheep.client.image.uploadImage
 import com.ketworie.wheep.client.user.UserService
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SettingsActivity : AppCompatActivity() {
@@ -94,25 +90,12 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun updateAvatar(image: Uri) {
-        avatar.isEnabled = false
-        val alphaAnimation = AlphaAnimation(1F, 0F).apply {
-            repeatCount = Animation.INFINITE
-            duration = 800
-        }
-        avatar.startAnimation(alphaAnimation)
         CoroutineScope(Dispatchers.IO).launch {
-            val userId = userService.userId
-            if (userId.isEmpty())
-                return@launch
-            userService.updateAvatar(userId, image).toastError(this@SettingsActivity)
-            val drawable = image.path?.let { RoundedBitmapDrawableFactory.create(resources, it) }
-            drawable?.isCircular = true
-            withContext(Dispatchers.Main) {
-                avatar.clearAnimation()
-                avatar.alpha = 1F
-                avatar.setImageDrawable(drawable)
-            }
-            avatar.isEnabled = true
+            uploadImage(
+                this@SettingsActivity,
+                avatar,
+                image
+            ) { userService.updateAvatar(userService.userId, it) }
         }
     }
 

@@ -5,21 +5,17 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.google.android.material.snackbar.Snackbar
-import com.ketworie.wheep.client.FileService
-import com.ketworie.wheep.client.MainApplication
+import com.ketworie.wheep.client.*
 import com.ketworie.wheep.client.MainApplication.Companion.REQUEST_AVATAR
 import com.ketworie.wheep.client.MainApplication.Companion.USER_IDS
-import com.ketworie.wheep.client.R
-import com.ketworie.wheep.client.UserSelectorFragment
 import com.ketworie.wheep.client.image.ImageCropperActivity
 import com.ketworie.wheep.client.image.loadAvatar
-import com.ketworie.wheep.client.network.NetworkResponse
+import com.ketworie.wheep.client.image.uploadImage
 import com.ketworie.wheep.client.network.toastError
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_hub_add.*
 import kotlinx.android.synthetic.main.activity_home.avatar
+import kotlinx.android.synthetic.main.activity_hub_add.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,6 +28,9 @@ class HubAddActivity : AppCompatActivity() {
 
     @Inject
     lateinit var fileService: FileService
+
+    @Inject
+    lateinit var hubService: HubService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -49,12 +48,32 @@ class HubAddActivity : AppCompatActivity() {
 
     private fun createHub(fragment: UserSelectorFragment) {
         if (fragment.tracker.selection.size() <= 1) {
-            Snackbar.make(create, R.string.select_more_users, Snackbar.LENGTH_SHORT)
-                .setBackgroundTint(resources.getColor(R.color.design_default_color_error, theme))
-                .show()
+            snack(R.string.select_more_users)
             return
         }
-        TODO("Not yet implemented")
+        if (!avatar.isEnabled) {
+            snack(R.string.avatar_is_loading)
+            return
+        }
+        if (!name.requireNonBlank(resources.getString(R.string.name_empty)))
+            return
+
+        create.isEnabled = false
+        CoroutineScope(Dispatchers.IO).launch {
+            val users = fragment.tracker.selection.toList()
+            val hubAdd = HubAdd(name.text.toString(), avatarAddress, users)
+            val isSuccessful = !hubService.addHub(hubAdd).toastError(this@HubAddActivity)
+            withContext(Dispatchers.Main) {
+                if (isSuccessful) finish()
+                create.isEnabled = true
+            }
+        }
+    }
+
+    private fun snack(resId: Int) {
+        Snackbar.make(create, resId, Snackbar.LENGTH_SHORT)
+            .setBackgroundTint(resources.getColor(R.color.design_default_color_error, theme))
+            .show()
     }
 
     private fun pickAvatar() {
@@ -74,16 +93,9 @@ class HubAddActivity : AppCompatActivity() {
     }
 
     private fun uploadAvatar(image: Uri) {
-        avatar.isEnabled = false
-        val drawable = image.path?.let { RoundedBitmapDrawableFactory.create(resources, it) }
-        drawable?.isCircular = true
-        avatar.setImageDrawable(drawable)
         CoroutineScope(Dispatchers.IO).launch {
-            val response = fileService.uploadImage(image)
-            withContext(Dispatchers.Main) { avatar.isEnabled = true }
-            if (response.toastError(this@HubAddActivity))
-                return@launch
-            avatarAddress = (response as NetworkResponse.Success<String>).body
+            avatarAddress =
+                uploadImage(this@HubAddActivity, avatar, image) { fileService.uploadImage(it) }
         }
     }
 

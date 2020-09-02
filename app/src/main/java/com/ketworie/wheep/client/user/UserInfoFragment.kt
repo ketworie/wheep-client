@@ -98,7 +98,8 @@ class UserInfoFragment() : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             val hasError = userService.addContact(user).toastError(requireActivity())
             requireActivity().runOnUiThread {
-                addContact.isEnabled = true; animateContactButton(!hasError)
+                addContact.isEnabled = true
+                animateContactButton(!hasError)
             }
         }
     }
@@ -109,9 +110,8 @@ class UserInfoFragment() : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             val hasError = userService.removeContact(user).toastError(requireActivity())
             requireActivity().runOnUiThread {
-                removeContact.isEnabled = true; animateContactButton(
-                hasError
-            )
+                removeContact.isEnabled = true
+                animateContactButton(hasError)
             }
         }
     }
