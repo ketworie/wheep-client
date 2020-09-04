@@ -2,7 +2,6 @@ package com.ketworie.wheep.client.contact
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import androidx.lifecycle.get
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ketworie.wheep.client.MainApplication.Companion.USER_ID
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
@@ -57,12 +55,6 @@ class ContactListFragment : Fragment() {
         }
         viewModel.getContacts().observe(this.viewLifecycleOwner) {
             contactAdapter.submitList(it)
-        }
-        contactList.onFlingListener = object : RecyclerView.OnFlingListener() {
-            override fun onFling(velocityX: Int, velocityY: Int): Boolean {
-                Log.i("SCROLL", "Can scroll: ${contactList.canScrollVertically(-1)}")
-                return true
-            }
         }
         contactAdapter.onItemClick = this::startContactInfo
         addContact.setOnClickListener { startContactAdd() }
