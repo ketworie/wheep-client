@@ -3,13 +3,17 @@ package com.ketworie.wheep.client.chat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ketworie.wheep.client.R
+import com.ketworie.wheep.client.image.loadAvatar
+import com.ketworie.wheep.client.user.User
 import kotlinx.android.synthetic.main.item_incoming_message.view.*
 
-class MessageAdapter(private val userId: String) :
+class MessageAdapter(private val userId: String, var usersById: Map<String, User>) :
     PagedListAdapter<Message, MessageAdapter.MessageViewHolder>(MessageDefaultDiff) {
 
     var isScrollNeeded = false
@@ -44,19 +48,29 @@ class MessageAdapter(private val userId: String) :
         val view =
             LayoutInflater.from(parent.context).inflate(viewType, parent, false)
                 ?: throw RuntimeException("Error inflating message item")
-        return MessageViewHolder(view)
+        if (viewType == R.layout.item_outgoing_message)
+            return MessageViewHolder(view)
+
+        return IncomingMessageViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         getItem(position)?.apply {
-            holder.name?.text = userId
             holder.text.text = text
+            if (holder !is IncomingMessageViewHolder)
+                return
+            val user = usersById[userId]
+            holder.name.text = user?.name ?: "Undefined"
+            loadAvatar(holder.itemView.context, holder.avatar, user?.image ?: "")
         }
     }
 
-    inner class MessageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val avatar = view.avatar
-        val name = view.name
-        val text = view.text
+    open inner class MessageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val text: AppCompatTextView = view.text
+    }
+
+    inner class IncomingMessageViewHolder(view: View) : MessageViewHolder(view) {
+        val avatar: AppCompatImageView = view.avatar
+        val name: AppCompatTextView = view.name
     }
 }

@@ -30,4 +30,5 @@
     <string name="select_more_users">Select more than one user</string>
     <string name="avatar_is_loading">Avatar is loading</string>
     <string name="name_empty">Enter hub name</string>
+    <string name="user_count">Hub members: %d</string>
 </resources>

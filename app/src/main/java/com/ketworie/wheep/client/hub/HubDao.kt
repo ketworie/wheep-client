@@ -25,8 +25,9 @@ interface HubDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(hub: Hub)
 
+    @Transaction
     @Query("SELECT * FROM Hub WHERE id = :id")
-    fun get(id: String): LiveData<Hub>
+    fun get(id: String): LiveData<HubWithUsers>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveAll(hubs: List<Hub>)

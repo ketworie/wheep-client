@@ -10,7 +10,6 @@ data class Hub(
     val id: String,
     var name: String,
     var image: String,
-    var userCount: Int,
     var isDialog: Boolean?,
     var lastModified: ZonedDateTime
 )

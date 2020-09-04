@@ -3,9 +3,9 @@ package com.ketworie.wheep.client.chat;
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
-import com.ketworie.wheep.client.hub.Hub
 import com.ketworie.wheep.client.hub.HubService
-import javax.inject.Inject;
+import com.ketworie.wheep.client.hub.HubWithUsers
+import javax.inject.Inject
 
 class ChatActivityViewModel @Inject constructor() : ViewModel() {
 
@@ -15,7 +15,7 @@ class ChatActivityViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var messagingService: MessagingService
 
-    fun getHub(id: String): LiveData<Hub> {
+    fun getHub(id: String): LiveData<HubWithUsers> {
         return hubService.get(id)
     }
 

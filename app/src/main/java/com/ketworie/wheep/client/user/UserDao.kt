@@ -12,7 +12,10 @@ interface UserDao {
     fun get(id: String): LiveData<User>
 
     @Query("SELECT * FROM User WHERE id IN (:ids) ORDER BY name")
-    fun getAll(ids: List<String>): DataSource.Factory<Int, User>
+    fun getAllPaged(ids: List<String>): DataSource.Factory<Int, User>
+
+    @Query("SELECT * FROM User WHERE id IN (:ids) ORDER BY name")
+    fun getAll(ids: List<String>): List<User>
 
     @Query("SELECT u.* FROM User u JOIN Contact c ON c.userId = u.id ORDER BY u.name")
     fun getContactUsers(): DataSource.Factory<Int, User>
@@ -22,6 +25,9 @@ interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveAll(user: List<User>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveUserHubs(userHubs: List<UserHub>)
 
     @Delete
     suspend fun delete(user: User)

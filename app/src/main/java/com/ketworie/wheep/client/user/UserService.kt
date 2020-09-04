@@ -40,7 +40,11 @@ class UserService @Inject constructor() {
         return userDao.get(id)
     }
 
-    fun getUsers(ids: List<String>): DataSource.Factory<Int, User> {
+    fun getAllPaged(ids: List<String>): DataSource.Factory<Int, User> {
+        return userDao.getAllPaged(ids)
+    }
+
+    fun getAll(ids: List<String>): List<User> {
         return userDao.getAll(ids)
     }
 

@@ -11,7 +11,6 @@ import com.ketworie.wheep.client.MainApplication.Companion.HUB_ID
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.image.loadAvatar
-import com.ketworie.wheep.client.observeOnce
 import com.ketworie.wheep.client.user.UserService
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -33,20 +32,19 @@ class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        supportPostponeEnterTransition()
         setContentView(R.layout.activity_chat)
         viewModel = ViewModelProvider(this, viewModelFactory).get()
         hubId = intent.extras?.getString(HUB_ID) ?: return
         viewModel.getHub(hubId).observe(this) {
-            name.text = it.name
+            name.text = it.hub.name
+            userCount.text = resources.getString(R.string.user_count, it.users.size)
             loadAvatar(
                 this,
                 avatar,
-                it.image
-            ) { supportStartPostponedEnterTransition() }
-        }
-        userService.getMe().observeOnce(this) { user ->
-            val messageAdapter = MessageAdapter(user.id)
+                it.hub.image
+            )
+            val usersById = it.users.map { user -> Pair(user.id, user) }.toMap()
+            val messageAdapter = MessageAdapter(userService.userId, usersById)
             messageAdapter.setScroller { messageList.smoothScrollToPosition(0) }
             messageList.apply {
                 adapter = messageAdapter

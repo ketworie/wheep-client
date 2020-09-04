@@ -1,7 +1,7 @@
 package com.ketworie.wheep.client.chat
 
-import com.ketworie.wheep.client.hub.Hub
 import com.ketworie.wheep.client.hub.HubAdd
+import com.ketworie.wheep.client.hub.HubView
 import com.ketworie.wheep.client.network.GenericError
 import com.ketworie.wheep.client.user.User
 import okhttp3.MultipartBody
@@ -40,7 +40,7 @@ interface ChatService {
     suspend fun removeContact(@Query("id") id: String): GenericError<Unit>
 
     @GET("/me/hubs")
-    suspend fun getMyHubs(): List<Hub>
+    suspend fun getMyHubs(): List<HubView>
 
     @GET("/hub/prev")
     suspend fun getPreviousMessages(
@@ -49,7 +49,7 @@ interface ChatService {
     ): GenericError<List<Message>>
 
     @POST("/hub")
-    suspend fun addHub(@Body add: HubAdd): GenericError<Hub>
+    suspend fun addHub(@Body add: HubAdd): GenericError<HubView>
 
     @POST("/hub/send")
     suspend fun sendMessage(@Body message: MessageSend): Message

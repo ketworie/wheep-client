@@ -58,7 +58,7 @@ class UserSelectorFragment(private val ids: List<String>) : Fragment() {
                     selectionText.visibility = View.GONE
             }
         })
-        userService.getUsers(ids).toLiveData(10).observeOnce(this.viewLifecycleOwner) {
+        userService.getAllPaged(ids).toLiveData(10).observeOnce(this.viewLifecycleOwner) {
             adapter.submitList(it)
         }
     }
