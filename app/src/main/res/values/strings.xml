@@ -15,6 +15,8 @@
     <string name="contacts_tab">CONTACTS</string>
     <string name="add_contact">＋ ADD CONTACT</string>
     <string name="add_hub">＋ ADD HUB</string>
+    <string name="add_item">＋ ADD ITEM</string>
+    <string name="add_users">＋ ADD USERS</string>
     <string name="alias">Alias</string>
     <string name="search_button">SEARCH</string>
     <string name="type_here">Type here</string>
@@ -31,4 +33,10 @@
     <string name="avatar_is_loading">Avatar is loading</string>
     <string name="name_empty">Enter hub name</string>
     <string name="user_count">Hub members: %d</string>
+    <string name="remove_user">Remove %s from this hub?</string>
+    <string name="ok">@android:string/ok</string>
+    <string name="cancel">@android:string/cancel</string>
+    <string name="apply">APPLY</string>
+    <string name="add">ADD</string>
+    <string name="select_users">Select users</string>
 </resources>

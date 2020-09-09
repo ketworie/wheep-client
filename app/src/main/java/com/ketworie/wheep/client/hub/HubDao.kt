@@ -25,9 +25,12 @@ interface HubDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(hub: Hub)
 
+    @Query("SELECT * FROM Hub WHERE id = :id")
+    fun get(id: String): LiveData<Hub>
+
     @Transaction
     @Query("SELECT * FROM Hub WHERE id = :id")
-    fun get(id: String): LiveData<HubWithUsers>
+    fun getWithUsers(id: String): LiveData<HubWithUsers>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveAll(hubs: List<Hub>)
@@ -37,4 +40,7 @@ interface HubDao {
 
     @Query("DELETE FROM Hub")
     suspend fun deleteAll()
+
+    @Query("UPDATE Hub SET image = :image WHERE id = :id")
+    suspend fun updateAvatar(id: String, image: String)
 }

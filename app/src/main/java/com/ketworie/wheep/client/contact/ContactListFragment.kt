@@ -20,7 +20,7 @@ import com.ketworie.wheep.client.user.User
 import com.ketworie.wheep.client.user.UserAdapter
 import com.ketworie.wheep.client.user.UserInfoActivity
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_contact_list.*
+import kotlinx.android.synthetic.main.fragment_item_list.*
 import javax.inject.Inject
 
 class ContactListFragment : Fragment() {
@@ -34,7 +34,7 @@ class ContactListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_contact_list, container, false)
+        return inflater.inflate(R.layout.fragment_item_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,7 +42,7 @@ class ContactListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory).get()
         val contactAdapter = UserAdapter()
-        contactList?.apply {
+        itemList?.apply {
             val linearLayoutManager = LinearLayoutManager(this@ContactListFragment.activity)
             layoutManager = linearLayoutManager
             val dividerItemDecoration =
@@ -57,24 +57,22 @@ class ContactListFragment : Fragment() {
             contactAdapter.submitList(it)
         }
         contactAdapter.onItemClick = this::startContactInfo
-        addContact.setOnClickListener { startContactAdd() }
+        addItem.text = resources.getString(R.string.add_contact)
+        addItem.setOnClickListener { startContactAdd() }
     }
 
     private fun startContactInfo(view: View, user: User) {
         startActivity(
-            Intent(this.context, UserInfoActivity::class.java).putExtra(USER_ID, user.id)
-            ,
+            Intent(this.context, UserInfoActivity::class.java).putExtra(USER_ID, user.id),
             this.activity?.parent?.let {
-                ActivityOptionsCompat.makeSceneTransitionAnimation(it)
-                    .toBundle()
+                ActivityOptionsCompat.makeSceneTransitionAnimation(it).toBundle()
             }
         )
     }
 
     private fun startContactAdd() {
         startActivity(
-            Intent(this.context, ContacAddtActivity::class.java)
-            ,
+            Intent(this.context, ContacAddtActivity::class.java),
             this.activity?.parent?.let {
                 ActivityOptionsCompat.makeSceneTransitionAnimation(it)
                     .toBundle()

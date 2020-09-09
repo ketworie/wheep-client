@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".hub.HubInfoActivity"
+            android:theme="@style/AppTheme.NoTitle.WhiteStatusBar" />
+        <activity
             android:name=".hub.HubAddActivity"
             android:theme="@style/AppTheme.NoTitle.WhiteStatusBar" />
         <activity

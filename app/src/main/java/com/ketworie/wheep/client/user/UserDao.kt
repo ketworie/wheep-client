@@ -30,6 +30,9 @@ interface UserDao {
     suspend fun saveUserHubs(userHubs: List<UserHub>)
 
     @Delete
+    suspend fun deleteUserHub(userHub: UserHub)
+
+    @Delete
     suspend fun delete(user: User)
 
     @Query("UPDATE User SET image = :image WHERE id = :id")

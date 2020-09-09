@@ -7,7 +7,8 @@
     android:clickable="true"
     android:focusable="false"
     android:focusableInTouchMode="false"
-    android:foreground="?attr/selectableItemBackground"
+    android:background="?attr/selectableItemBackground"
+    android:foreground="@drawable/check_indicator"
     android:orientation="horizontal">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -19,6 +20,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -28,6 +30,7 @@
             android:layout_margin="5dp"
             android:textSize="20sp"
             android:lines="1"
+            android:ellipsize="end"
             tools:text="Header" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -37,6 +40,16 @@
             android:layout_marginHorizontal="5dp"
             android:ellipsize="end"
             android:maxLines="1"
-            tools:text="Last message" />
+            tools:text="Body" />
     </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/remove"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="16dp"
+        android:background="@android:color/transparent"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:visibility="gone"
+        tools:visibility="visible" />
 </androidx.appcompat.widget.LinearLayoutCompat>

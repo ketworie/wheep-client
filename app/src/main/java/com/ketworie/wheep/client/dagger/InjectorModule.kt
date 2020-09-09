@@ -3,13 +3,14 @@ package com.ketworie.wheep.client.dagger
 import com.ketworie.wheep.client.HomeActivity
 import com.ketworie.wheep.client.SettingsActivity
 import com.ketworie.wheep.client.SignInActivity
-import com.ketworie.wheep.client.UserSelectorFragment
 import com.ketworie.wheep.client.chat.ChatActivity
 import com.ketworie.wheep.client.contact.ContacAddtActivity
 import com.ketworie.wheep.client.contact.ContactListFragment
 import com.ketworie.wheep.client.hub.HubAddActivity
+import com.ketworie.wheep.client.hub.HubInfoActivity
 import com.ketworie.wheep.client.hub.HubListFragment
 import com.ketworie.wheep.client.user.UserInfoFragment
+import com.ketworie.wheep.client.user.UserSelectorFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -44,5 +45,8 @@ abstract class InjectorModule {
 
     @ContributesAndroidInjector
     abstract fun contributeAddHubActivityInjector(): HubAddActivity?
+
+    @ContributesAndroidInjector
+    abstract fun contributeHubInfoActivityInjector(): HubInfoActivity?
 
 }

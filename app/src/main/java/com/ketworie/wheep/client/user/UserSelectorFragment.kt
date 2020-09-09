@@ -1,4 +1,4 @@
-package com.ketworie.wheep.client
+package com.ketworie.wheep.client.user
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,18 +11,19 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionManager
-import com.ketworie.wheep.client.user.StringKeyProvider
-import com.ketworie.wheep.client.user.UserService
+import com.ketworie.wheep.client.R
+import com.ketworie.wheep.client.observeOnce
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_user_selector.*
 import javax.inject.Inject
 
-class UserSelectorFragment(private val ids: List<String>) : Fragment() {
+class UserSelectorFragment() : Fragment() {
 
     @Inject
     lateinit var userService: UserService
 
     lateinit var tracker: SelectionTracker<String>
+    private val adapter = SelectableUserAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,14 +35,15 @@ class UserSelectorFragment(private val ids: List<String>) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onViewCreated(view, savedInstanceState)
-        val adapter = SelectableUserAdapter()
         userList.adapter = adapter
         userList.layoutManager = LinearLayoutManager(this@UserSelectorFragment.requireActivity())
         tracker = SelectionTracker.Builder<String>(
             "userSelector",
             userList,
             StringKeyProvider(userList),
-            SelectableUserAdapter.UserDetailsLookup(userList),
+            SelectableUserAdapter.UserDetailsLookup(
+                userList
+            ),
             StorageStrategy.createStringStorage()
         )
             .withSelectionPredicate(SelectionPredicates.createSelectAnything())
@@ -51,13 +53,16 @@ class UserSelectorFragment(private val ids: List<String>) : Fragment() {
             override fun onSelectionChanged() {
                 TransitionManager.beginDelayedTransition(root)
                 if (tracker.hasSelection()) {
-                    selectionText.visibility = View.VISIBLE
-                    selectionText.text =
+                    selectionHeader.visibility = View.VISIBLE
+                    selectionHeader.text =
                         resources.getString(R.string.users_selected, tracker.selection.size())
                 } else
-                    selectionText.visibility = View.GONE
+                    selectionHeader.visibility = View.GONE
             }
         })
+    }
+
+    fun submitIds(ids: List<String>) {
         userService.getAllPaged(ids).toLiveData(10).observeOnce(this.viewLifecycleOwner) {
             adapter.submitList(it)
         }

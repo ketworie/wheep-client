@@ -19,7 +19,7 @@ import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.chat.ChatActivity
 import com.ketworie.wheep.client.observeOnce
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_hub_list.*
+import kotlinx.android.synthetic.main.fragment_item_list.*
 import java.util.*
 import javax.inject.Inject
 
@@ -34,15 +34,16 @@ class HubListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_hub_list, container, false)
+        return inflater.inflate(R.layout.fragment_item_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onViewCreated(view, savedInstanceState)
+        addItem.text = resources.getString(R.string.add_hub)
         val hubAdapter = HubAdapter()
         hubAdapter.onItemClick = this::startChat
-        hubList.apply {
+        itemList.apply {
             val linearLayoutManager = LinearLayoutManager(this@HubListFragment.activity)
             layoutManager = linearLayoutManager
             val dividerItemDecoration =
@@ -57,7 +58,7 @@ class HubListFragment : Fragment() {
         viewModel.getHubs().observe(viewLifecycleOwner) {
             hubAdapter.submitList(it)
         }
-        addHub.setOnClickListener { startAddHub() }
+        addItem.setOnClickListener { startAddHub() }
     }
 
     private fun startAddHub() {

@@ -116,7 +116,7 @@ class UserService @Inject constructor() {
         val file = image.toFile()
         val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
         val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
-        val updateAvatar = chatService.updateAvatar(body)
+        val updateAvatar = chatService.updateMyAvatar(body)
         if (updateAvatar is NetworkResponse.Success) {
             userDao.updateAvatar(id, updateAvatar.body)
         }

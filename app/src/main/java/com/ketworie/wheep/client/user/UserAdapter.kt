@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.selection.ItemDetailsLookup
@@ -21,6 +22,7 @@ open class UserAdapter : PagedListAdapter<User, UserAdapter.UserViewHolder>(User
     HasStringKey {
 
     var onItemClick: ((View, User) -> Unit) = { _, _ -> }
+    var onItemRemove: ((View, User) -> Unit)? = null
 
     companion object UserDefaultDiff : DiffUtil.ItemCallback<User>() {
         override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
@@ -57,10 +59,14 @@ open class UserAdapter : PagedListAdapter<User, UserAdapter.UserViewHolder>(User
         val name: TextView = view.header
         val alias: TextView = view.body
         val root: LinearLayoutCompat = view.root
+        val remove: AppCompatImageButton = view.remove
 
         init {
             view.setOnClickListener {
                 getItem(adapterPosition)?.let { onItemClick.invoke(view, it) }
+            }
+            remove.setOnClickListener {
+                getItem(adapterPosition)?.let { onItemRemove?.invoke(remove, it) }
             }
         }
 
@@ -68,6 +74,8 @@ open class UserAdapter : PagedListAdapter<User, UserAdapter.UserViewHolder>(User
             name.text = user.name
             alias.text = user.alias
             loadAvatar(itemView.context, avatar, user.image)
+            if (onItemRemove != null)
+                remove.visibility = View.VISIBLE
         }
 
         fun getItemDetails(): ItemDetailsLookup.ItemDetails<String?> =

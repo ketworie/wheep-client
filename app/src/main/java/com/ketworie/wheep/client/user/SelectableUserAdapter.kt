@@ -1,10 +1,9 @@
-package com.ketworie.wheep.client
+package com.ketworie.wheep.client.user
 
 import android.view.MotionEvent
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
-import com.ketworie.wheep.client.user.UserAdapter
 
 class SelectableUserAdapter() : UserAdapter() {
 

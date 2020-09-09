@@ -1,5 +1,7 @@
 package com.ketworie.wheep.client.hub
 
+import android.net.Uri
+import androidx.core.net.toFile
 import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import com.ketworie.wheep.client.chat.ChatService
@@ -7,6 +9,9 @@ import com.ketworie.wheep.client.network.GenericError
 import com.ketworie.wheep.client.network.NetworkResponse
 import com.ketworie.wheep.client.user.UserDao
 import com.ketworie.wheep.client.user.UserHub
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,8 +31,12 @@ class HubService @Inject constructor() {
         return hubDao.getRecent()
     }
 
-    fun get(id: String): LiveData<HubWithUsers> {
+    fun get(id: String): LiveData<Hub> {
         return hubDao.get(id)
+    }
+
+    fun getWithUsers(id: String): LiveData<HubWithUsers> {
+        return hubDao.getWithUsers(id)
     }
 
     suspend fun deleteAll() {
@@ -48,6 +57,24 @@ class HubService @Inject constructor() {
             hubDao.save(pair.first)
             userDao.saveUserHubs(pair.second)
         }
+        return response
+    }
+
+    suspend fun updateAvatar(id: String, image: Uri): GenericError<String> {
+        val file = image.toFile()
+        val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
+        val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
+        val updateAvatar = chatService.updateHubAvatar(id, body)
+        if (updateAvatar is NetworkResponse.Success) {
+            hubDao.updateAvatar(id, updateAvatar.body)
+        }
+        return updateAvatar
+    }
+
+    suspend fun removeUser(hubId: String, userId: String): GenericError<Unit> {
+        val response = chatService.removeUser(hubId, userId)
+        if (response is NetworkResponse.Success)
+            userDao.deleteUserHub(UserHub(userId, hubId))
         return response
     }
 

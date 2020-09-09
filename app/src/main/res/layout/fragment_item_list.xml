@@ -8,6 +8,7 @@
     tools:context=".hub.HubListFragment">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -16,17 +17,16 @@
         app:expanded="false">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/addHub"
+            android:id="@+id/addItem"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_hub"
+            android:text="@string/add_item"
             app:layout_scrollFlags="scroll|snap" />
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/hubList"
+        android:id="@+id/itemList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -9,9 +10,22 @@
     android:orientation="vertical"
     tools:context=".hub.HubAddActivity">
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/selectionHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/select_users"
+        android:textColor="@color/black"
+        android:textSize="28sp"
+        android:visibility="gone" />
+
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="1dp"
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -21,25 +35,40 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/name"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="10dp"
-            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxEms="11"
+            android:maxLines="1"
             android:background="@android:color/transparent"
             android:hint="@string/hub_name"
             android:imeOptions="actionDone"
+            tools:text="Some hub name"
             android:inputType="text" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/applyEdit"
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_menu_edit"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:layoutAnimation="@anim/layout_animation_fall" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/create"
+        android:id="@+id/apply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"

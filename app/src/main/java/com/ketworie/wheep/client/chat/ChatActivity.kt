@@ -1,7 +1,9 @@
 package com.ketworie.wheep.client.chat
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ketworie.wheep.client.MainApplication.Companion.HUB_ID
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.ViewModelFactory
+import com.ketworie.wheep.client.hub.HubInfoActivity
 import com.ketworie.wheep.client.image.loadAvatar
 import com.ketworie.wheep.client.user.UserService
 import dagger.android.AndroidInjection
@@ -58,7 +61,12 @@ class ChatActivity : AppCompatActivity() {
         sendButton.setOnClickListener {
             sendMessage()
         }
+        hubInfo.setOnClickListener(this::onHubInfo)
+    }
 
+    private fun onHubInfo(v: View?) {
+        val intent = Intent(this, HubInfoActivity::class.java).putExtra(HUB_ID, hubId)
+        startActivity(intent)
     }
 
     private fun sendMessage() {

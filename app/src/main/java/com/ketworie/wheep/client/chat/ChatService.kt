@@ -61,11 +61,24 @@ interface ChatService {
     ): GenericError<List<Message>>
 
     @Multipart
+    @POST("/hub/avatar/update")
+    suspend fun updateHubAvatar(
+        @Part("hubId") hubId: String,
+        @Part image: MultipartBody.Part
+    ): GenericError<String>
+
+    @POST("/hub/user/remove")
+    suspend fun removeUser(
+        @Query("hubId") hubId: String,
+        @Query("userId") userId: String
+    ): GenericError<Unit>
+
+    @Multipart
     @POST("/upload/image")
     suspend fun uploadImage(@Part image: MultipartBody.Part): GenericError<String>
 
     @Multipart
-    @POST("/avatar/update")
-    suspend fun updateAvatar(@Part image: MultipartBody.Part): GenericError<String>
+    @POST("/me/avatar/update")
+    suspend fun updateMyAvatar(@Part image: MultipartBody.Part): GenericError<String>
 
 }
