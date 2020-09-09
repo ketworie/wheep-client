@@ -16,8 +16,8 @@ interface HubDao {
                 "Message.prevId as m_prevId, " +
                 "Message.date AS m_date " +
                 "FROM Hub " +
-                "LEFT JOIN Message ON (Message.hubId = Hub.id " +
-                "AND Message.date = (SELECT MAX(m.date) FROM Message m)) " +
+                "LEFT JOIN Message ON Message.id = (SELECT t.id FROM " +
+                "(SELECT m.id FROM Message m WHERE m.hubId = Hub.id ORDER BY m.date DESC) t LIMIT 1) " +
                 "ORDER BY COALESCE(Message.date, Hub.lastModified) DESC"
     )
     fun getRecent(): DataSource.Factory<Int, HubMessage>
