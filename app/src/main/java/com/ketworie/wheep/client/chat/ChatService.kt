@@ -60,6 +60,10 @@ interface ChatService {
         @Query("date") date: ZonedDateTime
     ): GenericError<List<Message>>
 
+    @FormUrlEncoded
+    @POST("/hub/rename")
+    suspend fun renameHub(@Field("id") id: String, @Field("name") name: String): GenericError<Unit>
+
     @Multipart
     @POST("/hub/avatar/update")
     suspend fun updateHubAvatar(
@@ -67,10 +71,11 @@ interface ChatService {
         @Part image: MultipartBody.Part
     ): GenericError<String>
 
+    @FormUrlEncoded
     @POST("/hub/user/remove")
     suspend fun removeUser(
-        @Query("hubId") hubId: String,
-        @Query("userId") userId: String
+        @Field("hubId") hubId: String,
+        @Field("userId") userId: String
     ): GenericError<Unit>
 
     @Multipart

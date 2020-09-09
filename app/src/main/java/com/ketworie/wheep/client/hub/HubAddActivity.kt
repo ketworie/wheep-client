@@ -67,7 +67,7 @@ class HubAddActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             val users = fragment.tracker.selection.toList()
             val hubAdd = HubAdd(name.text.toString(), avatarAddress, users)
-            val isSuccessful = !hubService.addHub(hubAdd).toastError(this@HubAddActivity)
+            val isSuccessful = !hubService.add(hubAdd).toastError(this@HubAddActivity)
             withContext(Dispatchers.Main) {
                 if (isSuccessful) finish()
                 apply.isEnabled = true

@@ -43,4 +43,7 @@ interface HubDao {
 
     @Query("UPDATE Hub SET image = :image WHERE id = :id")
     suspend fun updateAvatar(id: String, image: String)
+
+    @Query("UPDATE Hub SET name = :name WHERE id = :id")
+    suspend fun updateName(id: String, name: String)
 }

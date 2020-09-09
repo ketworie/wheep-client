@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.observe
 import androidx.transition.AutoTransition
 import androidx.transition.Transition
@@ -16,6 +17,7 @@ import com.ketworie.wheep.client.MainApplication
 import com.ketworie.wheep.client.MainApplication.Companion.HUB_ID
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.contact.Contact
+import com.ketworie.wheep.client.hideKeyboard
 import com.ketworie.wheep.client.image.ImageCropperActivity
 import com.ketworie.wheep.client.image.loadAvatar
 import com.ketworie.wheep.client.image.uploadImage
@@ -46,7 +48,7 @@ class HubInfoActivity : AppCompatActivity() {
     private val userListFragment = UserListFragment()
     private var userSelectorFragment = UserSelectorFragment()
     private var isSelectMode = false
-    private var hub: HubWithUsers? = null
+    private var hubWithUsers: HubWithUsers? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -58,13 +60,29 @@ class HubInfoActivity : AppCompatActivity() {
             .add(R.id.fragment, userListFragment)
             .runOnCommit {
                 userListFragment.addItem.setOnClickListener { _ -> switchToSelection() }
-                loadHubs()
+                loadHub()
             }
             .commit()
         avatar.setOnClickListener { pickAvatar() }
         applyEdit.visibility = View.VISIBLE
+        applyEdit.setOnClickListener { onApplyEdit() }
+        name.addTextChangedListener { text ->
+            circle.isActivated = this.hubWithUsers?.hub?.name != text.toString()
+        }
         apply.visibility = View.GONE
         apply.text = resources.getString(R.string.add)
+    }
+
+    private fun onApplyEdit() {
+        if (!circle.isActivated || name.text.isNullOrBlank())
+            return
+        hideKeyboard()
+        root.requestFocus()
+        applyEdit.isEnabled = false
+        CoroutineScope(Dispatchers.IO).launch {
+            hubService.rename(hubId, name.text.toString()).toastError(this@HubInfoActivity)
+            applyEdit.isEnabled = true
+        }
     }
 
     private fun switchToSelection() {
@@ -88,7 +106,7 @@ class HubInfoActivity : AppCompatActivity() {
             .replace(R.id.fragment, userSelectorFragment)
             .runOnCommit {
                 userService.getContacts().observeOnce(this@HubInfoActivity) {
-                    val hubUsers = hub?.users?.map(User::id) ?: emptyList()
+                    val hubUsers = hubWithUsers?.users?.map(User::id) ?: emptyList()
                     val ids =
                         it.map(Contact::userId).filter { id -> !hubUsers.contains(id) }
                     userSelectorFragment.submitIds(ids)
@@ -126,9 +144,9 @@ class HubInfoActivity : AppCompatActivity() {
             .commit()
     }
 
-    private fun loadHubs() {
+    private fun loadHub() {
         hubService.getWithUsers(hubId).observe(userListFragment.viewLifecycleOwner) {
-            hub = it
+            hubWithUsers = it
             name.setText(it.hub.name)
             loadAvatar(this, avatar, it.hub.image)
             userListFragment.submitUsers(it.users)

@@ -50,7 +50,7 @@ class HubService @Inject constructor() {
         userDao.saveUserHubs(pairs.flatMap(Pair<Hub, List<UserHub>>::second))
     }
 
-    suspend fun addHub(add: HubAdd): GenericError<HubView> {
+    suspend fun add(add: HubAdd): GenericError<HubView> {
         val response = chatService.addHub(add)
         if (response is NetworkResponse.Success) {
             val pair = response.body.toEntity()
@@ -69,6 +69,13 @@ class HubService @Inject constructor() {
             hubDao.updateAvatar(id, updateAvatar.body)
         }
         return updateAvatar
+    }
+
+    suspend fun rename(id: String, name: String): GenericError<Unit> {
+        val response = chatService.renameHub(id, name)
+        if (response is NetworkResponse.Success)
+            hubDao.updateName(id, name)
+        return response
     }
 
     suspend fun removeUser(hubId: String, userId: String): GenericError<Unit> {
