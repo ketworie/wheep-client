@@ -16,7 +16,7 @@ import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_contact_add.*
 import javax.inject.Inject
 
-class ContacAddtActivity : AppCompatActivity() {
+class ContactAddActivity : AppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory

@@ -72,7 +72,7 @@ class ContactListFragment : Fragment() {
 
     private fun startContactAdd() {
         startActivity(
-            Intent(this.context, ContacAddtActivity::class.java),
+            Intent(this.context, ContactAddActivity::class.java),
             this.activity?.parent?.let {
                 ActivityOptionsCompat.makeSceneTransitionAnimation(it)
                     .toBundle()

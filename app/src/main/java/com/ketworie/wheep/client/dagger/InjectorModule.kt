@@ -4,7 +4,7 @@ import com.ketworie.wheep.client.HomeActivity
 import com.ketworie.wheep.client.SettingsActivity
 import com.ketworie.wheep.client.SignInActivity
 import com.ketworie.wheep.client.chat.ChatActivity
-import com.ketworie.wheep.client.contact.ContacAddtActivity
+import com.ketworie.wheep.client.contact.ContactAddActivity
 import com.ketworie.wheep.client.contact.ContactListFragment
 import com.ketworie.wheep.client.hub.HubAddActivity
 import com.ketworie.wheep.client.hub.HubInfoActivity
@@ -41,7 +41,7 @@ abstract class InjectorModule {
     abstract fun contributeUserSelectorFragmentInjector(): UserSelectorFragment?
 
     @ContributesAndroidInjector
-    abstract fun contributeAddContactActivityInjector(): ContacAddtActivity?
+    abstract fun contributeAddContactActivityInjector(): ContactAddActivity?
 
     @ContributesAndroidInjector
     abstract fun contributeAddHubActivityInjector(): HubAddActivity?

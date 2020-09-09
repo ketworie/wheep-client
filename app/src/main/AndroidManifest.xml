@@ -28,7 +28,7 @@
             android:name=".user.UserInfoActivity"
             android:theme="@style/AppTheme.NoTitle.WhiteStatusBar" />
         <activity
-            android:name=".contact.ContacAddtActivity"
+            android:name=".contact.ContactAddActivity"
             android:theme="@style/AppTheme.NoTitle" />
         <activity
             android:name=".chat.ChatActivity"
