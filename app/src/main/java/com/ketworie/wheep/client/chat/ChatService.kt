@@ -78,6 +78,13 @@ interface ChatService {
         @Field("userId") userId: String
     ): GenericError<Unit>
 
+    @FormUrlEncoded
+    @POST("/hub/user/add")
+    suspend fun addUsers(
+        @Field("hubId") hubId: String,
+        @Field("userId") userIds: List<String>
+    ): GenericError<Unit>
+
     @Multipart
     @POST("/upload/image")
     suspend fun uploadImage(@Part image: MultipartBody.Part): GenericError<String>
@@ -85,5 +92,6 @@ interface ChatService {
     @Multipart
     @POST("/me/avatar/update")
     suspend fun updateMyAvatar(@Part image: MultipartBody.Part): GenericError<String>
+
 
 }

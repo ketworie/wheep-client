@@ -65,15 +65,30 @@ class HubInfoActivity : AppCompatActivity() {
             .commit()
         avatar.setOnClickListener { pickAvatar() }
         applyEdit.visibility = View.VISIBLE
-        applyEdit.setOnClickListener { onApplyEdit() }
+        applyEdit.setOnClickListener { onEditName() }
         name.addTextChangedListener { text ->
             circle.isActivated = this.hubWithUsers?.hub?.name != text.toString()
         }
         apply.visibility = View.GONE
         apply.text = resources.getString(R.string.add)
+        apply.setOnClickListener { onAddUsers() }
     }
 
-    private fun onApplyEdit() {
+    private fun onAddUsers() {
+        val userIds = userSelectorFragment.tracker.selection.toList()
+        if (userIds.isEmpty())
+            return
+        apply.isEnabled = false
+        CoroutineScope(Dispatchers.IO).launch {
+            val hasError = hubService.addUsers(hubId, userIds).toastError(this@HubInfoActivity)
+            withContext(Dispatchers.Main) {
+                apply.isEnabled = true
+                if (!hasError) switchToEdit()
+            }
+        }
+    }
+
+    private fun onEditName() {
         if (!circle.isActivated || name.text.isNullOrBlank())
             return
         hideKeyboard()
@@ -145,7 +160,7 @@ class HubInfoActivity : AppCompatActivity() {
     }
 
     private fun loadHub() {
-        hubService.getWithUsers(hubId).observe(userListFragment.viewLifecycleOwner) {
+        hubService.getWithUsers(hubId).observe(this) {
             hubWithUsers = it
             name.setText(it.hub.name)
             loadAvatar(this, avatar, it.hub.image)

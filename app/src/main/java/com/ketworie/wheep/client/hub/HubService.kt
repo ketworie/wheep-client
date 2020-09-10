@@ -78,6 +78,13 @@ class HubService @Inject constructor() {
         return response
     }
 
+    suspend fun addUsers(hubId: String, userIds: List<String>): GenericError<Unit> {
+        val response = chatService.addUsers(hubId, userIds)
+        if (response is NetworkResponse.Success)
+            userDao.saveUserHubs(userIds.map { UserHub(it, hubId) })
+        return response
+    }
+
     suspend fun removeUser(hubId: String, userId: String): GenericError<Unit> {
         val response = chatService.removeUser(hubId, userId)
         if (response is NetworkResponse.Success)

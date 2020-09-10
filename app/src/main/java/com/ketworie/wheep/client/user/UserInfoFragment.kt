@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_user_info.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class UserInfoFragment() : Fragment() {
@@ -97,7 +98,7 @@ class UserInfoFragment() : Fragment() {
         addContact.isEnabled = false
         CoroutineScope(Dispatchers.IO).launch {
             val hasError = userService.addContact(user).toastError(requireActivity())
-            requireActivity().runOnUiThread {
+            withContext(Dispatchers.Main) {
                 addContact.isEnabled = true
                 animateContactButton(!hasError)
             }
@@ -109,7 +110,7 @@ class UserInfoFragment() : Fragment() {
         removeContact.isEnabled = false
         CoroutineScope(Dispatchers.IO).launch {
             val hasError = userService.removeContact(user).toastError(requireActivity())
-            requireActivity().runOnUiThread {
+            withContext(Dispatchers.Main) {
                 removeContact.isEnabled = true
                 animateContactButton(hasError)
             }
