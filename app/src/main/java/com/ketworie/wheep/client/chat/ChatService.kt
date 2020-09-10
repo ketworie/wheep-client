@@ -5,6 +5,7 @@ import com.ketworie.wheep.client.hub.HubView
 import com.ketworie.wheep.client.network.GenericError
 import com.ketworie.wheep.client.user.User
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 import java.time.ZonedDateTime
@@ -67,7 +68,7 @@ interface ChatService {
     @Multipart
     @POST("/hub/avatar/update")
     suspend fun updateHubAvatar(
-        @Part("hubId") hubId: String,
+        @Part("hubId") hubId: RequestBody,
         @Part image: MultipartBody.Part
     ): GenericError<String>
 

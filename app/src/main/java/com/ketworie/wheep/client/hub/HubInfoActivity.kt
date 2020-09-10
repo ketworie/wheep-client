@@ -163,7 +163,8 @@ class HubInfoActivity : AppCompatActivity() {
         hubService.getWithUsers(hubId).observe(this) {
             hubWithUsers = it
             name.setText(it.hub.name)
-            loadAvatar(this, avatar, it.hub.image)
+            if (avatar.drawable == null)
+                loadAvatar(this, avatar, it.hub.image)
             userListFragment.submitUsers(it.users)
         }
     }

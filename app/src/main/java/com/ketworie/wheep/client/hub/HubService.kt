@@ -62,9 +62,10 @@ class HubService @Inject constructor() {
 
     suspend fun updateAvatar(id: String, image: Uri): GenericError<String> {
         val file = image.toFile()
+        val idBody = RequestBody.create(MediaType.parse("text/plain"), id)
         val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
         val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
-        val updateAvatar = chatService.updateHubAvatar(id, body)
+        val updateAvatar = chatService.updateHubAvatar(idBody, body)
         if (updateAvatar is NetworkResponse.Success) {
             hubDao.updateAvatar(id, updateAvatar.body)
         }
