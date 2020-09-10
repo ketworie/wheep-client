@@ -4,19 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import com.google.android.material.snackbar.Snackbar
 import com.ketworie.wheep.client.MainApplication.Companion.PREFERENCES
 import com.ketworie.wheep.client.MainApplication.Companion.USER_ID
 import com.ketworie.wheep.client.MainApplication.Companion.X_AUTH_TOKEN
-import com.ketworie.wheep.client.network.GenericError
 import com.ketworie.wheep.client.network.NetworkResponse
-import com.ketworie.wheep.client.network.toastError
+import com.ketworie.wheep.client.network.errorMessage
 import com.ketworie.wheep.client.security.AuthInterceptor
 import com.ketworie.wheep.client.security.SecurityService
-import com.ketworie.wheep.client.user.User
 import com.ketworie.wheep.client.user.UserService
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_sign_in.*
@@ -46,7 +43,7 @@ class SignInActivity : AppCompatActivity() {
         appName.post { recoverSession() }
 
 
-        findViewById<EditText>(R.id.password).setOnEditorActionListener { _, actionId, _ ->
+        password.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 processSignIn()
                 return@setOnEditorActionListener true
@@ -134,8 +131,7 @@ class SignInActivity : AppCompatActivity() {
                     securityService.login(login.text.toString(), password.text.toString())
                 persistToken(token)
                 registerToken(token)
-                if (loadMe().toastError(this@SignInActivity))
-                    return@launch
+                loadMe()
                 runOnUiThread { startHomeActivity() }
             } catch (e: Exception) {
                 Snackbar
@@ -154,15 +150,16 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun loadMe(): GenericError<User> {
-        val response = userService.loadMe()
-        if (response is NetworkResponse.Success) {
-            val userId = response.body.id
-            getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit()
-                .putString(USER_ID, userId).apply()
-            registerUserId(userId)
+    private suspend fun loadMe() {
+        when (val response = userService.loadMe()) {
+            is NetworkResponse.Success -> {
+                val userId = response.body.id
+                getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit()
+                    .putString(USER_ID, userId).apply()
+                registerUserId(userId)
+            }
+            else -> throw RuntimeException(response.errorMessage(this))
         }
-        return response
     }
 
     private fun registerToken(token: String) {

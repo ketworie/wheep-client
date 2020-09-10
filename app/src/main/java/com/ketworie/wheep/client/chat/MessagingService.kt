@@ -27,7 +27,7 @@ class MessagingService @Inject constructor() {
     }
 
     suspend fun loadMessages(hubId: String) {
-        val messages = chatService.getPreviousMessages(hubId, ZonedDateTime.now())
+        val messages = chatService.getLastMessages(hubId)
         if (messages is NetworkResponse.Success)
             messageDao.saveAll(messages.body)
     }

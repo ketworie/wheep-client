@@ -1,5 +1,6 @@
 package com.ketworie.wheep.client.network
 
+import android.util.Log
 import okhttp3.Request
 import okhttp3.ResponseBody
 import okio.Timeout
@@ -29,27 +30,36 @@ internal class NetworkResponseCall<S : Any, E : Any>(
                         )
                     } else {
                         // Response is successful but the body is null
+                        val unknownError =
+                            NetworkResponse.UnknownError(RuntimeException("response body is null"))
+                        Log.e("NETWORK", unknownError.toString())
                         callback.onResponse(
                             this@NetworkResponseCall,
-                            Response.success(NetworkResponse.UnknownError(RuntimeException("response body is null")))
+                            Response.success(unknownError)
                         )
                     }
                 } else {
                     if (error == null || error.contentLength() == 0L) {
+                        val unknownError =
+                            NetworkResponse.UnknownError(RuntimeException("empty error with code $code"))
+                        Log.e("NETWORK", unknownError.toString())
                         callback.onResponse(
                             this@NetworkResponseCall,
-                            Response.success(NetworkResponse.UnknownError(RuntimeException("empty error with code $code")))
+                            Response.success(unknownError)
                         )
                         return
                     }
                     try {
                         val errorBody = errorConverter.convert(error)
                             ?: throw RuntimeException("null error body")
+                        val apiError = NetworkResponse.ApiError(errorBody, code)
+                        Log.e("NETWORK", apiError.toString())
                         callback.onResponse(
                             this@NetworkResponseCall,
-                            Response.success(NetworkResponse.ApiError(errorBody, code))
+                            Response.success(apiError)
                         )
                     } catch (ex: Exception) {
+                        Log.e("NETWORK", "Request error conversion failure", ex)
                         callback.onResponse(
                             this@NetworkResponseCall,
                             Response.success(NetworkResponse.UnknownError(ex))
@@ -59,6 +69,7 @@ internal class NetworkResponseCall<S : Any, E : Any>(
             }
 
             override fun onFailure(call: Call<S>, throwable: Throwable) {
+                Log.e("NETWORK", "Request failure", throwable)
                 val networkResponse = when (throwable) {
                     is IOException -> NetworkResponse.NetworkError(throwable)
                     else -> NetworkResponse.UnknownError(throwable)

@@ -11,24 +11,22 @@ typealias GenericError<T> = NetworkResponse<T, ApiError>
 
 suspend fun <T : Any> GenericError<T>.toastError(context: Context): Boolean =
     withContext(Dispatchers.Default) {
-        when (this@toastError) {
-            is NetworkResponse.ApiError -> toast(context, this@toastError.body.message)
-            is NetworkResponse.NetworkError -> toast(
-                context,
-                context.resources.getString(R.string.network_error)
-            )
-            is NetworkResponse.UnknownError -> toast(
-                context,
-                context.resources.getString(R.string.unknown_error)
-            )
-            else -> return@withContext false
-        }
+        val errorMessage = errorMessage(context) ?: return@withContext false
+        toast(context, errorMessage)
         return@withContext true
     }
 
 private suspend fun toast(context: Context, text: String) = withContext(Dispatchers.Main) {
     Toast.makeText(context, text.capitalize(), Toast.LENGTH_SHORT).show()
 }
+
+fun <T : Any> GenericError<T>.errorMessage(context: Context): String? =
+    when (this) {
+        is NetworkResponse.ApiError -> this.body.message
+        is NetworkResponse.NetworkError -> context.resources.getString(R.string.network_error)
+        is NetworkResponse.UnknownError -> context.resources.getString(R.string.unknown_error)
+        else -> null
+    }
 
 
 sealed class NetworkResponse<out T : Any, out U : Any> {

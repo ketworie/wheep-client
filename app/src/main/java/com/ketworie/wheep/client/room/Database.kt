@@ -15,7 +15,7 @@ import com.ketworie.wheep.client.user.UserHub
 @TypeConverters(Converters::class)
 @Database(
     entities = [User::class, Hub::class, Message::class, Contact::class, UserHub::class],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 abstract class Database : RoomDatabase() {

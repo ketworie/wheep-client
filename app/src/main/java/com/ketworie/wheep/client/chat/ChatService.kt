@@ -43,8 +43,19 @@ interface ChatService {
     @GET("/me/hubs")
     suspend fun getMyHubs(): List<HubView>
 
+    @GET("/hub/last")
+    suspend fun getLastMessages(
+        @Query("hub") hubId: String
+    ): GenericError<List<Message>>
+
     @GET("/hub/prev")
     suspend fun getPreviousMessages(
+        @Query("hub") hubId: String,
+        @Query("date") date: ZonedDateTime
+    ): GenericError<List<Message>>
+
+    @GET("/hub/next")
+    suspend fun getNextMessages(
         @Query("hub") hubId: String,
         @Query("date") date: ZonedDateTime
     ): GenericError<List<Message>>
@@ -54,12 +65,6 @@ interface ChatService {
 
     @POST("/hub/send")
     suspend fun sendMessage(@Body message: MessageSend): Message
-
-    @GET("/hub/next")
-    suspend fun getNextMessages(
-        @Query("hub") hubId: String,
-        @Query("date") date: ZonedDateTime
-    ): GenericError<List<Message>>
 
     @FormUrlEncoded
     @POST("/hub/rename")

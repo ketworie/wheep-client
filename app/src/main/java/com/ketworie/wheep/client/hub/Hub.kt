@@ -2,7 +2,6 @@ package com.ketworie.wheep.client.hub
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.ZonedDateTime
 
 @Entity
 data class Hub(
@@ -10,6 +9,5 @@ data class Hub(
     val id: String,
     var name: String,
     var image: String,
-    var isDialog: Boolean?,
-    var lastModified: ZonedDateTime
+    var isDialog: Boolean?
 )

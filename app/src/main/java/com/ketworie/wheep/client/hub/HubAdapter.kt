@@ -22,7 +22,7 @@ class HubAdapter : PagedListAdapter<HubMessage, HubAdapter.HubViewHolder>(HubDef
         }
 
         override fun areContentsTheSame(oldItem: HubMessage, newItem: HubMessage): Boolean {
-            return oldItem.hub.lastModified == newItem.hub.lastModified && oldItem.message?.date == newItem.message?.date
+            return oldItem.hub == newItem.hub && oldItem.message?.date == newItem.message?.date
         }
 
     }
