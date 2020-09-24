@@ -11,7 +11,7 @@ inline fun <T> LiveData<T>.observeOnce(
     val wrappedObserver = object : Observer<T> {
         override fun onChanged(t: T) {
             removeObserver(this)
-            onChanged.invoke(t)
+            onChanged(t)
         }
     }
     observe(owner, wrappedObserver)

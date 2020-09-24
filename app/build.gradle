@@ -18,7 +18,7 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.incremental":"true"]
+                arguments = ["room.incremental": "true"]
             }
         }
     }
@@ -42,6 +42,11 @@ android {
         jvmTarget = "1.8"
     }
 
+    packagingOptions {
+        pickFirst("META-INF/atomicfu.kotlin_module")
+        pickFirst("META-INF/kotlinx-io.kotlin_module")
+    }
+
 }
 
 dependencies {
@@ -55,9 +60,9 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview-selection:1.0.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'com.google.android.material:material:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'com.google.android.material:material:1.2.1'
     def retrofit_version = "2.8.1"
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-jackson:$retrofit_version"
@@ -69,9 +74,10 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
-    def lifecycle_ktx_version = "2.2.0"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_ktx_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_ktx_version"
+    def lifecycle_version = "2.2.0"
+    implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation 'androidx.paging:paging-runtime-ktx:2.1.2'
     def room_version = "2.2.5"
@@ -80,5 +86,8 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     implementation 'com.karumi:dexter:6.2.1'
     implementation 'com.github.yalantis:ucrop:2.2.5'
+    def krossbow_version = "0.41.0"
+    implementation("org.hildan.krossbow:krossbow-stomp-jackson:$krossbow_version")
+    implementation("org.hildan.krossbow:krossbow-websocket-okhttp:$krossbow_version")
 
 }

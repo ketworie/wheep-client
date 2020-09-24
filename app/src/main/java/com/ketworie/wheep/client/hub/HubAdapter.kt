@@ -50,7 +50,7 @@ class HubAdapter : PagedListAdapter<HubMessage, HubAdapter.HubViewHolder>(HubDef
 
         init {
             view.setOnClickListener {
-                getItem(adapterPosition)?.let { onItemClick.invoke(view, it.hub) }
+                getItem(adapterPosition)?.let { onItemClick(view, it.hub) }
             }
         }
     }

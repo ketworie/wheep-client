@@ -63,7 +63,7 @@ open class UserAdapter : PagedListAdapter<User, UserAdapter.UserViewHolder>(User
 
         init {
             view.setOnClickListener {
-                getItem(adapterPosition)?.let { onItemClick.invoke(view, it) }
+                getItem(adapterPosition)?.let { onItemClick(view, it) }
             }
             remove.setOnClickListener {
                 getItem(adapterPosition)?.let { onItemRemove?.invoke(remove, it) }

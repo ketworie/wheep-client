@@ -2,9 +2,10 @@ package com.ketworie.wheep.client.dagger
 
 import android.app.Application
 import androidx.room.Room
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.ketworie.wheep.client.MainApplication.Companion.SERVER_BASE
+import com.ketworie.wheep.client.MainApplication.Companion.WEB_SERVER
 import com.ketworie.wheep.client.chat.ChatService
 import com.ketworie.wheep.client.chat.MessageDao
 import com.ketworie.wheep.client.hub.HubDao
@@ -33,17 +34,17 @@ class DataModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun provideChatService(client: OkHttpClient): ChatService {
+    fun provideObjectMapper(): ObjectMapper {
+        return jacksonObjectMapper().registerModule(JavaTimeModule())
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatService(client: OkHttpClient, objectMapper: ObjectMapper): ChatService {
         val retrofit = Retrofit.Builder()
-            .baseUrl(SERVER_BASE)
+            .baseUrl(WEB_SERVER)
             .client(client)
-            .addConverterFactory(
-                JacksonConverterFactory.create(
-                    jacksonObjectMapper().registerModule(
-                        JavaTimeModule()
-                    )
-                )
-            )
+            .addConverterFactory(JacksonConverterFactory.create(objectMapper))
             .addCallAdapterFactory(NetworkResponseAdapterFactory())
             .build()
         return retrofit.create(ChatService::class.java)

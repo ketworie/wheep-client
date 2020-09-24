@@ -34,7 +34,7 @@ class MessageAdapter(private val userId: String, var usersById: Map<String, User
                 super.onItemRangeInserted(positionStart, itemCount)
                 if (isScrollNeeded) {
                     isScrollNeeded = false
-                    scroller.invoke()
+                    scroller()
                 }
             }
         })

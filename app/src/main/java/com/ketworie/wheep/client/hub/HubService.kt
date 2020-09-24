@@ -9,9 +9,10 @@ import com.ketworie.wheep.client.network.GenericError
 import com.ketworie.wheep.client.network.NetworkResponse
 import com.ketworie.wheep.client.user.UserDao
 import com.ketworie.wheep.client.user.UserHub
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -62,8 +63,8 @@ class HubService @Inject constructor() {
 
     suspend fun updateAvatar(id: String, image: Uri): GenericError<String> {
         val file = image.toFile()
-        val idBody = RequestBody.create(MediaType.parse("text/plain"), id)
-        val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
+        val idBody = id.toRequestBody("text/plain".toMediaTypeOrNull())
+        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
         val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
         val updateAvatar = chatService.updateHubAvatar(idBody, body)
         if (updateAvatar is NetworkResponse.Success) {

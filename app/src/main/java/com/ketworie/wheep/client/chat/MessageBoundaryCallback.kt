@@ -1,19 +1,20 @@
 package com.ketworie.wheep.client.chat
 
 import com.ketworie.wheep.client.AsyncBoundaryCallback
+import java.time.ZonedDateTime
 
-class MessageBoundaryCallback(private val messagingService: MessagingService, val hubId: String) :
+class MessageBoundaryCallback(private val messageService: MessageService, val hubId: String) :
     AsyncBoundaryCallback<Message>() {
 
     override suspend fun loadInitial() {
-        messagingService.loadMessages(hubId)
+        messageService.loadPrev(hubId, ZonedDateTime.now())
     }
 
     override suspend fun loadNext(itemAtEnd: Message) {
-        messagingService.loadPrevMessages(hubId, itemAtEnd.date)
+        messageService.loadPrev(hubId, itemAtEnd.date)
     }
 
     override suspend fun loadPrevious(itemAtFront: Message) {
-        messagingService.loadNextMessages(hubId, itemAtFront.date)
+        messageService.loadNext(hubId, itemAtFront.date)
     }
 }

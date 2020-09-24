@@ -49,7 +49,7 @@ fun loadAvatar(context: Context, imageView: ImageView, address: String, onLoaded
                 target: Target<Bitmap>?,
                 isFirstResource: Boolean
             ): Boolean {
-                onLoaded.invoke()
+                onLoaded()
                 return false
             }
 
@@ -60,7 +60,7 @@ fun loadAvatar(context: Context, imageView: ImageView, address: String, onLoaded
                 dataSource: DataSource?,
                 isFirstResource: Boolean
             ): Boolean {
-                onLoaded.invoke()
+                onLoaded()
                 return false
             }
         })
@@ -83,7 +83,7 @@ suspend fun uploadImage(
     }
     val drawable = image.path?.let { RoundedBitmapDrawableFactory.create(context.resources, it) }
     drawable?.isCircular = true
-    val response = uploader.invoke(image)
+    val response = uploader(image)
     withContext(Dispatchers.Main) {
         holder.isEnabled = true
         holder.stopBlinking()

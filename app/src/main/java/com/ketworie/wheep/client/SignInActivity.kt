@@ -34,6 +34,9 @@ class SignInActivity : AppCompatActivity() {
     @Inject
     lateinit var authInterceptor: AuthInterceptor
 
+    var token = ""
+    var userId = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -93,7 +96,7 @@ class SignInActivity : AppCompatActivity() {
             when (val response = userService.loadMe()) {
                 is NetworkResponse.Success -> {
                     registerUserId(response.body.id)
-                    withContext(Dispatchers.Main) { startHomeActivity() }
+                    withContext(Dispatchers.Main) { startChat() }
                     return@launch
                 }
                 is NetworkResponse.ApiError -> {
@@ -102,7 +105,7 @@ class SignInActivity : AppCompatActivity() {
                 }
             }
             registerUserId(userId)
-            withContext(Dispatchers.Main) { startHomeActivity() }
+            withContext(Dispatchers.Main) { startChat() }
         }
     }
 
@@ -132,7 +135,7 @@ class SignInActivity : AppCompatActivity() {
                 persistToken(token)
                 registerToken(token)
                 loadMe()
-                runOnUiThread { startHomeActivity() }
+                runOnUiThread { startChat() }
             } catch (e: Exception) {
                 Snackbar
                     .make(appName, e.message!!, Snackbar.LENGTH_SHORT)
@@ -163,10 +166,12 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun registerToken(token: String) {
+        this.token = token
         authInterceptor.token = token
     }
 
     private fun registerUserId(userId: String) {
+        this.userId = userId
         userService.userId = userId
     }
 
@@ -180,11 +185,21 @@ class SignInActivity : AppCompatActivity() {
         signInButton.text = resources.getString(R.string.login_button_waiting)
     }
 
-    private fun startHomeActivity() {
+    private fun startChat() {
+        userService.userId = userId
+        authInterceptor.token = token
+        startBackgroundService(token)
         startActivity(
             Intent(this, HomeActivity::class.java)
             , ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle()
         )
+    }
+
+    private fun startBackgroundService(token: String) {
+        Intent(this, MessageStreamService::class.java).apply {
+            putExtra(X_AUTH_TOKEN, token)
+            startService(this)
+        }
     }
 
     private fun hasValidInput(): Boolean {

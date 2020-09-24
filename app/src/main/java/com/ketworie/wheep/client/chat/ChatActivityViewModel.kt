@@ -13,17 +13,17 @@ class ChatActivityViewModel @Inject constructor() : ViewModel() {
     lateinit var hubService: HubService
 
     @Inject
-    lateinit var messagingService: MessagingService
+    lateinit var messageService: MessageService
 
     fun getHub(id: String): LiveData<HubWithUsers> {
         return hubService.getWithUsers(id)
     }
 
     fun getMessages(hubId: String): LiveData<PagedList<Message>> {
-        return messagingService.getPaged(hubId)
+        return messageService.getPaged(hubId)
     }
 
     suspend fun sendMessage(message: MessageSend) {
-        messagingService.sendMessage(message)
+        messageService.send(message)
     }
 }

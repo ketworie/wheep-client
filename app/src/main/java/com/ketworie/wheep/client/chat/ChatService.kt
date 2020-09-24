@@ -43,11 +43,6 @@ interface ChatService {
     @GET("/me/hubs")
     suspend fun getMyHubs(): List<HubView>
 
-    @GET("/hub/last")
-    suspend fun getLastMessages(
-        @Query("hub") hubId: String
-    ): GenericError<List<Message>>
-
     @GET("/hub/prev")
     suspend fun getPreviousMessages(
         @Query("hub") hubId: String,
@@ -98,6 +93,9 @@ interface ChatService {
     @Multipart
     @POST("/me/avatar/update")
     suspend fun updateMyAvatar(@Part image: MultipartBody.Part): GenericError<String>
+
+    @GET("/setup")
+    suspend fun setupQueue(): GenericError<Unit>
 
 
 }

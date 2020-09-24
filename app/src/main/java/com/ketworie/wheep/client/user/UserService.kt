@@ -13,9 +13,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -114,7 +114,7 @@ class UserService @Inject constructor() {
 
     suspend fun updateAvatar(id: String, image: Uri): GenericError<String> {
         val file = image.toFile()
-        val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
+        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
         val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
         val updateAvatar = chatService.updateMyAvatar(body)
         if (updateAvatar is NetworkResponse.Success) {

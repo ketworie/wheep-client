@@ -51,6 +51,10 @@ class SettingsActivity : AppCompatActivity() {
     private fun logOut() {
         getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit().remove(X_AUTH_TOKEN).apply()
         getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit().remove(USER_ID).apply()
+        Intent(this, MessageStreamService::class.java).apply {
+            putExtra(X_AUTH_TOKEN, "")
+            startService(this)
+        }
         userService.resetUserId()
         CoroutineScope(Dispatchers.IO).launch {
             hubService.deleteAll()
