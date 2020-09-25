@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import java.time.ZonedDateTime
 
 @Dao
 interface MessageDao {
@@ -23,5 +24,14 @@ interface MessageDao {
 
     @Query("DELETE FROM Message")
     suspend fun deleteAll()
+
+    @Query("SELECT * FROM Message WHERE date <= :dateTime AND hubId = :hubId ORDER BY date DESC LIMIT :limit")
+    fun loadInit(hubId: String, dateTime: ZonedDateTime, limit: Int): List<Message>
+
+    @Query("SELECT * FROM Message WHERE date < :dateTime AND hubId = :hubId ORDER BY date DESC LIMIT :limit")
+    fun loadPrev(hubId: String, dateTime: ZonedDateTime, limit: Int): List<Message>
+
+    @Query("SELECT * FROM Message WHERE date > :dateTime AND hubId = :hubId ORDER BY date ASC LIMIT :limit")
+    fun loadNext(hubId: String, dateTime: ZonedDateTime, limit: Int): List<Message>
 
 }

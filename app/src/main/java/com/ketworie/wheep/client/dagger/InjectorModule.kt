@@ -1,10 +1,10 @@
 package com.ketworie.wheep.client.dagger
 
 import com.ketworie.wheep.client.HomeActivity
-import com.ketworie.wheep.client.MessageStreamService
 import com.ketworie.wheep.client.SettingsActivity
 import com.ketworie.wheep.client.SignInActivity
 import com.ketworie.wheep.client.chat.ChatActivity
+import com.ketworie.wheep.client.chat.MessageStreamService
 import com.ketworie.wheep.client.contact.ContactAddActivity
 import com.ketworie.wheep.client.contact.ContactListFragment
 import com.ketworie.wheep.client.hub.HubAddActivity

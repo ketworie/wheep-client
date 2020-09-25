@@ -1,4 +1,4 @@
-package com.ketworie.wheep.client
+package com.ketworie.wheep.client.chat
 
 import android.app.Service
 import android.content.Context
@@ -15,8 +15,6 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ketworie.wheep.client.MainApplication.Companion.STOMP_SERVER
 import com.ketworie.wheep.client.MainApplication.Companion.X_AUTH_TOKEN
-import com.ketworie.wheep.client.chat.Message
-import com.ketworie.wheep.client.chat.MessageService
 import com.ketworie.wheep.client.network.NetworkResponse
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
@@ -30,7 +28,6 @@ import org.hildan.krossbow.stomp.config.HeartBeat
 import org.hildan.krossbow.stomp.config.StompConfig
 import org.hildan.krossbow.stomp.conversions.subscribe
 import org.hildan.krossbow.stomp.conversions.withJacksonConversions
-import org.hildan.krossbow.websocket.WebSocketException
 import org.hildan.krossbow.websocket.okhttp.OkHttpWebSocketClient
 import java.time.Duration
 import javax.inject.Inject
@@ -98,7 +95,7 @@ class MessageStreamService : Service() {
                 messageService.save(it)
                 Log.d("MSG", "Received message ${it.id}")
             }
-        } catch (e: WebSocketException) {
+        } catch (e: Exception) {
             Log.d("MSG", "Exception during message receiving", e)
             return
         }

@@ -24,7 +24,7 @@ class MessageAdapter(private val userId: String, var usersById: Map<String, User
         }
 
         override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean {
-            return oldItem.text == newItem.text
+            return oldItem == newItem
         }
     }
 

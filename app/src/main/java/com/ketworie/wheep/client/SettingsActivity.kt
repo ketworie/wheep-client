@@ -12,6 +12,7 @@ import com.ketworie.wheep.client.MainApplication.Companion.PREFERENCES
 import com.ketworie.wheep.client.MainApplication.Companion.REQUEST_AVATAR
 import com.ketworie.wheep.client.MainApplication.Companion.USER_ID
 import com.ketworie.wheep.client.MainApplication.Companion.X_AUTH_TOKEN
+import com.ketworie.wheep.client.chat.MessageStreamService
 import com.ketworie.wheep.client.hub.HubService
 import com.ketworie.wheep.client.image.ImageCropperActivity
 import com.ketworie.wheep.client.image.uploadImage

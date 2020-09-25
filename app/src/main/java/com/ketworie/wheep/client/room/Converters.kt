@@ -1,17 +1,19 @@
 package com.ketworie.wheep.client.room
 
 import androidx.room.TypeConverter
+import java.time.Instant
+import java.time.ZoneId
 import java.time.ZonedDateTime
 
 class Converters {
 
     @TypeConverter
-    fun encodeZonedDateTime(time: ZonedDateTime): String {
-        return time.toString()
+    fun decodeZonedDateTime(value: Long?): ZonedDateTime? {
+        return value?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneId.of("UTC")) }
     }
 
     @TypeConverter
-    fun decodeZonedDateTime(time: String): ZonedDateTime {
-        return ZonedDateTime.parse(time)
+    fun encodeZonedDateTime(date: ZonedDateTime?): Long? {
+        return date?.toInstant()?.toEpochMilli()
     }
 }

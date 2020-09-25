@@ -10,6 +10,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.ketworie.wheep.client.MainApplication.Companion.PREFERENCES
 import com.ketworie.wheep.client.MainApplication.Companion.USER_ID
 import com.ketworie.wheep.client.MainApplication.Companion.X_AUTH_TOKEN
+import com.ketworie.wheep.client.chat.MessageStreamService
 import com.ketworie.wheep.client.network.NetworkResponse
 import com.ketworie.wheep.client.network.errorMessage
 import com.ketworie.wheep.client.security.AuthInterceptor
