@@ -39,4 +39,6 @@
     <string name="apply">APPLY</string>
     <string name="add">ADD</string>
     <string name="select_users">Select users</string>
+    <string name="channel_name">Wheep</string>
+    <string name="channel_description">Wheep</string>
 </resources>

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.observe
 import androidx.transition.AutoTransition
@@ -27,7 +26,7 @@ import com.ketworie.wheep.client.user.User
 import com.ketworie.wheep.client.user.UserListFragment
 import com.ketworie.wheep.client.user.UserSelectorFragment
 import com.ketworie.wheep.client.user.UserService
-import dagger.android.AndroidInjection
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_home.avatar
 import kotlinx.android.synthetic.main.activity_hub_add.*
 import kotlinx.android.synthetic.main.fragment_item_list.*
@@ -37,7 +36,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class HubInfoActivity : AppCompatActivity() {
+class HubInfoActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var hubService: HubService
@@ -51,7 +50,6 @@ class HubInfoActivity : AppCompatActivity() {
     private var hubWithUsers: HubWithUsers? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         intent.getStringExtra(HUB_ID)?.let { hubId = it } ?: finish()
         setContentView(R.layout.activity_hub_add)

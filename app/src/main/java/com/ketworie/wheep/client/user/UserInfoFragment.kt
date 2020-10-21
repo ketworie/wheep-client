@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
@@ -14,7 +13,7 @@ import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.image.loadAvatar
 import com.ketworie.wheep.client.network.toastError
 import com.ketworie.wheep.client.observeOnce
-import dagger.android.support.AndroidSupportInjection
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_user_info.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class UserInfoFragment() : Fragment() {
+class UserInfoFragment() : DaggerFragment() {
 
     @Inject
     lateinit var userService: UserService
@@ -41,7 +40,6 @@ class UserInfoFragment() : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory).get()
         addContact.setOnClickListener { addContact() }

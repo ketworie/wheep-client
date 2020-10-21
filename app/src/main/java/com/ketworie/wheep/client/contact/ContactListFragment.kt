@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
@@ -19,11 +18,11 @@ import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.user.User
 import com.ketworie.wheep.client.user.UserAdapter
 import com.ketworie.wheep.client.user.UserInfoActivity
-import dagger.android.support.AndroidSupportInjection
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_item_list.*
 import javax.inject.Inject
 
-class ContactListFragment : Fragment() {
+class ContactListFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -38,7 +37,6 @@ class ContactListFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory).get()
         val contactAdapter = UserAdapter()

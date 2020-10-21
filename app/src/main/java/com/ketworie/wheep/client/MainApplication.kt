@@ -1,15 +1,15 @@
 package com.ketworie.wheep.client
 
-import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import com.ketworie.wheep.client.dagger.DaggerMainApplicationComponent
 import com.ketworie.wheep.client.dagger.DataModule
 import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
+import dagger.android.DaggerApplication
 
 
-class MainApplication : Application(), HasAndroidInjector {
+class MainApplication : DaggerApplication() {
     companion object {
         const val X_AUTH_TOKEN = "X-Auth-Token"
         const val USER_ID = "userId"
@@ -23,22 +23,33 @@ class MainApplication : Application(), HasAndroidInjector {
         const val IMAGE_PATH = "imagePath"
         const val USER_IDS = "userIds"
         const val REQUEST_AVATAR = 101
+        const val CHANNEL_ID = "WHP"
     }
-
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
-
 
     override fun onCreate() {
         super.onCreate()
-        DaggerMainApplicationComponent
+        createNotificationChannel()
+    }
+
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        return DaggerMainApplicationComponent
             .builder()
             .dataModule(DataModule(this))
             .build()
-            .inject(this)
     }
 
-    override fun androidInjector(): AndroidInjector<Any> {
-        return dispatchingAndroidInjector
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        val name = getString(R.string.channel_name)
+        val descriptionText = getString(R.string.channel_description)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+            description = descriptionText
+        }
+        // Register the channel with the system
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 }

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
@@ -15,14 +14,14 @@ import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.hub.HubInfoActivity
 import com.ketworie.wheep.client.image.loadAvatar
 import com.ketworie.wheep.client.user.UserService
-import dagger.android.AndroidInjection
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var userService: UserService
@@ -33,7 +32,6 @@ class ChatActivity : AppCompatActivity() {
     lateinit var hubId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
         viewModel = ViewModelProvider(this, viewModelFactory).get()

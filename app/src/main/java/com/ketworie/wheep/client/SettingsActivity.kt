@@ -5,26 +5,25 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import com.ketworie.wheep.client.MainApplication.Companion.IMAGE_PATH
 import com.ketworie.wheep.client.MainApplication.Companion.PREFERENCES
 import com.ketworie.wheep.client.MainApplication.Companion.REQUEST_AVATAR
 import com.ketworie.wheep.client.MainApplication.Companion.USER_ID
 import com.ketworie.wheep.client.MainApplication.Companion.X_AUTH_TOKEN
-import com.ketworie.wheep.client.chat.MessageStreamService
+import com.ketworie.wheep.client.event.EventStreamService
 import com.ketworie.wheep.client.hub.HubService
 import com.ketworie.wheep.client.image.ImageCropperActivity
 import com.ketworie.wheep.client.image.uploadImage
 import com.ketworie.wheep.client.user.UserService
-import dagger.android.AndroidInjection
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var userService: UserService
@@ -33,7 +32,6 @@ class SettingsActivity : AppCompatActivity() {
     lateinit var hubService: HubService
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         supportPostponeEnterTransition()
         setContentView(R.layout.activity_settings)
@@ -52,7 +50,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun logOut() {
         getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit().remove(X_AUTH_TOKEN).apply()
         getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit().remove(USER_ID).apply()
-        Intent(this, MessageStreamService::class.java).apply {
+        Intent(this, EventStreamService::class.java).apply {
             putExtra(X_AUTH_TOKEN, "")
             startService(this)
         }

@@ -4,9 +4,9 @@ import com.ketworie.wheep.client.HomeActivity
 import com.ketworie.wheep.client.SettingsActivity
 import com.ketworie.wheep.client.SignInActivity
 import com.ketworie.wheep.client.chat.ChatActivity
-import com.ketworie.wheep.client.chat.MessageStreamService
 import com.ketworie.wheep.client.contact.ContactAddActivity
 import com.ketworie.wheep.client.contact.ContactListFragment
+import com.ketworie.wheep.client.event.EventStreamService
 import com.ketworie.wheep.client.hub.HubAddActivity
 import com.ketworie.wheep.client.hub.HubInfoActivity
 import com.ketworie.wheep.client.hub.HubListFragment
@@ -51,6 +51,6 @@ abstract class InjectorModule {
     abstract fun contributeHubInfoActivityInjector(): HubInfoActivity?
 
     @ContributesAndroidInjector
-    abstract fun contributeMessageStreamServiceInjector(): MessageStreamService?
+    abstract fun contributeMessageStreamServiceInjector(): EventStreamService?
 
 }

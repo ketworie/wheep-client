@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.paging.toLiveData
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
@@ -13,11 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionManager
 import com.ketworie.wheep.client.R
 import com.ketworie.wheep.client.observeOnce
-import dagger.android.support.AndroidSupportInjection
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_user_selector.*
 import javax.inject.Inject
 
-class UserSelectorFragment() : Fragment() {
+class UserSelectorFragment() : DaggerFragment() {
 
     @Inject
     lateinit var userService: UserService
@@ -33,7 +32,6 @@ class UserSelectorFragment() : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
         super.onViewCreated(view, savedInstanceState)
         userList.adapter = adapter
         userList.layoutManager = LinearLayoutManager(this@UserSelectorFragment.requireActivity())

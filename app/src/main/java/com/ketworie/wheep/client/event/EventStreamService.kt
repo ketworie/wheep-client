@@ -1,5 +1,7 @@
-package com.ketworie.wheep.client.chat
+package com.ketworie.wheep.client.event
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -7,6 +9,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.IBinder
+import android.os.SystemClock
 import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
@@ -32,7 +35,7 @@ import org.hildan.krossbow.websocket.okhttp.OkHttpWebSocketClient
 import java.time.Duration
 import javax.inject.Inject
 
-class MessageStreamService : Service() {
+class EventStreamService : Service() {
 
     val client: StompClient = StompClient(
         OkHttpWebSocketClient(),
@@ -42,10 +45,11 @@ class MessageStreamService : Service() {
     lateinit var objectMapper: ObjectMapper
 
     @Inject
-    lateinit var messageService: MessageService
+    lateinit var eventService: EventService
     lateinit var connectivityManager: ConnectivityManager
     private var token = ""
     private var messageJob: Job? = null
+    private val alarmMgr = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     override fun onCreate() {
         AndroidInjection.inject(this)
@@ -81,7 +85,7 @@ class MessageStreamService : Service() {
                 ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) ?: false
         if (!hasInternet)
             return
-        if (messageService.setupQueue() !is NetworkResponse.Success) {
+        if (eventService.setupQueue() !is NetworkResponse.Success) {
             delay(Duration.ofMinutes(1))
             Log.d("MSR", "Retry after unsuccessful setup")
             subscribe()
@@ -90,15 +94,35 @@ class MessageStreamService : Service() {
         try {
             val session = client.connect(STOMP_SERVER, "biba", "4815162342", mapOf("host" to "/"))
                 .withJacksonConversions(objectMapper)
-            val subscribe = session.subscribe("/amq/queue/q-$token", Message::class)
+            val subscribe = session.subscribe("/amq/queue/q-$token", Event::class)
             subscribe.collect {
-                messageService.save(it)
-                Log.d("MSG", "Received message ${it.id}")
+                eventService.save(it)
+                Log.d("MSG", "Received event ${it.date}")
             }
         } catch (e: Exception) {
             Log.d("MSG", "Exception during message receiving", e)
+            delay(Duration.ofMinutes(1))
+            subscribe()
             return
         }
+    }
+
+    private fun startReceiver() {
+        val alarmIntent = Intent(this, EventBroadcastReceiver::class.java).let { intent ->
+            PendingIntent.getBroadcast(this, 0, intent, 0)
+        }
+        alarmMgr.set(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + 1000,
+            alarmIntent
+        )
+    }
+
+    private fun stopReceiver() {
+        val alarmIntent = Intent(this, EventBroadcastReceiver::class.java).let { intent ->
+            PendingIntent.getBroadcast(this, 0, intent, 0)
+        }
+        alarmMgr.cancel(alarmIntent)
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -106,10 +130,7 @@ class MessageStreamService : Service() {
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        sendBroadcast(
-            Intent("com.ketworie.wheep.client.BackgroundService")
-                .putExtra(X_AUTH_TOKEN, token)
-        )
+        Log.d("MST", "Service killed")
     }
 
     inner class NetworkListener : ConnectivityManager.NetworkCallback() {

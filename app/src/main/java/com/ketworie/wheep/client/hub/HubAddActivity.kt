@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.ketworie.wheep.client.FileService
 import com.ketworie.wheep.client.MainApplication
@@ -17,7 +16,7 @@ import com.ketworie.wheep.client.image.uploadImage
 import com.ketworie.wheep.client.network.toastError
 import com.ketworie.wheep.client.requireNonBlank
 import com.ketworie.wheep.client.user.UserSelectorFragment
-import dagger.android.AndroidInjection
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_home.avatar
 import kotlinx.android.synthetic.main.activity_hub_add.*
 import kotlinx.coroutines.CoroutineScope
@@ -26,7 +25,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class HubAddActivity : AppCompatActivity() {
+class HubAddActivity : DaggerAppCompatActivity() {
 
     var avatarAddress = ""
 
@@ -38,7 +37,6 @@ class HubAddActivity : AppCompatActivity() {
     private val fragment = UserSelectorFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hub_add)
         intent?.getStringArrayListExtra(USER_IDS)?.let {

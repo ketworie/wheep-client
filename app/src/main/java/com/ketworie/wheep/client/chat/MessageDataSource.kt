@@ -14,7 +14,8 @@ class MessageDataSource(
     ItemKeyedDataSource<ZonedDateTime, Message>() {
 
     init {
-        db.invalidationTracker.addObserver(object : InvalidationTracker.Observer("Message") {
+        db.invalidationTracker.addObserver(object :
+            InvalidationTracker.Observer(Message::class.simpleName!!) {
             override fun onInvalidated(tables: MutableSet<String>) {
                 Log.d("DS", "invalidate")
                 invalidate()
@@ -35,9 +36,9 @@ class MessageDataSource(
         val limit = params.requestedLoadSize
         // initial key can belong to upper or lower item on recycler view
         // so to avoid visual stuttering loading messages around that position
-        val init = messageService.fetchInit(hubId, dateTime, limit / 2)
-        val next = messageService.fetchNext(hubId, dateTime, limit / 2)
-        val messages = next + init
+        val before = messageService.fetchInit(hubId, dateTime, limit / 2)
+        val after = messageService.fetchNext(hubId, dateTime, limit / 2)
+        val messages = after + before
         Log.d("DS", "Limit $limit. Initial ${messages.size} $dateTime")
         callback.onResult(messages)
     }

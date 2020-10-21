@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true">
-        <service android:name=".chat.MessageStreamService" />
+        <service android:name=".event.EventStreamService" />
         <activity
             android:name=".hub.HubInfoActivity"
             android:theme="@style/AppTheme.NoTitle.WhiteStatusBar" />

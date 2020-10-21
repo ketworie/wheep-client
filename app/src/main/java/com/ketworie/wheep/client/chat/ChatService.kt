@@ -1,5 +1,6 @@
 package com.ketworie.wheep.client.chat
 
+import com.ketworie.wheep.client.event.Event
 import com.ketworie.wheep.client.hub.HubAdd
 import com.ketworie.wheep.client.hub.HubView
 import com.ketworie.wheep.client.network.GenericError
@@ -96,6 +97,9 @@ interface ChatService {
 
     @GET("/setup")
     suspend fun setupQueue(): GenericError<Unit>
+
+    @GET("/event/last")
+    suspend fun getLastEvent(@Field("from") from: ZonedDateTime): GenericError<Event>
 
 
 }

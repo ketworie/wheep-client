@@ -3,9 +3,9 @@ package com.ketworie.wheep.client.chat
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
-import com.ketworie.wheep.client.network.GenericError
 import com.ketworie.wheep.client.network.NetworkResponse
 import com.ketworie.wheep.client.room.Database
+import com.ketworie.wheep.client.user.UserService
 import java.time.ZonedDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,6 +21,9 @@ class MessageService @Inject constructor() {
 
     @Inject
     lateinit var chatService: ChatService
+
+    @Inject
+    lateinit var userService: UserService
 
     fun getPaged(hubId: String): LiveData<PagedList<Message>> {
         return MessageDataSourceFactory(database, this, hubId)
@@ -59,9 +62,4 @@ class MessageService @Inject constructor() {
     suspend fun save(message: Message) {
         messageDao.save(message)
     }
-
-    suspend fun setupQueue(): GenericError<Unit> {
-        return chatService.setupQueue()
-    }
-
 }

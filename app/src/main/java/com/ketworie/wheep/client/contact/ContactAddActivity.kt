@@ -3,7 +3,6 @@ package com.ketworie.wheep.client.contact
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.observe
@@ -12,11 +11,11 @@ import com.ketworie.wheep.client.ViewModelFactory
 import com.ketworie.wheep.client.hideKeyboard
 import com.ketworie.wheep.client.network.NetworkResponse
 import com.ketworie.wheep.client.user.UserInfoFragment
-import dagger.android.AndroidInjection
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_contact_add.*
 import javax.inject.Inject
 
-class ContactAddActivity : AppCompatActivity() {
+class ContactAddActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -27,7 +26,6 @@ class ContactAddActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contact_add)
         viewModelAdd = ViewModelProvider(this, viewModelFactory).get()

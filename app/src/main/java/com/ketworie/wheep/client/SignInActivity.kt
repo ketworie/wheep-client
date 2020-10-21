@@ -4,19 +4,18 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import com.google.android.material.snackbar.Snackbar
 import com.ketworie.wheep.client.MainApplication.Companion.PREFERENCES
 import com.ketworie.wheep.client.MainApplication.Companion.USER_ID
 import com.ketworie.wheep.client.MainApplication.Companion.X_AUTH_TOKEN
-import com.ketworie.wheep.client.chat.MessageStreamService
+import com.ketworie.wheep.client.event.EventStreamService
 import com.ketworie.wheep.client.network.NetworkResponse
 import com.ketworie.wheep.client.network.errorMessage
 import com.ketworie.wheep.client.security.AuthInterceptor
 import com.ketworie.wheep.client.security.SecurityService
 import com.ketworie.wheep.client.user.UserService
-import dagger.android.AndroidInjection
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class SignInActivity : AppCompatActivity() {
+class SignInActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var securityService: SecurityService
@@ -39,7 +38,6 @@ class SignInActivity : AppCompatActivity() {
     var userId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
@@ -197,7 +195,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun startBackgroundService(token: String) {
-        Intent(this, MessageStreamService::class.java).apply {
+        Intent(this, EventStreamService::class.java).apply {
             putExtra(X_AUTH_TOKEN, token)
             startService(this)
         }
