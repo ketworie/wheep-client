@@ -2,7 +2,6 @@ package com.ketworie.wheep.client.event
 
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -19,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.ketworie.wheep.client.MainApplication.Companion.STOMP_SERVER
 import com.ketworie.wheep.client.MainApplication.Companion.X_AUTH_TOKEN
 import com.ketworie.wheep.client.network.NetworkResponse
-import dagger.android.AndroidInjection
+import dagger.android.DaggerService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -35,7 +34,7 @@ import org.hildan.krossbow.websocket.okhttp.OkHttpWebSocketClient
 import java.time.Duration
 import javax.inject.Inject
 
-class EventStreamService : Service() {
+class EventStreamService : DaggerService() {
 
     val client: StompClient = StompClient(
         OkHttpWebSocketClient(),
@@ -48,12 +47,13 @@ class EventStreamService : Service() {
     lateinit var eventService: EventService
     lateinit var connectivityManager: ConnectivityManager
     private var token = ""
-    private var messageJob: Job? = null
-    private val alarmMgr = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    private var eventStreamingJob: Job? = null
+    lateinit var alarmMgr: AlarmManager
 
     override fun onCreate() {
-        AndroidInjection.inject(this)
+        super.onCreate()
         Log.d("MSG", "Service created")
+        alarmMgr = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         connectivityManager =
             getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         connectivityManager.registerDefaultNetworkCallback(NetworkListener())
@@ -63,27 +63,24 @@ class EventStreamService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         token = intent?.getStringExtra(X_AUTH_TOKEN) ?: ""
         if (token.isBlank()) {
-            stopJob()
+            switchToProactive()
         }
         return START_REDELIVER_INTENT
     }
 
-    private fun startJob() {
-        if (messageJob == null || messageJob?.isActive == false)
-            messageJob = CoroutineScope(Dispatchers.IO).launch { subscribe() }
+    private fun switchToReactive() {
+        if (eventStreamingJob == null || eventStreamingJob?.isActive == false)
+            eventStreamingJob = CoroutineScope(Dispatchers.IO).launch { subscribe() }
+        stopBackgroundReceiver()
     }
 
-    private fun stopJob() {
-        messageJob?.cancel()
+    private fun switchToProactive() {
+        eventStreamingJob?.cancel()
+        startBackgroundReceiver()
     }
 
     private suspend fun subscribe() {
         if (token.isBlank())
-            return
-        val hasInternet =
-            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-                ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) ?: false
-        if (!hasInternet)
             return
         if (eventService.setupQueue() !is NetworkResponse.Success) {
             delay(Duration.ofMinutes(1))
@@ -107,10 +104,8 @@ class EventStreamService : Service() {
         }
     }
 
-    private fun startReceiver() {
-        val alarmIntent = Intent(this, EventBroadcastReceiver::class.java).let { intent ->
-            PendingIntent.getBroadcast(this, 0, intent, 0)
-        }
+    private fun startBackgroundReceiver() {
+        val alarmIntent = broadcastIntent(PendingIntent.FLAG_UPDATE_CURRENT) ?: return
         alarmMgr.set(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
             SystemClock.elapsedRealtime() + 1000,
@@ -118,11 +113,15 @@ class EventStreamService : Service() {
         )
     }
 
-    private fun stopReceiver() {
-        val alarmIntent = Intent(this, EventBroadcastReceiver::class.java).let { intent ->
-            PendingIntent.getBroadcast(this, 0, intent, 0)
-        }
+    private fun stopBackgroundReceiver() {
+        val alarmIntent = broadcastIntent(PendingIntent.FLAG_NO_CREATE) ?: return
         alarmMgr.cancel(alarmIntent)
+    }
+
+    private fun broadcastIntent(flag: Int): PendingIntent? {
+        return Intent(this, EventBroadcastReceiver::class.java).let { intent ->
+            PendingIntent.getBroadcast(this, 0, intent, flag)
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -137,17 +136,12 @@ class EventStreamService : Service() {
 
         override fun onLosing(network: Network, maxMsToLive: Int) {
             Log.d("MSG", "About to lose network in $maxMsToLive ms")
-            stopJob()
+            switchToProactive()
         }
 
         override fun onLost(network: Network) {
             Log.d("MSG", "Network lost")
-            stopJob()
-        }
-
-        override fun onAvailable(network: Network) {
-            Log.d("MSG", "Network available")
-            stopJob()
+            switchToProactive()
         }
 
         override fun onCapabilitiesChanged(
@@ -157,9 +151,8 @@ class EventStreamService : Service() {
             val hasInternet =
                 networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
             Log.d("MSG", "Has internet: $hasInternet")
-            if (!hasInternet)
-                return
-            startJob()
+            if (!hasInternet) return
+            switchToReactive()
         }
     }
 
@@ -167,13 +160,18 @@ class EventStreamService : Service() {
         @OnLifecycleEvent(Lifecycle.Event.ON_START)
         fun onStart() {
             Log.d("MSG", "App started")
-            startJob()
+            val hasInternet =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                    ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) ?: false
+            if (!hasInternet)
+                return
+            switchToReactive()
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
         fun onStop() {
             Log.d("MSG", "App stopped")
-            stopJob()
+            switchToProactive()
         }
     }
 

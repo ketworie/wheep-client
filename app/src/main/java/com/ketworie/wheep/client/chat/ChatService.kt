@@ -99,7 +99,7 @@ interface ChatService {
     suspend fun setupQueue(): GenericError<Unit>
 
     @GET("/event/last")
-    suspend fun getLastEvent(@Field("from") from: ZonedDateTime): GenericError<Event>
+    suspend fun getLastEvent(@Query("from") from: ZonedDateTime): GenericError<Event>
 
 
 }

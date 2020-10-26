@@ -4,12 +4,10 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.SystemClock
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import com.ketworie.wheep.client.MainApplication.Companion.CHANNEL_ID
-import com.ketworie.wheep.client.R
-import com.ketworie.wheep.client.chat.Message
+import com.ketworie.wheep.client.notification.NotificationService
 import dagger.android.DaggerBroadcastReceiver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,32 +20,49 @@ class EventBroadcastReceiver : DaggerBroadcastReceiver() {
     @Inject
     lateinit var eventService: EventService
 
+    @Inject
+    lateinit var notificationService: NotificationService
+    lateinit var connectivityManager: ConnectivityManager
+    private val defaultRate = 5000
+    private var minRate = 12 * 60 * 60 * 1000
+
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
-        val dateTime = intent?.getSerializableExtra("date") as ZonedDateTime? ?: ZonedDateTime.now()
+        connectivityManager =
+            context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        var dateTime = intent?.getSerializableExtra("date") as ZonedDateTime? ?: ZonedDateTime.now()
+        val rate = intent?.getIntExtra("rate", defaultRate)!!
         val pendingResult = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
+            val hasInternet =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                    ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) ?: false
+            if (!hasInternet) {
+                reschedule(context, rate, dateTime)
+                pendingResult.finish()
+                return@launch
+            }
             val lastEvent = eventService.checkLast(dateTime)
             if (lastEvent != null) {
-                val builder = NotificationCompat.Builder(context!!, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.accent_circle)
-                    .setContentTitle("New message")
-                    .setContentText((lastEvent.body as Message).text)
-                NotificationManagerCompat.from(context).notify(1, builder.build())
+                notificationService.notify(context, lastEvent)
+                dateTime = lastEvent.date
             }
-            reschedule(context!!)
+//            rate = if (lastEvent == null && rate < minRate) rate * 2 else defaultRate
+            reschedule(context, rate, dateTime)
             pendingResult.finish()
         }
     }
 
-    private fun reschedule(context: Context) {
+    private fun reschedule(context: Context, rate: Int, dateTime: ZonedDateTime?) {
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmIntent = Intent(context, EventBroadcastReceiver::class.java).let { intent ->
-            PendingIntent.getBroadcast(context, 0, intent, 0)
+            intent.putExtra("rate", rate)
+            intent.putExtra("date", dateTime)
+            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
         alarmMgr.set(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            SystemClock.elapsedRealtime() + 1000,
+            SystemClock.elapsedRealtime() + rate,
             alarmIntent
         )
 
